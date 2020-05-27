@@ -7,7 +7,7 @@ export interface WithSagaTaskStore extends Store {
 }
 
 export interface WithReduxNextPageContext extends NextPageContext {
-  store: WithSagaTaskStore; // Added with react-redux Provider in _app.tsx
+  store: WithSagaTaskStore;
 }
 
 export interface Post {
@@ -24,13 +24,10 @@ export interface Comment {
 
 export interface OpenPost extends Post {
   comments: Comment[];
-};
+}
 
 export interface State {
-  count: number;
   error: null | Error;
-  lastUpdate: number;
-  light: boolean;
   allPostsList: Post[] | null;
   post: OpenPost | null
 }

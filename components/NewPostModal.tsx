@@ -19,7 +19,7 @@ const NewPostModal = ({ open, onClose }) => {
                 {"Use Google's location service?"}
             </DialogTitle>
             <DialogContent>
-                <NewPost />
+                <NewPost onSubmitExtra={onClose} />
             </DialogContent>
             <DialogActions>
                 <Button onClick={onClose} color="primary">
@@ -28,6 +28,6 @@ const NewPostModal = ({ open, onClose }) => {
             </DialogActions>
         </Dialog>
     );
-};
+}
 
 export default NewPostModal;

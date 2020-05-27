@@ -3,6 +3,7 @@ import NewPostModal from './NewPostModal'
 import Router, { useRouter } from "next/router";
 import Button from "@material-ui/core/Button";
 import { useState } from "react";
+
 const Header = () => {
     const [open, setOpen] = useState(false);
     const { pathname } = useRouter();
@@ -26,6 +27,6 @@ const Header = () => {
             />
         </div>
     );
-};
+}
 
 export default Header;

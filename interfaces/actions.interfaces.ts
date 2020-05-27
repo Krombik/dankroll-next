@@ -6,18 +6,6 @@ export interface Failure {
   payLoad: Error;
 }
 
-export interface Increment {
-  type: actionTypes.INCREMENT;
-}
-
-export interface Decrement {
-  type: actionTypes.DECREMENT;
-}
-
-export interface Reset {
-  type: actionTypes.RESET;
-}
-
 export interface LoadAllPostsList {
   type: actionTypes.LOAD_ALL_POSTS_LIST;
 }
@@ -35,16 +23,4 @@ export interface LoadPost {
 export interface LoadPostSuccess {
   type: actionTypes.LOAD_POST_SUCCESS;
   payLoad: OpenPost;
-}
-
-export interface StartClock {
-  type: actionTypes.START_CLOCK;
-}
-
-export interface TickClock {
-  type: actionTypes.TICK_CLOCK;
-  payLoad: {
-    light: boolean;
-    ts: number;
-  }
 }

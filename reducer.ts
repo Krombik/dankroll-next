@@ -2,61 +2,31 @@ import { actionTypes, Action } from './actions/types';
 import { State } from './interfaces';
 
 export const exampleInitialState: State = {
-  count: 0,
   error: null,
-  lastUpdate: 0,
-  light: false,
   allPostsList: null,
   post: null
-};
+}
 
 const reducer = (state = exampleInitialState, action: Action): State => {
   switch (action.type) {
     case actionTypes.FAILURE:
-      return {
+      return ({
         ...state,
-        ...{ error: action.payLoad },
-      };
-
-    case actionTypes.INCREMENT:
-      return {
-        ...state,
-        ...{ count: state.count + 1 },
-      };
-
-    case actionTypes.DECREMENT:
-      return {
-        ...state,
-        ...{ count: state.count - 1 },
-      };
-
-    case actionTypes.RESET:
-      return {
-        ...state,
-        ...{ count: exampleInitialState.count },
-      };
-
+        error: action.payLoad,
+      });
     case actionTypes.LOAD_ALL_POSTS_LIST_SUCCESS:
-      return {
+      return ({
         ...state,
-        ...{ allPostsList: action.payLoad },
-      };
-
+        allPostsList: action.payLoad,
+      });
     case actionTypes.LOAD_POST_SUCCESS:
-      return {
+      return ({
         ...state,
-        ...{ post: action.payLoad },
-      };
-
-    case actionTypes.TICK_CLOCK:
-      return {
-        ...state,
-        ...{ lastUpdate: action.payLoad.ts, light: !!action.payLoad.light },
-      };
-
+        post: action.payLoad
+      });
     default:
       return state;
   }
-};
+}
 
 export default reducer;

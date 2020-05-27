@@ -14,9 +14,8 @@ const selectData = createSelector(
   (error, allPostsList) => ({ error, allPostsList }),
 );
 
-const Page: React.FunctionComponent<PageProps> = ({ title }: PageProps) => {
+const Home: React.FunctionComponent<PageProps> = ({ title }: PageProps) => {
   const { error, allPostsList } = useSelector(selectData);
-
   return (
     <div>
       <h1>{title}</h1>
@@ -34,6 +33,6 @@ const Page: React.FunctionComponent<PageProps> = ({ title }: PageProps) => {
       {error && <p style={{ color: 'red' }}>Error: {error.message}</p>}
     </div>
   );
-};
+}
 
-export default Page;
+export default Home;

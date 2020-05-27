@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import { State } from '../interfaces';
 
-
 const selectData = createSelector(
   (state: State) => state.error,
   (state: State) => state.post,
@@ -29,6 +28,6 @@ const Post: React.FunctionComponent = () => {
       {error && <p style={{ color: 'red' }}>Error: {error.message}</p>}
     </div>
   );
-};
+}
 
 export default Post;

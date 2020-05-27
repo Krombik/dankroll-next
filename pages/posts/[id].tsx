@@ -4,17 +4,11 @@ import { loadPost } from '../../actions';
 import Post from '../../components/Post';
 import { WithReduxNextPageContext } from '../../interfaces';
 
-const PostPage: NextPage = () => {
-    return <Post />;
-};
+const PostPage: NextPage = () => (<Post />);
 
-PostPage.getInitialProps = async ({
-    store,
-    query,
-}: WithReduxNextPageContext): Promise<void> => {
+PostPage.getInitialProps = async ({ store, query }: WithReduxNextPageContext): Promise<void> => {
     if (!store.getState().post)
         store.dispatch(loadPost(+query.id));
-};
-
+}
 
 export default PostPage;
