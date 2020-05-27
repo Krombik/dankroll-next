@@ -1,5 +1,4 @@
 import React from 'react';
-import Link from 'next/link';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import { State } from '../interfaces';
@@ -11,9 +10,8 @@ const selectData = createSelector(
   (error, post) => ({ error, post }),
 );
 
-const Page: React.FunctionComponent = () => {
+const Post: React.FunctionComponent = () => {
   const { error, post } = useSelector(selectData);
-  console.log(post)
   return (
     <div>
       {post &&
@@ -33,4 +31,4 @@ const Page: React.FunctionComponent = () => {
   );
 };
 
-export default Page;
+export default Post;

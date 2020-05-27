@@ -25,7 +25,7 @@ const Page: React.FunctionComponent<PageProps> = ({ title }: PageProps) => {
           <div key={index}>
             <h3>{item.title}</h3>
             <div>{item.body}</div>
-            <Link as={`/posts/${item.id}`} href="/posts/[id]">
+            <Link as={`/posts/${item.id}`} href={`/posts/[id]?id=${item.id}`}>
               <a className="hover:underline">See more...</a>
             </Link>
           </div>

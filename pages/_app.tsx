@@ -5,6 +5,7 @@ import withRedux from 'next-redux-wrapper';
 import withReduxSaga from 'next-redux-saga';
 import createStore from '../store';
 import { WithSagaTaskStore } from '../interfaces';
+import Layout from '../components/Layout'
 
 interface MyAppProps {
   store: WithSagaTaskStore;
@@ -25,7 +26,9 @@ class MyApp extends App<MyAppProps> {
     const { Component, pageProps, store } = this.props;
     return (
       <Provider store={store}>
-        <Component {...pageProps} />
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
       </Provider>
     );
   }
