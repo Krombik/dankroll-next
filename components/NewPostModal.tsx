@@ -1,33 +1,22 @@
+import { Dialog, DialogContent, DialogTitle } from '@material-ui/core';
+import NewPost from './NewPost';
+import styled from 'styled-components';
 
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import NewPost from './NewPost'
+const Modal = styled(Dialog)`
+  .MuiDialog-paper {
+    padding: 2%;
+  }
+`;
 
 const NewPostModal = ({ open, onClose }) => {
-    return (
-        <Dialog
-            open={open}
-            keepMounted
-            onClose={onClose}
-            aria-labelledby="alert-dialog-slide-title"
-            aria-describedby="alert-dialog-slide-description"
-        >
-            <DialogTitle id="alert-dialog-slide-title">
-                {"Use Google's location service?"}
-            </DialogTitle>
-            <DialogContent>
-                <NewPost onSubmitExtra={onClose} />
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={onClose} color="primary">
-                    Close
-                </Button>
-            </DialogActions>
-        </Dialog>
-    );
-}
+  return (
+    <Modal open={open} keepMounted onClose={onClose}>
+      <DialogTitle>Add new post</DialogTitle>
+      <DialogContent>
+        <NewPost onSubmitExtra={onClose} />
+      </DialogContent>
+    </Modal>
+  );
+};
 
 export default NewPostModal;
