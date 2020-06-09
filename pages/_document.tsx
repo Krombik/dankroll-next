@@ -1,8 +1,8 @@
-import Document, { DocumentContext } from 'next/document';
-import { ServerStyleSheet as StyledComponentSheets } from 'styled-components';
-import { ServerStyleSheets as MaterialUiServerStyleSheets } from '@material-ui/core/styles';
+import Document, { DocumentContext } from "next/document";
+import { ServerStyleSheet as StyledComponentSheets } from "styled-components";
+import { ServerStyleSheets as MaterialUiServerStyleSheets } from "@material-ui/core/styles";
 
-export default class MyDocument extends Document {
+export default class extends Document {
   static async getInitialProps(ctx: DocumentContext) {
     const styledComponentSheet = new StyledComponentSheets();
     const materialUiSheets = new MaterialUiServerStyleSheets();
@@ -10,8 +10,10 @@ export default class MyDocument extends Document {
     try {
       ctx.renderPage = () =>
         originalRenderPage({
-          enhanceApp: App => props =>
-            styledComponentSheet.collectStyles(materialUiSheets.collect(<App {...props} />)),
+          enhanceApp: (App) => (props) =>
+            styledComponentSheet.collectStyles(
+              materialUiSheets.collect(<App {...props} />)
+            ),
         });
       const initialProps = await Document.getInitialProps(ctx);
       return {
