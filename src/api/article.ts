@@ -8,7 +8,7 @@ import { getQuery } from "../utils/getQuery";
 export const getAllArticles = (page, limit = 10) =>
   axios
     .get<ArticleList>(`${SERVER_BASE_URL}/articles?${getQuery(limit, page)}`)
-    .then((res) => res.data);
+    .then((res) => res.data.articles);
 
 export const getArticlesByAuthor = (author, page = 0, limit = 5) =>
   axios.get(

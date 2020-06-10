@@ -27,7 +27,7 @@
     "babel-plugin-styled-components": "1.10.7",
     "redux-devtools-extension": "2.13.8",
     "typescript": "3.9.5",
-    "swr": "0.2.2"
+    "swr": "0.3.0-beta.3"
   },
   "license": "ISC"
 }

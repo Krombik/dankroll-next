@@ -13,9 +13,11 @@ import ArticlePreview from "../../components/article/ArticlePreviewComponent";
 
 type Props = {
   articles: ArticleType[];
+  setPage: any;
+  page: number;
 };
 
-const ArticleList: FC<Props> = ({ articles }) => {
+const ArticleList: FC<Props> = ({ articles, setPage, page }) => {
   return (
     <Grid container spacing={3} justify="center">
       {articles.map(({ title, body }, index) => (
@@ -25,6 +27,13 @@ const ArticleList: FC<Props> = ({ articles }) => {
           body={body.length < 150 ? body : body.slice(0, 150).concat("...")}
         />
       ))}
+      <button
+        onClick={() => {
+          setPage(page + 1);
+        }}
+      >
+        Load more
+      </button>
     </Grid>
   );
 };
