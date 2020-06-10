@@ -30,14 +30,15 @@ const ArticleList: FC<Props> = ({ initialData }) => {
   );
   return (
     <Grid container spacing={3}>
-      <Maybe error={error} isLoading={allArticles.length === 0}>
-        {allArticles?.map(({ articles }, i) =>
-          articles.map((article, j) => {
-            return <ArticlePreview key={(i + 1) * (j + 1)} article={article} />;
-          })
-        )}
-        {allArticles.length !== page && <div>Loading</div>}
-      </Maybe>
+      {allArticles?.map(({ articles }, i) =>
+        articles.map((article, j) => {
+          return <ArticlePreview key={(i + 1) * (j + 1)} article={article} />;
+        })
+      )}
+      {(allArticles.length !== page || allArticles.length === 0) &&
+        Array.from(new Array(10)).map((_, index) => (
+          <ArticlePreview key={index} />
+        ))}
       <button
         onClick={() => {
           setPage(page + 1);
