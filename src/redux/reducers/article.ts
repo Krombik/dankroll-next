@@ -1,21 +1,19 @@
 import { articleActionTypes, ArticleActions } from "../../types/actions";
-import { AnyAction } from "redux";
-import { ArticleType } from "../../types/article";
 
 type State = {
-  articles: ArticleType[];
+  articlesPerPageCount: number;
 };
 
 const initialState: State = {
-  articles: [],
+  articlesPerPageCount: 10,
 };
 
 export default function reducer(state = initialState, action: ArticleActions) {
   switch (action.type) {
-    case articleActionTypes.GET_ARTICLE_LIST:
+    case articleActionTypes.SET_ARTICLES_PER_PAGE_COUNT:
       return {
         ...state,
-        articles: action.payload,
+        articlesPerPageCount: action.payload,
       };
     default:
       return state;

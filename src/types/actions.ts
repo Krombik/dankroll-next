@@ -1,14 +1,12 @@
-import { ArticleType } from "./article";
-
 export enum articleActionTypes {
-  GET_ARTICLE_LIST = "GET_ARTICLE_LIST",
+  SET_ARTICLES_PER_PAGE_COUNT = "SET_ARTICLES_COUNT_PER_PAGE",
 }
 
-type GetArticleList = {
-  type: articleActionTypes.GET_ARTICLE_LIST;
-  payload: ArticleType[];
+type SetArticlesPerPageCount = {
+  type: articleActionTypes.SET_ARTICLES_PER_PAGE_COUNT;
+  payload: number;
 };
 
-export type ArticleActions = GetArticleList;
+export type ArticleActions = SetArticlesPerPageCount;
 
 export type Actions = ArticleActions;

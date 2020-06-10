@@ -1,14 +1,12 @@
-import { ThunkResult, ArticleList } from "../../types";
-import axios from "axios";
+import { ThunkResult } from "../../types";
 import { articleActionTypes } from "../../types/actions";
 
-export const getArticleList = (): ThunkResult<Promise<void>> => async (
-  dispatch
-) => {
-  const {
-    data: { articles },
-  } = await axios.get<ArticleList>(
-    `${`https://conduit.productionready.io/api`}/articles?offset=${10}`
-  );
-  dispatch({ type: articleActionTypes.GET_ARTICLE_LIST, payload: articles });
+export const setArticlesCountPerPage = (
+  count: number
+): ThunkResult<void> => async (dispatch) => {
+  if (count <= 100 && count > 0)
+    dispatch({
+      type: articleActionTypes.SET_ARTICLES_PER_PAGE_COUNT,
+      payload: count,
+    });
 };

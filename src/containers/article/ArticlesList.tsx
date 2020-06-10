@@ -1,10 +1,13 @@
 import Link from "next/link";
-import { State, ThunkDispatcher, ArticleType } from "../../types";
+import { AllArticles } from "../../types/article";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, FC } from "react";
 import { createSelector } from "reselect";
 import { Grid, Paper, Button } from "@material-ui/core";
-import ArticlePreview from "../../components/article/ArticlePreviewComponent";
+import ArticlePreview from "./ArticlePreview";
+import Maybe from "../common/Maybe";
+import { getAllArticles } from "../../api/article";
+import { useSWRInfinite } from "swr";
 
 // const selectData = createSelector(
 //   (state: State) => state.article.articles,
@@ -12,21 +15,29 @@ import ArticlePreview from "../../components/article/ArticlePreviewComponent";
 // );
 
 type Props = {
-  articles: ArticleType[];
-  setPage: any;
-  page: number;
+  initialData: AllArticles[];
 };
 
-const ArticleList: FC<Props> = ({ articles, setPage, page }) => {
+const ArticleList: FC<Props> = ({ initialData }) => {
+  const { data: allArticles, error, setPage, page } = useSWRInfinite(
+    (index, previousPageData) => {
+      return previousPageData && previousPageData.articles.length !== 0
+        ? [index + 1]
+        : [1];
+    },
+    getAllArticles,
+    { initialData }
+  );
   return (
-    <Grid container spacing={3} justify="center">
-      {articles.map(({ title, body }, index) => (
-        <ArticlePreview
-          key={index}
-          title={title}
-          body={body.length < 150 ? body : body.slice(0, 150).concat("...")}
-        />
-      ))}
+    <Grid container spacing={3}>
+      <Maybe error={error} isLoading={allArticles.length === 0}>
+        {allArticles?.map(({ articles }, i) =>
+          articles.map((article, j) => {
+            return <ArticlePreview key={(i + 1) * (j + 1)} article={article} />;
+          })
+        )}
+        {allArticles.length !== page && <div>Loading</div>}
+      </Maybe>
       <button
         onClick={() => {
           setPage(page + 1);

@@ -1,14 +1,14 @@
 import axios from "axios";
 
-import { ArticleList } from "../types/article";
+import { AllArticles } from "../types/article";
 
 import { SERVER_BASE_URL } from "../utils/constant";
 import { getQuery } from "../utils/getQuery";
 
 export const getAllArticles = (page, limit = 10) =>
   axios
-    .get<ArticleList>(`${SERVER_BASE_URL}/articles?${getQuery(limit, page)}`)
-    .then((res) => res.data.articles);
+    .get<AllArticles>(`${SERVER_BASE_URL}/articles?${getQuery(limit, page)}`)
+    .then((res) => res.data);
 
 export const getArticlesByAuthor = (author, page = 0, limit = 5) =>
   axios.get(

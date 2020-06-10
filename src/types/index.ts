@@ -1,8 +1,6 @@
-import { AnyAction } from "redux";
 import { ThunkAction, ThunkDispatch } from "redux-thunk";
 import { combinedReducer } from "../redux/reducers";
 import { wrapper } from "../redux/store";
-export * from "./article";
 import { Actions } from "./actions";
 import { InferGetStaticPropsType, GetStaticProps } from "next";
 

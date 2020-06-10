@@ -1,4 +1,4 @@
-export interface ArticleList {
+export interface AllArticles {
   articles: ArticleType[];
   articlesCount: number;
 }

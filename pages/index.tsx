@@ -1,4 +1,3 @@
-import { getArticleList } from "../src/redux/actions/article";
 import { wrapper } from "../src/redux/store";
 import { ThunkContext, StaticProps } from "../src/types";
 import ArticleList from "../src/containers/article/ArticlesList";
@@ -11,30 +10,7 @@ import { useEffect, useState } from "react";
 const Index: NextPage<StaticProps<typeof getStaticProps>> = ({
   initialArticles,
 }) => {
-  // const { data: allArticles, error } = useSWR([1], getAllArticles, {
-  //   initialData: initialArticles,
-  // });
-  console.log("dratute");
-  const { data: allArticles, error, setPage, page } = useSWRInfinite(
-    (index, previousPageData) => {
-      // reached the end
-      if (previousPageData?.length === 0) return null;
-
-      // API key
-      return [index];
-    },
-    getAllArticles, // same as useSWR
-    { initialData: [initialArticles] } // same as useSWR
-  );
-  return (
-    <Maybe error={error} isLoading={!allArticles}>
-      <ArticleList
-        setPage={setPage}
-        page={page}
-        articles={allArticles.flat()}
-      />
-    </Maybe>
-  );
+  return <ArticleList initialData={[initialArticles]} />;
 };
 
 export const getStaticProps = wrapper.getStaticProps(
