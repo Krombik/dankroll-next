@@ -21,7 +21,7 @@ const ArticlePreview: FC<Props> = ({ article }) => {
   const content = article
     ? {
         avatar: (
-          <Avatar aria-label="recipe" src={article.author.image}>
+          <Avatar src={article.author.image}>
             {article.author.username[0]}
           </Avatar>
         ),
@@ -36,17 +36,19 @@ const ArticlePreview: FC<Props> = ({ article }) => {
       }
     : {
         avatar: (
-          <Skeleton animation="wave" variant="circle" width={40} height={40} />
+          <Skeleton animation={false} variant="circle">
+            <Avatar />
+          </Skeleton>
         ),
         like: "?",
-        author: <Skeleton animation="wave" width="30%" />,
-        date: <Skeleton animation="wave" width="40%" />,
-        title: <Skeleton animation="wave" width="70%" />,
+        author: <Skeleton animation={false} width="30%" />,
+        date: <Skeleton animation={false} width="40%" />,
+        title: <Skeleton animation={false} width="70%" />,
         about: (
           <>
-            <Skeleton animation="wave" height={16} width="100%" />
-            <Skeleton animation="wave" height={16} width="100%" />
-            <Skeleton animation="wave" height={16} width="80%" />
+            <Skeleton animation={false} width="100%" />
+            <Skeleton animation={false} width="95%" />
+            <Skeleton animation={false} width="80%" />
           </>
         ),
       };

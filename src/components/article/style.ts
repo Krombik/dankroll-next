@@ -13,9 +13,9 @@ export const TagList = styled.ul`
   padding: 0 8px;
   margin: 8px 0 0;
   & > li {
-    margin-bottom: 8px;
+    margin-bottom: 4px;
     &:not(:last-child) {
-      margin-right: 8px;
+      margin-right: 4px;
     }
   }
 `;

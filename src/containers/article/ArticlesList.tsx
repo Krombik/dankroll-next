@@ -28,24 +28,37 @@ const ArticleList: FC<Props> = ({ initialData }) => {
     getAllArticles,
     { initialData }
   );
+  const isLoadMoreUnavailable =
+    allArticles.reduce((prev, curr) => prev + curr.articles.length, 0) >
+    allArticles[0].articlesCount;
+  const isLoading = allArticles.length !== page || allArticles.length === 0;
   return (
     <Grid container spacing={3}>
       {allArticles?.map(({ articles }, i) =>
-        articles.map((article, j) => {
-          return <ArticlePreview key={(i + 1) * (j + 1)} article={article} />;
-        })
+        articles.map((article, j) => (
+          <ArticlePreview key={(i + 1) * (j + 1)} article={article} />
+        ))
       )}
-      {(allArticles.length !== page || allArticles.length === 0) &&
+      {isLoading &&
         Array.from(new Array(10)).map((_, index) => (
           <ArticlePreview key={index} />
         ))}
-      <button
-        onClick={() => {
-          setPage(page + 1);
-        }}
-      >
-        Load more
-      </button>
+      <Grid container item justify="center">
+        <Button
+          onClick={() => {
+            setPage(page + 1);
+          }}
+          variant="contained"
+          color="primary"
+          disabled={isLoading || isLoadMoreUnavailable}
+        >
+          {isLoading
+            ? "Loading"
+            : isLoadMoreUnavailable
+            ? "No more Articles"
+            : "Load more"}
+        </Button>
+      </Grid>
     </Grid>
   );
 };
