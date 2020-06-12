@@ -1,11 +1,12 @@
 import { wrapper } from "../src/redux/store";
 import { ThunkContext, StaticProps } from "../src/types";
 import ArticleList from "../src/containers/article/ArticlesList";
+import RemovableTab from "../src/containers/article/RemovableTab";
 import { getAllArticles, getArticlesUrl } from "../src/api/article";
 import useSWR, { useSWRInfinite } from "swr";
 import Maybe from "../src/containers/common/Maybe";
 import { NextPage } from "next";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo, forwardRef, ElementType } from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Tab from "@material-ui/core/Tab";
 import TabContext from "@material-ui/lab/TabContext";
@@ -17,11 +18,20 @@ import { createSelector } from "reselect";
 import { State, ThunkDispatcher } from "../src/types";
 import { useDispatch } from "react-redux";
 import { addTag, setTab } from "../src/redux/actions/article";
+import CloseIcon from "@material-ui/icons/Close";
+import { TypographyProps } from "@material-ui/core";
 
 const selectData = createSelector(
   (state: State) => state.article.tagList,
   (state: State) => state.article.tab,
   (tagList, tab) => ({ tagList, tab })
+);
+
+const B = (props) => (
+  <div {...props}>
+    {props.children}
+    <CloseIcon />
+  </div>
 );
 
 const Index: NextPage<StaticProps<typeof getStaticProps>> = ({
@@ -35,9 +45,10 @@ const Index: NextPage<StaticProps<typeof getStaticProps>> = ({
   const tabs = [
     <Tab label="Last articles" value="default" key={0} />,
     ...tagList.map((tag, index) => (
-      <Tab key={index + 1} label={"#" + tag} value={tag} />
+      <RemovableTab key={index + 1} value={tag} />
     )),
   ];
+  console.log(tab);
   return (
     <TabContext value={tab}>
       <AppBar position="static" color="default">
@@ -48,7 +59,7 @@ const Index: NextPage<StaticProps<typeof getStaticProps>> = ({
       </TabPanel>
       {tagList.map((tag, index) => (
         <TabPanel value={tag} key={index}>
-          <ArticleList value={tag} type="tag" />
+          <ArticleList value={tag.slice(1)} type="tag" />
         </TabPanel>
       ))}
     </TabContext>

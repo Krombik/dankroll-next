@@ -103,7 +103,7 @@ const ArticlePreview: FC<Props> = ({ article }) => {
                 component="li"
                 key={index}
                 onClick={() => {
-                  handleAddTag(tag);
+                  handleAddTag("t" + tag);
                 }}
               />
             ))}

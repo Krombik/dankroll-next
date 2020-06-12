@@ -11,14 +11,29 @@ export const setArticlesCountPerPage = (count: number): ThunkResult<void> => (
     });
 };
 
-export const addTag = (tag: string): ThunkResult<void> => (dispatch) => {
-  dispatch({
-    type: articleActionTypes.ADD_TAG,
-    payload: tag,
-  });
+export const addTag = (tag: string): ThunkResult<void> => (
+  dispatch,
+  useState
+) => {
+  if (useState().article.tagList.indexOf(tag) === -1)
+    dispatch({
+      type: articleActionTypes.ADD_TAG,
+      payload: tag,
+    });
 };
 
-export const removeTag = (tag: string): ThunkResult<void> => (dispatch) => {
+export const removeTag = (tag: string): ThunkResult<void> => (
+  dispatch,
+  useState
+) => {
+  const { tagList } = useState().article;
+  const tagIndex = tagList.indexOf(tag);
+  const tab = tagIndex === 0 ? "default" : tagList[tagIndex - 1];
+  console.log(tab);
+  dispatch({
+    type: articleActionTypes.SET_TAB,
+    payload: tab,
+  });
   dispatch({
     type: articleActionTypes.REMOVE_TAG,
     payload: tag,
