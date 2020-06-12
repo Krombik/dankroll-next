@@ -1,23 +1,24 @@
 import axios from "axios";
 
 const updateOptions = () => {
-  if (typeof window === "undefined") return {};
-
-  if (!window.localStorage.user) return {};
-
-  if (Object.keys(window.localStorage.user).length === 0) return {};
-
-  const user = JSON.parse(window.localStorage.user);
-
-  if (!!user.token) {
+  const token = window.localStorage.user
+    ? JSON.parse(window.localStorage.user)?.token
+    : undefined;
+  if (token)
     return {
       headers: {
-        Authorization: `Token ${user.token}`,
+        Authorization: `Token ${token}`,
       },
     };
-  }
+  return {};
 };
-export default async function (url) {
+
+export const serverFetcher = async (url: string) => {
+  const { data } = await axios.get(url);
+  return data;
+};
+
+export const fetcher = async (url: string) => {
   const { data } = await axios.get(url, updateOptions());
   return data;
-}
+};

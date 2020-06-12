@@ -1,13 +1,18 @@
 import Link from "next/link";
 import { AllArticles } from "../../types/article";
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect, FC } from "react";
+import { useEffect, FC, useState } from "react";
 import { createSelector } from "reselect";
 import { Grid, Paper, Button } from "@material-ui/core";
 import ArticlePreview from "./ArticlePreview";
 import Maybe from "../common/Maybe";
-import { getAllArticles } from "../../api/article";
+import {
+  getAllArticles,
+  getArticlesByTag,
+  getArticlesUrl,
+} from "../../api/article";
 import { useSWRInfinite } from "swr";
+import { fetcher } from "../../utils/fetcher";
 
 // const selectData = createSelector(
 //   (state: State) => state.article.articles,
@@ -15,30 +20,33 @@ import { useSWRInfinite } from "swr";
 // );
 
 type Props = {
-  initialData: AllArticles[];
+  initialData?: AllArticles[];
+  type?: string;
+  value?: string;
 };
 
-const ArticleList: FC<Props> = ({ initialData }) => {
+const ArticleList: FC<Props> = ({ initialData, type, value }) => {
   const { data: allArticles, error, setPage, page } = useSWRInfinite(
     (index, previousPageData) => {
       return previousPageData && previousPageData.articles.length !== 0
-        ? [index + 1]
-        : [1];
+        ? getArticlesUrl({ page: index, type, value })
+        : getArticlesUrl({ type, value });
     },
-    getAllArticles,
+    fetcher,
     { initialData }
   );
-  const isLoadMoreUnavailable =
-    allArticles.reduce((prev, curr) => prev + curr.articles.length, 0) >
-    allArticles[0].articlesCount;
-  const isLoading = allArticles.length !== page || allArticles.length === 0;
+  const isLoadMoreUnavailable = allArticles
+    ? allArticles.reduce((prev, curr) => prev + curr.articles.length, 0) >=
+      allArticles[0].articlesCount
+    : false;
+  const isLoading = allArticles?.length !== page || allArticles?.length === 0;
   return (
     <Grid container spacing={3}>
-      {allArticles?.map(({ articles }, i) =>
-        articles.map((article, j) => (
-          <ArticlePreview key={(i + 1) * (j + 1)} article={article} />
-        ))
-      )}
+      {allArticles
+        ?.flatMap(({ articles }) => articles)
+        .map((article, index) => (
+          <ArticlePreview key={index} article={article} />
+        ))}
       {isLoading &&
         Array.from(new Array(10)).map((_, index) => (
           <ArticlePreview key={index} />
@@ -53,7 +61,7 @@ const ArticleList: FC<Props> = ({ initialData }) => {
           disabled={isLoading || isLoadMoreUnavailable}
         >
           {isLoading
-            ? "Loading"
+            ? "Loading..."
             : isLoadMoreUnavailable
             ? "No more Articles"
             : "Load more"}

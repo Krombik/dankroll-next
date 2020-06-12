@@ -5,25 +5,44 @@ import { AllArticles } from "../types/article";
 import { SERVER_BASE_URL } from "../utils/constant";
 import { getQuery } from "../utils/getQuery";
 
-export const getAllArticles = (page, limit = 10) =>
+type GetArticlesUrlProps = {
+  page?: number;
+  limit?: number;
+  type?: string;
+  value?: string;
+};
+
+export const getArticlesUrl = ({
+  page = 0,
+  limit = 10,
+  type,
+  value,
+}: GetArticlesUrlProps) =>
+  `${SERVER_BASE_URL}/articles?${
+    type ? `${type}=${encodeURIComponent(value)}&` : ""
+  }${getQuery(limit, page)}`;
+
+export const getAllArticles = (page: number, limit = 10) =>
   axios
     .get<AllArticles>(`${SERVER_BASE_URL}/articles?${getQuery(limit, page)}`)
     .then((res) => res.data);
 
-export const getArticlesByAuthor = (author, page = 0, limit = 5) =>
+export const getArticlesByAuthor = (author: string, page = 0, limit = 5) =>
   axios.get(
     `${SERVER_BASE_URL}/articles?author=${encodeURIComponent(
       author
     )}&${getQuery(limit, page)}`
   );
 
-export const getArticlesByTag = (tag, page = 0, limit = 10) =>
-  axios.get(
-    `${SERVER_BASE_URL}/articles?tag=${encodeURIComponent(tag)}&${getQuery(
-      limit,
-      page
-    )}`
-  );
+export const getArticlesByTag = (tag: string, page = 0, limit = 10) =>
+  axios
+    .get<AllArticles>(
+      `${SERVER_BASE_URL}/articles?tag=${encodeURIComponent(tag)}&${getQuery(
+        limit,
+        page
+      )}`
+    )
+    .then((res) => res.data);
 
 export const deleteArticle = (id, token) =>
   axios.delete(`${SERVER_BASE_URL}/articles/${id}`, {
