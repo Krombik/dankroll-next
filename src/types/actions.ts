@@ -1,8 +1,10 @@
+import { Tab } from "./article";
 export enum articleActionTypes {
   SET_ARTICLES_PER_PAGE_COUNT = "SET_ARTICLES_COUNT_PER_PAGE",
-  ADD_TAG = "ADD_TAG",
-  REMOVE_TAG = "REMOVE_TAG",
+  ADD_TAB = "ADD_TAG",
+  REMOVE_TAB = "REMOVE_TAG",
   SET_TAB = "SET_TAB",
+  MOVE_TAB = "MVE_TAB",
 }
 
 type SetArticlesPerPageCount = {
@@ -10,25 +12,31 @@ type SetArticlesPerPageCount = {
   payload: number;
 };
 
-type AddTag = {
-  type: articleActionTypes.ADD_TAG;
-  payload: string;
+type AddTab = {
+  type: articleActionTypes.ADD_TAB;
+  payload: Tab;
 };
 
-type RemoveTag = {
-  type: articleActionTypes.REMOVE_TAG;
+type RemoveTab = {
+  type: articleActionTypes.REMOVE_TAB;
   payload: string;
 };
 
 type SetTab = {
   type: articleActionTypes.SET_TAB;
-  payload: string;
+  payload: string | number;
+};
+
+type MoveTab = {
+  type: articleActionTypes.MOVE_TAB;
+  payload: { from: number; to: number };
 };
 
 export type ArticleActions =
   | SetArticlesPerPageCount
-  | AddTag
-  | RemoveTag
-  | SetTab;
+  | AddTab
+  | RemoveTab
+  | SetTab
+  | MoveTab;
 
 export type Actions = ArticleActions;

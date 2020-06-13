@@ -26,3 +26,10 @@ export type Author = {
   image: string;
   following: boolean;
 };
+
+export type Tab = {
+  value: string;
+  type: string;
+  removable: number;
+  key?: string;
+};

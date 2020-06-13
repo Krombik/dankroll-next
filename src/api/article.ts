@@ -19,7 +19,7 @@ export const getArticlesUrl = ({
   value,
 }: GetArticlesUrlProps) =>
   `${SERVER_BASE_URL}/articles?${
-    type ? `${type}=${encodeURIComponent(value)}&` : ""
+    type !== "default" ? `${type}=${encodeURIComponent(value)}&` : ""
   }${getQuery(limit, page)}`;
 
 export const getAllArticles = (page: number, limit = 10) =>

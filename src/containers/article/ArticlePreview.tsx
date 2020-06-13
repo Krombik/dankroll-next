@@ -15,7 +15,7 @@ import Chip from "@material-ui/core/Chip";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { useDispatch } from "react-redux";
 import { ThunkDispatcher } from "../../types";
-import { addTag, setTab } from "../../redux/actions/article";
+import { addTab, setTab } from "../../redux/actions/article";
 
 type Props = {
   article?: ArticleType;
@@ -59,8 +59,9 @@ const ArticlePreview: FC<Props> = ({ article }) => {
   const dispatch = useDispatch<ThunkDispatcher>();
   const handleAddTag = (tag: string) => {
     window.scrollTo({ left: 0, top: 0, behavior: "smooth" });
-    dispatch(addTag(tag));
-    dispatch(setTab(tag));
+    dispatch(
+      setTab(dispatch(addTab({ value: tag, type: "tag", removable: 1 })))
+    );
   };
   return (
     <Grid item xs={12} lg={6}>
@@ -103,7 +104,7 @@ const ArticlePreview: FC<Props> = ({ article }) => {
                 component="li"
                 key={index}
                 onClick={() => {
-                  handleAddTag("t" + tag);
+                  handleAddTag(tag);
                 }}
               />
             ))}

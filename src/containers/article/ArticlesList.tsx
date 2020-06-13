@@ -1,23 +1,12 @@
 import Link from "next/link";
 import { AllArticles } from "../../types/article";
-import { useSelector, useDispatch } from "react-redux";
-import { useEffect, FC, useState } from "react";
-import { createSelector } from "reselect";
-import { Grid, Paper, Button } from "@material-ui/core";
+import { FC } from "react";
+import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
 import ArticlePreview from "./ArticlePreview";
-import Maybe from "../common/Maybe";
-import {
-  getAllArticles,
-  getArticlesByTag,
-  getArticlesUrl,
-} from "../../api/article";
+import { getArticlesUrl } from "../../api/article";
 import { useSWRInfinite } from "swr";
 import { fetcher } from "../../utils/fetcher";
-
-// const selectData = createSelector(
-//   (state: State) => state.article.articles,
-//   (articles) => ({ articles })
-// );
 
 type Props = {
   initialData?: AllArticles[];

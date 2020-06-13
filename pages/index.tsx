@@ -1,14 +1,10 @@
 import { wrapper } from "../src/redux/store";
 import { ThunkContext, StaticProps } from "../src/types";
 import ArticleList from "../src/containers/article/ArticlesList";
-import RemovableTab from "../src/containers/article/RemovableTab";
-import { getAllArticles, getArticlesUrl } from "../src/api/article";
-import useSWR, { useSWRInfinite } from "swr";
-import Maybe from "../src/containers/common/Maybe";
+import SpecialTab from "../src/containers/article/SpecialTab";
+import { getArticlesUrl } from "../src/api/article";
 import { NextPage } from "next";
-import { useEffect, useState, useMemo, forwardRef, ElementType } from "react";
 import AppBar from "@material-ui/core/AppBar";
-import Tab from "@material-ui/core/Tab";
 import TabContext from "@material-ui/lab/TabContext";
 import TabList from "@material-ui/lab/TabList";
 import TabPanel from "@material-ui/lab/TabPanel";
@@ -17,52 +13,66 @@ import { useSelector } from "react-redux";
 import { createSelector } from "reselect";
 import { State, ThunkDispatcher } from "../src/types";
 import { useDispatch } from "react-redux";
-import { addTag, setTab } from "../src/redux/actions/article";
-import CloseIcon from "@material-ui/icons/Close";
-import { TypographyProps } from "@material-ui/core";
+import { setTab, moveTab } from "../src/redux/actions/article";
+import { SortableContainer } from "react-sortable-hoc";
+
+const SortableList = SortableContainer(({ children }) => {
+  return <>{children}</>;
+});
 
 const selectData = createSelector(
-  (state: State) => state.article.tagList,
-  (state: State) => state.article.tab,
-  (tagList, tab) => ({ tagList, tab })
-);
-
-const B = (props) => (
-  <div {...props}>
-    {props.children}
-    <CloseIcon />
-  </div>
+  (state: State) => state.article.tabList,
+  (state: State) => state.article.currTab,
+  (tabList, currTab) => ({ tabList, currTab })
 );
 
 const Index: NextPage<StaticProps<typeof getStaticProps>> = ({
   initialArticles,
 }) => {
-  const { tagList, tab } = useSelector(selectData);
+  const { tabList, currTab } = useSelector(selectData);
   const dispatch = useDispatch<ThunkDispatcher>();
   const handleChange = (_, newValue: string) => {
     dispatch(setTab(newValue));
   };
-  const tabs = [
-    <Tab label="Last articles" value="default" key={0} />,
-    ...tagList.map((tag, index) => (
-      <RemovableTab key={index + 1} value={tag} />
-    )),
-  ];
-  console.log(tab);
+  const onSortEnd = ({ oldIndex, newIndex }) => {
+    dispatch(moveTab(oldIndex, newIndex));
+  };
   return (
-    <TabContext value={tab}>
-      <AppBar position="static" color="default">
-        <TabList onChange={handleChange}>{tabs}</TabList>
-      </AppBar>
-      <TabPanel value="default">
-        <ArticleList initialData={[initialArticles]} />
-      </TabPanel>
-      {tagList.map((tag, index) => (
-        <TabPanel value={tag} key={index}>
-          <ArticleList value={tag.slice(1)} type="tag" />
-        </TabPanel>
-      ))}
-    </TabContext>
+    <div>
+      <TabContext value={currTab}>
+        <AppBar position="static" color="default">
+          <SortableList
+            axis={"x"}
+            lockAxis={"x"}
+            distance={10}
+            onSortEnd={onSortEnd}
+          >
+            <TabList onChange={handleChange}>
+              {tabList.map((tab, index) => (
+                <SpecialTab
+                  value={tab.key}
+                  key={index}
+                  removable={tab.removable}
+                  tab={(tab.type === "tag" ? "#" : "") + tab.value}
+                  tabIndex={index}
+                />
+              ))}
+            </TabList>
+          </SortableList>
+        </AppBar>
+        {tabList.map((tab, index) => (
+          <TabPanel value={tab.key} key={index}>
+            <ArticleList
+              initialData={
+                tab.key === "default" ? [initialArticles] : undefined
+              }
+              value={tab.value}
+              type={tab.type}
+            />
+          </TabPanel>
+        ))}
+      </TabContext>
+    </div>
   );
 };
 

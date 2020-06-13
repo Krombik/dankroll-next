@@ -1,7 +1,9 @@
 import { ThunkResult } from "../../types";
 import { articleActionTypes } from "../../types/actions";
+import { Tab } from "../../types/article";
+import { moveFromTo } from "../../utils/moveFromTo";
 
-export const setArticlesCountPerPage = (count: number): ThunkResult<void> => (
+export const setArticlesCountPerPage = (count: number): ThunkResult => (
   dispatch
 ) => {
   if (count <= 100 && count > 0)
@@ -11,38 +13,61 @@ export const setArticlesCountPerPage = (count: number): ThunkResult<void> => (
     });
 };
 
-export const addTag = (tag: string): ThunkResult<void> => (
+export const addTab = (newTab: Tab): ThunkResult<string> => (
   dispatch,
   useState
 ) => {
-  if (useState().article.tagList.indexOf(tag) === -1)
+  const { tabList } = useState().article;
+  const trueNewTab = {
+    ...newTab,
+    key: newTab.type + "-" + newTab.value,
+  };
+  if (tabList.findIndex(({ key }) => key === trueNewTab.key) === -1) {
     dispatch({
-      type: articleActionTypes.ADD_TAG,
-      payload: tag,
+      type: articleActionTypes.ADD_TAB,
+      payload: trueNewTab,
+    });
+  }
+  return trueNewTab.key;
+};
+
+export const removeTab = (tab: string): ThunkResult => (dispatch, useState) => {
+  const { tabList, currTabIndex } = useState().article;
+  if (tabList.findIndex(({ key }) => key === tab) <= currTabIndex)
+    dispatch({
+      type: articleActionTypes.SET_TAB,
+      payload: currTabIndex - 1,
+    });
+  dispatch({
+    type: articleActionTypes.REMOVE_TAB,
+    payload: tab,
+  });
+};
+
+export const setTab = (tab: string): ThunkResult => (dispatch, useState) => {
+  if (useState().article.currTab !== tab)
+    dispatch({
+      type: articleActionTypes.SET_TAB,
+      payload: tab,
     });
 };
 
-export const removeTag = (tag: string): ThunkResult<void> => (
+export const moveTab = (from: number, to: number): ThunkResult => (
   dispatch,
   useState
 ) => {
-  const { tagList } = useState().article;
-  const tagIndex = tagList.indexOf(tag);
-  const tab = tagIndex === 0 ? "default" : tagList[tagIndex - 1];
-  console.log(tab);
+  const { currTab } = useState().article;
+  dispatch({
+    type: articleActionTypes.MOVE_TAB,
+    payload: { from, to },
+  });
+  // if (
+  //   (currTabIndex < from && currTabIndex < to) ||
+  //   (currTabIndex > from && currTabIndex > to)
+  // )
+  //   return;
   dispatch({
     type: articleActionTypes.SET_TAB,
-    payload: tab,
-  });
-  dispatch({
-    type: articleActionTypes.REMOVE_TAG,
-    payload: tag,
-  });
-};
-
-export const setTab = (tab: string): ThunkResult<void> => (dispatch) => {
-  dispatch({
-    type: articleActionTypes.SET_TAB,
-    payload: tab,
+    payload: currTab,
   });
 };
