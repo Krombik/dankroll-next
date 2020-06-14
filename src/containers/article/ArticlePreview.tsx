@@ -59,9 +59,7 @@ const ArticlePreview: FC<Props> = ({ article }) => {
   const dispatch = useDispatch<ThunkDispatcher>();
   const handleAddTag = (tag: string) => {
     window.scrollTo({ left: 0, top: 0, behavior: "smooth" });
-    dispatch(
-      setTab(dispatch(addTab({ value: tag, type: "tag", removable: 1 })))
-    );
+    dispatch(setTab(dispatch(addTab({ value: tag, type: "tag" }))));
   };
   return (
     <Grid item xs={12} lg={6}>

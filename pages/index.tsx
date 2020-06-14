@@ -15,6 +15,7 @@ import { State, ThunkDispatcher } from "../src/types";
 import { useDispatch } from "react-redux";
 import { setTab, moveTab } from "../src/redux/actions/article";
 import { SortableContainer } from "react-sortable-hoc";
+import { memo } from "react";
 
 const SortableList = SortableContainer(({ children }) => {
   return <>{children}</>;
@@ -22,24 +23,25 @@ const SortableList = SortableContainer(({ children }) => {
 
 const selectData = createSelector(
   (state: State) => state.article.tabList,
-  (state: State) => state.article.currTab,
-  (tabList, currTab) => ({ tabList, currTab })
+  (state: State) => state.article.currTabIndex,
+  (state: State) => state.article.tabOrder,
+  (tabList, currTabIndex, tabOrder) => ({ tabList, currTabIndex, tabOrder })
 );
 
 const Index: NextPage<StaticProps<typeof getStaticProps>> = ({
   initialArticles,
 }) => {
-  const { tabList, currTab } = useSelector(selectData);
+  const { tabList, currTabIndex, tabOrder } = useSelector(selectData);
   const dispatch = useDispatch<ThunkDispatcher>();
   const handleChange = (_, newValue: string) => {
-    dispatch(setTab(newValue));
+    dispatch(setTab(tabList.findIndex((tab) => tab.key === newValue)));
   };
   const onSortEnd = ({ oldIndex, newIndex }) => {
     dispatch(moveTab(oldIndex, newIndex));
   };
   return (
     <div>
-      <TabContext value={currTab}>
+      <TabContext value={tabList[currTabIndex].key}>
         <AppBar position="static" color="default">
           <SortableList
             axis={"x"}
@@ -48,12 +50,11 @@ const Index: NextPage<StaticProps<typeof getStaticProps>> = ({
             onSortEnd={onSortEnd}
           >
             <TabList onChange={handleChange}>
-              {tabList.map((tab, index) => (
+              {tabOrder.map((tabIndex, index) => (
                 <SpecialTab
-                  value={tab.key}
+                  value={tabList[tabIndex].key}
+                  tab={tabList[tabIndex]}
                   key={index}
-                  removable={tab.removable}
-                  tab={(tab.type === "tag" ? "#" : "") + tab.value}
                   tabIndex={index}
                 />
               ))}
@@ -64,7 +65,7 @@ const Index: NextPage<StaticProps<typeof getStaticProps>> = ({
           <TabPanel value={tab.key} key={index}>
             <ArticleList
               initialData={
-                tab.key === "default" ? [initialArticles] : undefined
+                tab.type === "default" ? [initialArticles] : undefined
               }
               value={tab.value}
               type={tab.type}
@@ -75,10 +76,8 @@ const Index: NextPage<StaticProps<typeof getStaticProps>> = ({
     </div>
   );
 };
-
 export const getStaticProps = wrapper.getStaticProps(
   async ({ store: { dispatch } }: ThunkContext) => {
-    // await dispatch(getArticleList());
     const initialArticles = await serverFetcher(getArticlesUrl({}));
     return { props: { initialArticles } };
   }

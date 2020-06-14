@@ -5,24 +5,25 @@ import { useDispatch } from "react-redux";
 import { removeTab } from "../../redux/actions/article";
 import CloseIcon from "@material-ui/icons/Close";
 import { SortableElement } from "react-sortable-hoc";
+import { Tab as TabType } from "../../types/article";
 
 type Props = {
-  value: string;
+  tab: TabType;
   tabIndex: number;
-  tab: string;
-  removable: number;
+  value: string;
 };
 
 const SortableItem = SortableElement(({ children }) => <>{children}</>);
 
 const SpecialTab: FC<Props> = memo((props) => {
-  const { tab, removable, value, tabIndex } = props;
+  const { tab, tabIndex, ...trueProps } = props;
+  const tabLabel = tab.type === "tag" ? "#" + tab.value : "Last articles";
   const dispatch = useDispatch<ThunkDispatcher>();
   const handleRemove = (e: SyntheticEvent) => {
     e.stopPropagation();
-    dispatch(removeTab(value));
+    dispatch(removeTab(tabIndex));
   };
-  if (removable) {
+  if (tab.type !== "default") {
     const withRemove = forwardRef<any>((props, ref) => (
       <SortableItem index={tabIndex}>
         <div {...props} ref={ref}>
@@ -31,9 +32,9 @@ const SpecialTab: FC<Props> = memo((props) => {
         </div>
       </SortableItem>
     ));
-    return <Tab label={tab} {...props} component={withRemove} />;
+    return <Tab label={tabLabel} {...trueProps} component={withRemove} />;
   }
-  return <Tab label={tab} {...props} />;
+  return <Tab label={tabLabel} {...trueProps} />;
 });
 
 export default SpecialTab;

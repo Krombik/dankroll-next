@@ -29,7 +29,6 @@ export type Author = {
 
 export type Tab = {
   value: string;
-  type: string;
-  removable: number;
+  type: "tag" | "author" | "feed" | "default";
   key?: string;
 };

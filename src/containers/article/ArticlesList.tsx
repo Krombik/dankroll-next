@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { AllArticles } from "../../types/article";
-import { FC } from "react";
+import { FC, memo } from "react";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import ArticlePreview from "./ArticlePreview";
