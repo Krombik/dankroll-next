@@ -5,17 +5,15 @@ import { moveFromTo } from "../../utils/moveFromTo";
 type State = {
   articlesPerPageCount: number;
   tabList: Tab[];
-  tabOrder: number[];
+  tabOrder: string[];
   currTab: string;
-  currTabIndex: number;
 };
 
 const initialState: State = {
   articlesPerPageCount: 10,
-  tabList: [{ value: "", type: "default", key: "default" }],
-  tabOrder: [0],
+  tabList: [],
+  tabOrder: [],
   currTab: "default",
-  currTabIndex: 0,
 };
 
 export default function reducer(
@@ -31,25 +29,19 @@ export default function reducer(
     case articleActionTypes.ADD_TAB:
       return {
         ...state,
-        tabOrder: [...state.tabOrder, state.tabList.length],
+        tabOrder: [...state.tabOrder, action.payload.key],
         tabList: [...state.tabList, action.payload],
       };
     case articleActionTypes.REMOVE_TAB:
       return {
         ...state,
-        tabList: state.tabList.filter(
-          (_, index) => index !== state.tabOrder[action.payload]
-        ),
-        tabOrder: state.tabOrder
-          .filter((_, index) => index !== action.payload)
-          .map((item) =>
-            item >= state.tabOrder[action.payload] ? item - 1 : item
-          ),
+        tabList: state.tabList.filter((item) => item.key !== action.payload),
+        tabOrder: state.tabOrder.filter((item) => item !== action.payload),
       };
     case articleActionTypes.SET_TAB:
       return {
         ...state,
-        currTabIndex: action.payload,
+        currTab: action.payload,
       };
     case articleActionTypes.MOVE_TAB:
       return {

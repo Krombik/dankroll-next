@@ -19,12 +19,12 @@ type AddTab = {
 
 type RemoveTab = {
   type: articleActionTypes.REMOVE_TAB;
-  payload: number;
+  payload: string;
 };
 
 type SetTab = {
   type: articleActionTypes.SET_TAB;
-  payload: number;
+  payload: string;
 };
 
 type MoveTab = {

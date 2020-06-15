@@ -12,53 +12,48 @@ export const setArticlesCountPerPage = (count: number): ThunkResult => (
     });
 };
 
-export const addTab = (newTab: Tab): ThunkResult<number> => (
+export const addTab = (newTab: Tab): ThunkResult<string> => (
   dispatch,
   useState
 ) => {
-  const { tabList } = useState().article;
-  const tabIndex = tabList.findIndex(
-    (tab) => tab.type === newTab.type && tab.value === newTab.value
-  );
-  if (tabIndex === -1) {
+  const key = newTab.type + "-" + newTab.value;
+  if (!useState().article.tabList.some((tab) => tab.key === key)) {
     dispatch({
       type: articleActionTypes.ADD_TAB,
-      payload: { ...newTab, key: newTab.type + "-" + newTab.value },
+      payload: { ...newTab, key },
     });
-    return tabList.length;
   }
-  return tabIndex;
+  return key;
 };
 
 export const removeTab = (tabOrderIndex: number): ThunkResult => (
   dispatch,
   useState
 ) => {
-  const { currTabIndex, tabOrder } = useState().article;
-  const currTabOrderIndex = tabOrder.indexOf(currTabIndex);
-  const newTabIndex =
-    tabOrder[
-      tabOrderIndex <= currTabOrderIndex
-        ? currTabOrderIndex - 1
-        : currTabOrderIndex
-    ];
+  const { currTab, tabOrder } = useState().article;
+  const currTabOrderIndex = tabOrder.indexOf(currTab);
   dispatch({
     type: articleActionTypes.SET_TAB,
     payload:
-      newTabIndex >= tabOrder[tabOrderIndex] ? newTabIndex - 1 : newTabIndex,
+      currTabOrderIndex === tabOrderIndex
+        ? currTabOrderIndex === tabOrder.length - 1
+          ? currTabOrderIndex === 0
+            ? "default"
+            : tabOrder[tabOrderIndex - 1]
+          : tabOrder[tabOrderIndex + 1]
+        : currTab,
   });
   dispatch({
     type: articleActionTypes.REMOVE_TAB,
-    payload: tabOrderIndex,
+    payload: tabOrder[tabOrderIndex],
   });
 };
 
-export const setTab = (tab: number): ThunkResult => (dispatch, useState) => {
-  if (useState().article.currTabIndex !== tab)
-    dispatch({
-      type: articleActionTypes.SET_TAB,
-      payload: tab,
-    });
+export const setTab = (tab: string): ThunkResult => (dispatch) => {
+  dispatch({
+    type: articleActionTypes.SET_TAB,
+    payload: tab,
+  });
 };
 
 export const moveTab = (from: number, to: number): ThunkResult => (
