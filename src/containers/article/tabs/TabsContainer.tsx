@@ -8,7 +8,7 @@ import { useDispatch } from "react-redux";
 import { setTab, moveTab } from "../../../redux/actions/article";
 import { SortableContainer } from "react-sortable-hoc";
 import Tab from "@material-ui/core/Tab";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { Tab as TabType } from "../../../types/article";
 import AddNewTabButton from "./AddNewTabButton";
 import Router from "next/router";
@@ -32,22 +32,26 @@ const TabsContainer: FC<Props> = ({ tabList }) => {
   const handleChange = (_, newValue: string) => {
     if (newValue !== "add") {
       dispatch(setTab(newValue));
-      const { type, value } = tabList.find(({ key }) => key === newValue);
-      Router.push(
-        "/",
-        {
+      let path: any;
+      if (newValue === "default-") path = "/";
+      else {
+        const { type, value } = tabList.find(({ key }) => key === newValue);
+        path = {
           pathname: "/",
           query: { [type]: value },
-        },
-        { shallow: true }
-      );
+        };
+      }
+      Router.push("/", path, { shallow: true });
     }
   };
   const onSortEnd = ({ oldIndex, newIndex }) => {
     dispatch(moveTab(oldIndex, newIndex));
   };
+  useEffect(() => {
+    console.log("keke");
+  }, []);
   const tabs = [
-    <Tab value="default" label="Last articles" key={1} />,
+    <Tab value="default-" label="Last articles" key={1} />,
     ...tabList.map((tab, index) => (
       <RemovableTab
         value={tab.key}

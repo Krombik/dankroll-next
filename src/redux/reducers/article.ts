@@ -13,7 +13,7 @@ const initialState: State = {
   articlesPerPageCount: 10,
   tabList: [],
   tabOrder: [],
-  currTab: "default",
+  currTab: "default-",
 };
 
 export default function reducer(

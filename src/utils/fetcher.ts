@@ -1,8 +1,8 @@
 import axios from "axios";
 
 const updateOptions = () => {
-  const token = window.localStorage.user
-    ? JSON.parse(window.localStorage.user)?.token
+  const token = localStorage.user
+    ? JSON.parse(localStorage.user)?.token
     : undefined;
   if (token)
     return {

@@ -36,7 +36,7 @@ export const removeTab = (tabOrderIndex: number): ThunkResult<Tab> => (
     currTabOrderIndex === tabOrderIndex
       ? currTabOrderIndex === tabOrder.length - 1
         ? currTabOrderIndex === 0
-          ? "default"
+          ? "default-"
           : tabOrder[tabOrderIndex - 1]
         : tabOrder[tabOrderIndex + 1]
       : currTab;
@@ -48,7 +48,12 @@ export const removeTab = (tabOrderIndex: number): ThunkResult<Tab> => (
     type: articleActionTypes.REMOVE_TAB,
     payload: tabOrder[tabOrderIndex],
   });
-  return tabList.find(({ key }) => key === newTabKey);
+  return (
+    tabList.find(({ key }) => key === newTabKey) ?? {
+      type: "default",
+      value: "",
+    }
+  );
 };
 
 export const setTab = (tab: string): ThunkResult => (dispatch) => {

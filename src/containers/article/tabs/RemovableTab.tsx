@@ -24,10 +24,12 @@ const SpecialTab: FC<Props> = memo((props) => {
     const { type, value } = dispatch(removeTab(tabIndex));
     Router.push(
       "/",
-      {
-        pathname: "/",
-        query: { [type]: value },
-      },
+      type !== "default"
+        ? {
+            pathname: "/",
+            query: { [type]: value },
+          }
+        : "/",
       { shallow: true }
     );
   };

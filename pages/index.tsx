@@ -10,8 +10,6 @@ import { useSelector } from "react-redux";
 import { createSelector } from "reselect";
 import { State } from "../src/types";
 import TabsContainer from "../src/containers/article/tabs/TabsContainer";
-import { useRouter } from "next/router";
-import { Context } from "next-redux-wrapper";
 import { addTab, setTab } from "../src/redux/actions/article";
 
 const selectData = createSelector(
@@ -29,10 +27,10 @@ const Index: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
     <div>
       <TabContext value={currTab}>
         <TabsContainer tabList={tabList} />
-        <TabPanel value="default">
+        <TabPanel value="default-">
           <ArticleList
             initialData={
-              initialKey === "default" ? [initialArticles] : undefined
+              initialKey === "default-" ? [initialArticles] : undefined
             }
             value=""
             type="default"
@@ -63,7 +61,8 @@ export const getServerSideProps = wrapper.getServerSideProps(
         ? { type: "author", value: author }
         : { type: "default", value: "" };
     const initialArticles = await serverFetcher(getArticlesUrl(initialTab));
-    dispatch(setTab(dispatch(addTab(initialTab))));
+    if (initialTab.type !== "default")
+      dispatch(setTab(dispatch(addTab(initialTab))));
     return {
       props: {
         initialArticles,
