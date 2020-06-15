@@ -22,25 +22,31 @@ const selectData = createSelector(
 
 const Index: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
   initialArticles,
+  initialKey,
 }) => {
   const { tabList, currTab } = useSelector(selectData);
-  // const { query } = useRouter();
-  // const { tag, author }: any = query;
-  // const tab
   return (
     <div>
       <TabContext value={currTab}>
         <TabsContainer tabList={tabList} />
         <TabPanel value="default">
           <ArticleList
-            initialData={[initialArticles]}
+            initialData={
+              initialKey === "default" ? [initialArticles] : undefined
+            }
             value=""
             type="default"
           />
         </TabPanel>
         {tabList.map((tab, index) => (
           <TabPanel value={tab.key} key={index}>
-            <ArticleList value={tab.value} type={tab.type} />
+            <ArticleList
+              initialData={
+                initialKey !== tab.key ? undefined : [initialArticles]
+              }
+              value={tab.value}
+              type={tab.type}
+            />
           </TabPanel>
         ))}
       </TabContext>
@@ -50,15 +56,20 @@ const Index: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
 export const getServerSideProps = wrapper.getServerSideProps(
   async ({ query, store: { dispatch } }: ServerSideContext) => {
     const { tag, author }: any = query;
-    const typeValue =
+    const initialTab =
       tag !== undefined
         ? { type: "tag", value: tag }
         : author !== undefined
         ? { type: "author", value: author }
         : { type: "default", value: "" };
-    const initialArticles = await serverFetcher(getArticlesUrl(typeValue));
-    dispatch(setTab(dispatch(addTab(typeValue))));
-    return { props: { initialArticles } };
+    const initialArticles = await serverFetcher(getArticlesUrl(initialTab));
+    dispatch(setTab(dispatch(addTab(initialTab))));
+    return {
+      props: {
+        initialArticles,
+        initialKey: initialTab.type + "-" + initialTab.value,
+      },
+    };
   }
 );
 
