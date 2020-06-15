@@ -16,6 +16,7 @@ import Skeleton from "@material-ui/lab/Skeleton";
 import { useDispatch } from "react-redux";
 import { ThunkDispatcher } from "../../types";
 import { addTab, setTab } from "../../redux/actions/article";
+import Router from "next/router";
 
 type Props = {
   article?: ArticleType;
@@ -60,6 +61,14 @@ const ArticlePreview: FC<Props> = ({ article }) => {
   const handleAddTag = (tag: string) => {
     window.scrollTo({ left: 0, top: 0, behavior: "smooth" });
     dispatch(setTab(dispatch(addTab({ value: tag, type: "tag" }))));
+    Router.push(
+      "/",
+      {
+        pathname: "/",
+        query: { tag },
+      },
+      { shallow: true }
+    );
   };
   return (
     <Grid item xs={12} lg={6}>

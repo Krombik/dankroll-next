@@ -7,14 +7,11 @@ import { State, ThunkDispatcher } from "../../../types";
 import { useDispatch } from "react-redux";
 import { setTab, moveTab } from "../../../redux/actions/article";
 import { SortableContainer } from "react-sortable-hoc";
-import IconButton from "@material-ui/core/IconButton";
-import AddIcon from "@material-ui/icons/Add";
 import Tab from "@material-ui/core/Tab";
-import Grid from "@material-ui/core/Grid";
-import Input from "@material-ui/core/Input";
-import { useState, useRef, FC } from "react";
+import { FC } from "react";
 import { Tab as TabType } from "../../../types/article";
 import AddNewTabButton from "./AddNewTabButton";
+import Router from "next/router";
 
 const SortableList = SortableContainer(({ children }) => {
   return <>{children}</>;
@@ -33,8 +30,18 @@ const TabsContainer: FC<Props> = ({ tabList }) => {
   const { tabOrder } = useSelector(selectData);
   const dispatch = useDispatch<ThunkDispatcher>();
   const handleChange = (_, newValue: string) => {
-    console.log(newValue);
-    if (newValue !== "add") dispatch(setTab(newValue));
+    if (newValue !== "add") {
+      dispatch(setTab(newValue));
+      const { type, value } = tabList.find(({ key }) => key === newValue);
+      Router.push(
+        "/",
+        {
+          pathname: "/",
+          query: { [type]: value },
+        },
+        { shallow: true }
+      );
+    }
   };
   const onSortEnd = ({ oldIndex, newIndex }) => {
     dispatch(moveTab(oldIndex, newIndex));

@@ -6,6 +6,7 @@ import { removeTab } from "../../../redux/actions/article";
 import CloseIcon from "@material-ui/icons/Close";
 import { SortableElement } from "react-sortable-hoc";
 import { Tab as TabType } from "../../../types/article";
+import Router from "next/router";
 
 type Props = {
   tab: TabType;
@@ -20,7 +21,15 @@ const SpecialTab: FC<Props> = memo((props) => {
   const dispatch = useDispatch<ThunkDispatcher>();
   const handleRemove = (e: SyntheticEvent) => {
     e.stopPropagation();
-    dispatch(removeTab(tabIndex));
+    const { type, value } = dispatch(removeTab(tabIndex));
+    Router.push(
+      "/",
+      {
+        pathname: "/",
+        query: { [type]: value },
+      },
+      { shallow: true }
+    );
   };
   const withRemove = forwardRef<any>((props, ref) => (
     <SortableItem index={tabIndex}>

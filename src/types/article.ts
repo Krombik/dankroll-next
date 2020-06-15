@@ -29,6 +29,6 @@ export type Author = {
 
 export type Tab = {
   value: string;
-  type: "tag" | "author" | "feed" | "default";
+  type: string;
   key?: string;
 };

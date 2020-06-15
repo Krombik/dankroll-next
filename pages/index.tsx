@@ -1,5 +1,5 @@
 import { wrapper } from "../src/redux/store";
-import { ThunkContext, StaticProps } from "../src/types";
+import { ServerSideContext, PropsFromServer } from "../src/types";
 import ArticleList from "../src/containers/article/ArticlesList";
 import { getArticlesUrl } from "../src/api/article";
 import { NextPage } from "next";
@@ -10,6 +10,9 @@ import { useSelector } from "react-redux";
 import { createSelector } from "reselect";
 import { State } from "../src/types";
 import TabsContainer from "../src/containers/article/tabs/TabsContainer";
+import { useRouter } from "next/router";
+import { Context } from "next-redux-wrapper";
+import { addTab, setTab } from "../src/redux/actions/article";
 
 const selectData = createSelector(
   (state: State) => state.article.tabList,
@@ -17,10 +20,13 @@ const selectData = createSelector(
   (tabList, currTab) => ({ tabList, currTab })
 );
 
-const Index: NextPage<StaticProps<typeof getStaticProps>> = ({
+const Index: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
   initialArticles,
 }) => {
   const { tabList, currTab } = useSelector(selectData);
+  // const { query } = useRouter();
+  // const { tag, author }: any = query;
+  // const tab
   return (
     <div>
       <TabContext value={currTab}>
@@ -41,9 +47,17 @@ const Index: NextPage<StaticProps<typeof getStaticProps>> = ({
     </div>
   );
 };
-export const getStaticProps = wrapper.getStaticProps(
-  async ({ store: { dispatch } }: ThunkContext) => {
-    const initialArticles = await serverFetcher(getArticlesUrl({}));
+export const getServerSideProps = wrapper.getServerSideProps(
+  async ({ query, store: { dispatch } }: ServerSideContext) => {
+    const { tag, author }: any = query;
+    const typeValue =
+      tag !== undefined
+        ? { type: "tag", value: tag }
+        : author !== undefined
+        ? { type: "author", value: author }
+        : { type: "default", value: "" };
+    const initialArticles = await serverFetcher(getArticlesUrl(typeValue));
+    dispatch(setTab(dispatch(addTab(typeValue))));
     return { props: { initialArticles } };
   }
 );

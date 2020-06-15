@@ -26,27 +26,29 @@ export const addTab = (newTab: Tab): ThunkResult<string> => (
   return key;
 };
 
-export const removeTab = (tabOrderIndex: number): ThunkResult => (
+export const removeTab = (tabOrderIndex: number): ThunkResult<Tab> => (
   dispatch,
   useState
 ) => {
-  const { currTab, tabOrder } = useState().article;
+  const { currTab, tabOrder, tabList } = useState().article;
   const currTabOrderIndex = tabOrder.indexOf(currTab);
+  const newTabKey =
+    currTabOrderIndex === tabOrderIndex
+      ? currTabOrderIndex === tabOrder.length - 1
+        ? currTabOrderIndex === 0
+          ? "default"
+          : tabOrder[tabOrderIndex - 1]
+        : tabOrder[tabOrderIndex + 1]
+      : currTab;
   dispatch({
     type: articleActionTypes.SET_TAB,
-    payload:
-      currTabOrderIndex === tabOrderIndex
-        ? currTabOrderIndex === tabOrder.length - 1
-          ? currTabOrderIndex === 0
-            ? "default"
-            : tabOrder[tabOrderIndex - 1]
-          : tabOrder[tabOrderIndex + 1]
-        : currTab,
+    payload: newTabKey,
   });
   dispatch({
     type: articleActionTypes.REMOVE_TAB,
     payload: tabOrder[tabOrderIndex],
   });
+  return tabList.find(({ key }) => key === newTabKey);
 };
 
 export const setTab = (tab: string): ThunkResult => (dispatch) => {
