@@ -38,7 +38,7 @@ export const serverAddTab = (newTab: Tab): ThunkResult => (dispatch) => {
   });
 };
 
-export const storageAddTabs = (clientOrder: string[]): ThunkResult => (
+export const addTabsFromStorage = (clientOrder: string[]): ThunkResult => (
   dispatch,
   useState
 ) => {

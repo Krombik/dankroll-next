@@ -3,25 +3,21 @@ import AppBar from "@material-ui/core/AppBar";
 import TabList from "@material-ui/lab/TabList";
 import { useSelector } from "react-redux";
 import { createSelector } from "reselect";
-import { State, ThunkDispatcher } from "../../../types";
+import { State, ThunkDispatcher } from "../../types";
 import { useDispatch } from "react-redux";
 import {
   setTab,
   moveTab,
-  storageAddTabs,
-} from "../../../redux/actions/article";
-import { SortableContainer } from "react-sortable-hoc";
+  addTabsFromStorage,
+} from "../../redux/actions/article";
 import Tab from "@material-ui/core/Tab";
 import { FC, useEffect } from "react";
-import { Tab as TabType } from "../../../types/article";
+import { Tab as TabType } from "../../types/article";
 import AddNewTabButton from "./AddNewTabButton";
 import Router from "next/router";
-import { tabKeyDecoder } from "../../../utils/tabKeyDecoder";
-import { setToStorage, getFromStorage } from "../../../utils/storage";
-
-const SortableList = SortableContainer(({ children }) => {
-  return <>{children}</>;
-});
+import { tabKeyDecoder } from "../../utils/tabKeyDecoder";
+import { setToStorage, getFromStorage } from "../../utils/storage";
+import SortableList from "../common/SortableList";
 
 const selectData = createSelector(
   (state: State) => state.article.tabOrder,
@@ -34,9 +30,8 @@ type Props = {
 
 const TabsContainer: FC<Props> = ({ tabList }) => {
   const { tabOrder } = useSelector(selectData);
-  console.log(tabOrder);
   const dispatch = useDispatch<ThunkDispatcher>();
-  const handleChange = (_, newValue: string) => {
+  const handleChange = (_: any, newValue: string) => {
     if (newValue !== "add") {
       dispatch(setTab(newValue));
       const { type, value } = tabKeyDecoder(newValue);
@@ -58,7 +53,7 @@ const TabsContainer: FC<Props> = ({ tabList }) => {
   useEffect(() => {
     const clientOrder = getFromStorage<string[]>("tabOrder");
     if (clientOrder && clientOrder.length > 0)
-      dispatch(storageAddTabs(clientOrder));
+      dispatch(addTabsFromStorage(clientOrder));
   }, []);
   useEffect(() => {
     setToStorage("tabOrder", tabOrder);

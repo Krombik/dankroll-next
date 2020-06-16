@@ -1,11 +1,11 @@
-import { ThunkDispatcher } from "../../../types";
+import { ThunkDispatcher } from "../../types";
 import { useDispatch } from "react-redux";
-import { addTab } from "../../../redux/actions/article";
+import { addTab } from "../../redux/actions/article";
 import AddIcon from "@material-ui/icons/Add";
 import Grid from "@material-ui/core/Grid";
 import Input from "@material-ui/core/Input";
 import { useState, useRef, FC, memo, ChangeEvent, KeyboardEvent } from "react";
-import { StyledAddNewTabButton } from "../../../components/article/style";
+import { StyledAddNewTabButton } from "../../components/tabs/styled";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import Router from "next/router";
 

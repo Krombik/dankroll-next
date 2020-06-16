@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { StyledArticlePreview, TagList } from "../../components/article/style";
+import { StyledArticlePreview, TagList } from "../../components/article/styled";
 import { ArticleType } from "../../types/article";
 import { Grid } from "@material-ui/core";
 import { FC } from "react";

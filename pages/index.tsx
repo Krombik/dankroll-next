@@ -9,7 +9,7 @@ import { serverFetcher } from "../src/utils/fetcher";
 import { useSelector } from "react-redux";
 import { createSelector } from "reselect";
 import { State } from "../src/types";
-import TabsContainer from "../src/containers/article/tabs/TabsContainer";
+import TabsContainer from "../src/containers/tabs/TabsContainer";
 import { serverAddTab } from "../src/redux/actions/article";
 
 const selectData = createSelector(
