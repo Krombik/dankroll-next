@@ -1,6 +1,13 @@
-const storage = async key => {
-  const value = localStorage.getItem(key);
-  return !!value ? JSON.parse(value) : undefined;
+import { error } from "console";
+
+export const getFromStorage = <T = any>(key: string): T => {
+  try {
+    return JSON.parse(localStorage.getItem(key));
+  } catch {
+    return undefined;
+  }
 };
 
-export default storage;
+export const setToStorage = (key: string, value: any) => {
+  localStorage.setItem(key, JSON.stringify(value));
+};

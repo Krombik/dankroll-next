@@ -1,6 +1,8 @@
 import { articleActionTypes, ArticleActions } from "../../types/actions";
 import { Tab } from "../../types/article";
 import { moveFromTo } from "../../utils/moveFromTo";
+import { HYDRATE } from "next-redux-wrapper";
+import { tabKeyDecoder } from "../../utils/tabKeyDecoder";
 
 type State = {
   articlesPerPageCount: number;
@@ -31,6 +33,12 @@ export default function reducer(
         ...state,
         tabOrder: [...state.tabOrder, action.payload.key],
         tabList: [...state.tabList, action.payload],
+      };
+    case articleActionTypes.ADD_TABS:
+      return {
+        ...state,
+        tabOrder: action.payload,
+        tabList: action.payload.map((key) => ({ ...tabKeyDecoder(key), key })),
       };
     case articleActionTypes.REMOVE_TAB:
       return {

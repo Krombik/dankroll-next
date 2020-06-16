@@ -60,7 +60,7 @@ const ArticlePreview: FC<Props> = ({ article }) => {
   const dispatch = useDispatch<ThunkDispatcher>();
   const handleAddTag = (tag: string) => {
     window.scrollTo({ left: 0, top: 0, behavior: "smooth" });
-    dispatch(setTab(dispatch(addTab({ value: tag, type: "tag" }))));
+    dispatch(addTab({ value: tag, type: "tag" }));
     Router.push(
       "/",
       {

@@ -12,25 +12,51 @@ export const setArticlesCountPerPage = (count: number): ThunkResult => (
     });
 };
 
-export const addTab = (newTab: Tab): ThunkResult<string> => (
-  dispatch,
-  useState
-) => {
+export const addTab = (newTab: Tab): ThunkResult => (dispatch, useState) => {
   const key = newTab.type + "-" + newTab.value;
   if (!useState().article.tabList.some((tab) => tab.key === key)) {
     dispatch({
       type: articleActionTypes.ADD_TAB,
       payload: { ...newTab, key },
     });
+    dispatch({
+      type: articleActionTypes.SET_TAB,
+      payload: key,
+    });
   }
-  return key;
 };
 
-export const removeTab = (tabOrderIndex: number): ThunkResult<Tab> => (
+export const serverAddTab = (newTab: Tab): ThunkResult => (dispatch) => {
+  const key = newTab.type + "-" + newTab.value;
+  dispatch({
+    type: articleActionTypes.ADD_TAB,
+    payload: { ...newTab, key },
+  });
+  dispatch({
+    type: articleActionTypes.SET_TAB,
+    payload: key,
+  });
+};
+
+export const storageAddTabs = (clientOrder: string[]): ThunkResult => (
   dispatch,
   useState
 ) => {
-  const { currTab, tabOrder, tabList } = useState().article;
+  const { tabOrder } = useState().article;
+  dispatch({
+    type: articleActionTypes.ADD_TABS,
+    payload:
+      tabOrder.length > 0 && clientOrder.some((item) => item === tabOrder[0])
+        ? clientOrder
+        : [...clientOrder, ...tabOrder],
+  });
+};
+
+export const removeTab = (tabOrderIndex: number): ThunkResult<string> => (
+  dispatch,
+  useState
+) => {
+  const { currTab, tabOrder } = useState().article;
   const currTabOrderIndex = tabOrder.indexOf(currTab);
   const newTabKey =
     currTabOrderIndex === tabOrderIndex
@@ -48,12 +74,7 @@ export const removeTab = (tabOrderIndex: number): ThunkResult<Tab> => (
     type: articleActionTypes.REMOVE_TAB,
     payload: tabOrder[tabOrderIndex],
   });
-  return (
-    tabList.find(({ key }) => key === newTabKey) ?? {
-      type: "default",
-      value: "",
-    }
-  );
+  return newTabKey;
 };
 
 export const setTab = (tab: string): ThunkResult => (dispatch) => {

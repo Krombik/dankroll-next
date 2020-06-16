@@ -1,6 +1,6 @@
 import { ThunkDispatcher } from "../../../types";
 import { useDispatch } from "react-redux";
-import { setTab, addTab } from "../../../redux/actions/article";
+import { addTab } from "../../../redux/actions/article";
 import AddIcon from "@material-ui/icons/Add";
 import Grid from "@material-ui/core/Grid";
 import Input from "@material-ui/core/Input";
@@ -30,7 +30,7 @@ const AddNewTabButton: FC<Props> = memo((props) => {
               type: "author",
               value: newTabName,
             };
-      dispatch(setTab(dispatch(addTab(newTab))));
+      dispatch(addTab(newTab));
       Router.push(
         "/",
         {

@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 import { createSelector } from "reselect";
 import { State } from "../src/types";
 import TabsContainer from "../src/containers/article/tabs/TabsContainer";
-import { addTab, setTab } from "../src/redux/actions/article";
+import { serverAddTab } from "../src/redux/actions/article";
 
 const selectData = createSelector(
   (state: State) => state.article.tabList,
@@ -61,8 +61,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
         ? { type: "author", value: author }
         : { type: "default", value: "" };
     const initialArticles = await serverFetcher(getArticlesUrl(initialTab));
-    if (initialTab.type !== "default")
-      dispatch(setTab(dispatch(addTab(initialTab))));
+    if (initialTab.type !== "default") dispatch(serverAddTab(initialTab));
     return {
       props: {
         initialArticles,

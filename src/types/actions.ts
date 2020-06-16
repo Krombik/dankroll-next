@@ -1,7 +1,10 @@
 import { Tab } from "./article";
+import { HYDRATE } from "next-redux-wrapper";
+import { State } from ".";
 export enum articleActionTypes {
   SET_ARTICLES_PER_PAGE_COUNT = "SET_ARTICLES_COUNT_PER_PAGE",
   ADD_TAB = "ADD_TAG",
+  ADD_TABS = "ADD_TAGS",
   REMOVE_TAB = "REMOVE_TAG",
   SET_TAB = "SET_TAB_BY_INDEX",
   MOVE_TAB = "MVE_TAB",
@@ -15,6 +18,11 @@ type SetArticlesPerPageCount = {
 type AddTab = {
   type: articleActionTypes.ADD_TAB;
   payload: Tab;
+};
+
+type AddTabs = {
+  type: articleActionTypes.ADD_TABS;
+  payload: string[];
 };
 
 type RemoveTab = {
@@ -35,8 +43,9 @@ type MoveTab = {
 export type ArticleActions =
   | SetArticlesPerPageCount
   | AddTab
+  | AddTabs
   | RemoveTab
   | SetTab
   | MoveTab;
 
-export type Actions = ArticleActions;
+export type Actions = ArticleActions | { type: typeof HYDRATE; payload: State };
