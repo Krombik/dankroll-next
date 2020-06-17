@@ -11,9 +11,11 @@ import Router from "next/router";
 
 type Props = {
   value: string;
+  articlesPagesNumber: { [key: string]: number };
 };
 
 const AddNewTabButton: FC<Props> = memo((props) => {
+  const { articlesPagesNumber, ...trueProps } = props;
   const ref = useRef<HTMLInputElement>(null);
   const [isSearchOpen, setSearchOpen] = useState(false);
   const [newTabName, setNewTabName] = useState("");
@@ -31,14 +33,15 @@ const AddNewTabButton: FC<Props> = memo((props) => {
               value: newTabName,
             };
       dispatch(addTab(newTab));
-      Router.push(
-        "/",
-        {
-          pathname: "/",
-          query: { [newTab.type]: newTab.value },
+      const page = articlesPagesNumber[newTab.type + "-" + newTab.value];
+      const path = {
+        pathname: "/",
+        query: {
+          [newTab.type]: newTab.value,
+          ...(page ? { page: page + 1 } : {}),
         },
-        { shallow: true }
-      );
+      };
+      Router.push(path, path, { shallow: true });
       setSearchOpen(false);
     } else ref.current.focus();
   };
@@ -57,7 +60,7 @@ const AddNewTabButton: FC<Props> = memo((props) => {
   return (
     <StyledAddNewTabButton
       disableRipple={true}
-      {...props}
+      {...trueProps}
       label={
         <ClickAwayListener onClickAway={handleClickAway}>
           <Grid container spacing={1} alignItems="center" wrap="nowrap">

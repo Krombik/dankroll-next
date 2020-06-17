@@ -7,55 +7,81 @@ import ArticlePreview from "./ArticlePreview";
 import { getArticlesUrl } from "../../api/article";
 import { useSWRInfinite } from "swr";
 import { fetcher } from "../../utils/fetcher";
+import Pagination from "../common/Pagination";
+import { useRouter } from "next/router";
 
 type Props = {
   initialData?: AllArticles[];
-  type?: string;
-  value?: string;
+  type: string;
+  value: string;
+  initialPage?: number;
 };
 
-const ArticleList: FC<Props> = ({ initialData, type, value }) => {
-  const { data: allArticles, error, setPage, page } = useSWRInfinite(
-    (index, previousPageData) => {
-      return previousPageData && previousPageData.articles.length !== 0
-        ? getArticlesUrl({ page: index, type, value })
-        : getArticlesUrl({ type, value });
-    },
+const ArticleList: FC<Props> = ({ initialData, type, value, initialPage }) => {
+  const {
+    query: { page: queryPage },
+  } = useRouter();
+  let startPage = queryPage ? +queryPage : initialPage;
+  startPage = startPage && startPage > 0 ? startPage - 1 : 0;
+  const { data, error, setPage, page, mutate } = useSWRInfinite<AllArticles>(
+    (index, previousPageData) =>
+      previousPageData && previousPageData.articles.length !== 0
+        ? getArticlesUrl({ page: startPage + index, type, value })
+        : getArticlesUrl({ page: startPage, type, value }),
     fetcher,
     { initialData }
   );
-  const isLoadMoreUnavailable = allArticles
-    ? allArticles.reduce((prev, curr) => prev + curr.articles.length, 0) >=
-      allArticles[0].articlesCount
-    : false;
-  const isLoading = allArticles?.length !== page || allArticles?.length === 0;
+  const articles =
+    data?.length > 0 ? data.flatMap(({ articles }) => articles) : [];
+  const articlesCount = data ? data[0]?.articlesCount : 0;
+  const isLoadMoreUnavailable = articles?.length >= articlesCount;
+  const isLoading = data?.length === 0 || data?.length < page;
+  const pageCount = Math.ceil(articlesCount / 10);
+  const resetPage = () => {
+    window.scrollTo({ left: 0, top: 0, behavior: "smooth" });
+    mutate([]);
+    setPage(1);
+  };
   return (
     <Grid container spacing={3}>
-      {allArticles
-        ?.flatMap(({ articles }) => articles)
-        .map((article, index) => (
-          <ArticlePreview key={index} article={article} />
-        ))}
-      {isLoading &&
-        Array.from(new Array(10)).map((_, index) => (
-          <ArticlePreview key={index} />
-        ))}
-      <Grid container item justify="center">
-        <Button
-          onClick={() => {
-            setPage(page + 1);
-          }}
-          variant="contained"
-          color="primary"
-          disabled={isLoading || isLoadMoreUnavailable}
-        >
-          {isLoading
-            ? "Loading..."
-            : isLoadMoreUnavailable
-            ? "No more Articles"
-            : "Load more"}
-        </Button>
-      </Grid>
+      {articles?.map((article, index) => (
+        <ArticlePreview key={index} article={article} />
+      ))}
+      {isLoading
+        ? Array.from(new Array(10)).map((_, index) => (
+            <ArticlePreview key={index} />
+          ))
+        : !articlesCount
+        ? "No articles available yet"
+        : ""}
+      {pageCount > 1 && (
+        <>
+          <Grid container item justify="center">
+            <Button
+              onClick={() => {
+                setPage((x) => x + 1);
+              }}
+              variant="contained"
+              color="primary"
+              disabled={isLoading || isLoadMoreUnavailable}
+            >
+              {isLoading
+                ? "Loading..."
+                : isLoadMoreUnavailable
+                ? "No more Articles"
+                : "Load more"}
+            </Button>
+          </Grid>
+          <Grid container item justify="center">
+            <Pagination
+              page={page + startPage}
+              count={pageCount}
+              tabKey={type + "-" + value}
+              resetPage={resetPage}
+            />
+          </Grid>
+        </>
+      )}
     </Grid>
   );
 };

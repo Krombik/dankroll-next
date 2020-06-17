@@ -1,14 +1,14 @@
 import { articleActionTypes, ArticleActions } from "../../types/actions";
 import { Tab } from "../../types/article";
 import { moveFromTo } from "../../utils/moveFromTo";
-import { HYDRATE } from "next-redux-wrapper";
 import { tabKeyDecoder } from "../../utils/tabKeyDecoder";
 
 type State = {
   articlesPerPageCount: number;
+  currTab: string;
   tabList: Tab[];
   tabOrder: string[];
-  currTab: string;
+  articlesPagesNumber: { [key: string]: number };
 };
 
 const initialState: State = {
@@ -16,6 +16,7 @@ const initialState: State = {
   tabList: [],
   tabOrder: [],
   currTab: "default-",
+  articlesPagesNumber: { "default-": 0 },
 };
 
 export default function reducer(
@@ -39,12 +40,20 @@ export default function reducer(
         ...state,
         tabOrder: action.payload,
         tabList: action.payload.map((key) => ({ ...tabKeyDecoder(key), key })),
+        articlesPagesNumber: {
+          ...Object.fromEntries(action.payload.map((key) => [key, 0])),
+          ...state.articlesPagesNumber,
+        },
       };
     case articleActionTypes.REMOVE_TAB:
       return {
         ...state,
         tabList: state.tabList.filter((item) => item.key !== action.payload),
         tabOrder: state.tabOrder.filter((item) => item !== action.payload),
+        articlesPagesNumber: {
+          ...state.articlesPagesNumber,
+          [action.payload]: undefined,
+        },
       };
     case articleActionTypes.SET_TAB:
       return {
@@ -59,6 +68,14 @@ export default function reducer(
           action.payload.from,
           action.payload.to
         ),
+      };
+    case articleActionTypes.SET_PAGE_NUMBERS:
+      return {
+        ...state,
+        articlesPagesNumber: {
+          ...state.articlesPagesNumber,
+          [action.payload.key]: action.payload.count,
+        },
       };
     default:
       return state;

@@ -8,8 +8,8 @@ import { getQuery } from "../utils/getQuery";
 type GetArticlesUrlProps = {
   page?: number;
   limit?: number;
-  type?: string;
-  value?: string;
+  type: string;
+  value: string;
 };
 
 export const getArticlesUrl = ({

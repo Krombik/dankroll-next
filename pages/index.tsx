@@ -11,6 +11,7 @@ import { createSelector } from "reselect";
 import { State } from "../src/types";
 import TabsContainer from "../src/containers/tabs/TabsContainer";
 import { serverAddTab } from "../src/redux/actions/article";
+import { useRouter } from "next/router";
 
 const selectData = createSelector(
   (state: State) => state.article.tabList,
@@ -21,27 +22,22 @@ const selectData = createSelector(
 const Index: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
   initialArticles,
   initialKey,
+  initialPage,
 }) => {
   const { tabList, currTab } = useSelector(selectData);
+  const isTabInitial = (key: string) =>
+    initialKey !== key ? {} : { initialPage, initialData: [initialArticles] };
   return (
     <div>
       <TabContext value={currTab}>
         <TabsContainer tabList={tabList} />
         <TabPanel value="default-">
-          <ArticleList
-            initialData={
-              initialKey === "default-" ? [initialArticles] : undefined
-            }
-            value=""
-            type="default"
-          />
+          <ArticleList {...isTabInitial("default-")} value="" type="default" />
         </TabPanel>
         {tabList.map((tab, index) => (
           <TabPanel value={tab.key} key={index}>
             <ArticleList
-              initialData={
-                initialKey !== tab.key ? undefined : [initialArticles]
-              }
+              {...isTabInitial(tab.key)}
               value={tab.value}
               type={tab.type}
             />
@@ -53,19 +49,23 @@ const Index: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
 };
 export const getServerSideProps = wrapper.getServerSideProps(
   async ({ query, store: { dispatch } }: ServerSideContext) => {
-    const { tag, author }: any = query;
-    const initialTab =
-      tag !== undefined
-        ? { type: "tag", value: tag }
-        : author !== undefined
-        ? { type: "author", value: author }
-        : { type: "default", value: "" };
-    const initialArticles = await serverFetcher(getArticlesUrl(initialTab));
-    if (initialTab.type !== "default") dispatch(serverAddTab(initialTab));
+    const { tag, author, page: queryPage }: any = query;
+    let page = +queryPage;
+    page = page && page > 0 ? page - 1 : 0;
+    const initialTab = tag
+      ? { type: "tag", value: tag }
+      : author
+      ? { type: "author", value: author }
+      : { type: "default", value: "" };
+    const initialArticles = await serverFetcher(
+      getArticlesUrl({ ...initialTab, page })
+    );
+    if (initialTab.type !== "default") dispatch(serverAddTab(initialTab, page));
     return {
       props: {
         initialArticles,
         initialKey: initialTab.type + "-" + initialTab.value,
+        initialPage: page,
       },
     };
   }

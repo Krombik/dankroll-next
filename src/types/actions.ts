@@ -8,6 +8,7 @@ export enum articleActionTypes {
   REMOVE_TAB = "REMOVE_TAG",
   SET_TAB = "SET_TAB_BY_INDEX",
   MOVE_TAB = "MVE_TAB",
+  SET_PAGE_NUMBERS = "SET_PAGE_NUMBERS",
 }
 
 type SetArticlesPerPageCount = {
@@ -40,12 +41,18 @@ type MoveTab = {
   payload: { from: number; to: number };
 };
 
+type SetPageNumbers = {
+  type: articleActionTypes.SET_PAGE_NUMBERS;
+  payload: { key: string; count: number };
+};
+
 export type ArticleActions =
   | SetArticlesPerPageCount
   | AddTab
   | AddTabs
   | RemoveTab
   | SetTab
-  | MoveTab;
+  | MoveTab
+  | SetPageNumbers;
 
 export type Actions = ArticleActions | { type: typeof HYDRATE; payload: State };

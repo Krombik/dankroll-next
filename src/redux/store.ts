@@ -13,13 +13,15 @@ const bindMiddleware = (middleware: Middleware[]) => {
   return applyMiddleware(...middleware);
 };
 
-const reducer = (state: State, action: Actions) =>
-  action.type === HYDRATE
-    ? {
-        ...state,
-        ...action.payload,
-      }
-    : combinedReducer(state, action);
+const reducer = (state: State, action: Actions) => {
+  if (action.type === HYDRATE) {
+    const newState = { ...state, ...action.payload };
+    if (state.article.tabList.length > action.payload.article.tabList.length)
+      return { ...newState, article: { ...state.article } };
+    return newState;
+  }
+  return combinedReducer(state, action);
+};
 
 const initStore = () => createStore(reducer, bindMiddleware([thunkMiddleware]));
 

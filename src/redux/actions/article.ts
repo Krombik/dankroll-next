@@ -14,7 +14,8 @@ export const setArticlesCountPerPage = (count: number): ThunkResult => (
 
 export const addTab = (newTab: Tab): ThunkResult => (dispatch, useState) => {
   const key = newTab.type + "-" + newTab.value;
-  if (!useState().article.tabList.some((tab) => tab.key === key)) {
+  const { tabList, articlesPagesNumber } = useState().article;
+  if (!tabList.some((tab) => tab.key === key)) {
     dispatch({
       type: articleActionTypes.ADD_TAB,
       payload: { ...newTab, key },
@@ -23,10 +24,17 @@ export const addTab = (newTab: Tab): ThunkResult => (dispatch, useState) => {
       type: articleActionTypes.SET_TAB,
       payload: key,
     });
+    if (articlesPagesNumber[key])
+      dispatch({
+        type: articleActionTypes.SET_PAGE_NUMBERS,
+        payload: { key, count: 0 },
+      });
   }
 };
 
-export const serverAddTab = (newTab: Tab): ThunkResult => (dispatch) => {
+export const serverAddTab = (newTab: Tab, page: number): ThunkResult => (
+  dispatch
+) => {
   const key = newTab.type + "-" + newTab.value;
   dispatch({
     type: articleActionTypes.ADD_TAB,
@@ -35,6 +43,10 @@ export const serverAddTab = (newTab: Tab): ThunkResult => (dispatch) => {
   dispatch({
     type: articleActionTypes.SET_TAB,
     payload: key,
+  });
+  dispatch({
+    type: articleActionTypes.SET_PAGE_NUMBERS,
+    payload: { key, count: page },
   });
 };
 
@@ -77,10 +89,12 @@ export const removeTab = (tabOrderIndex: number): ThunkResult<string> => (
   return newTabKey;
 };
 
-export const setTab = (tab: string): ThunkResult => (dispatch) => {
+export const setPageNumbers = (key: string, count: number): ThunkResult => (
+  dispatch
+) => {
   dispatch({
-    type: articleActionTypes.SET_TAB,
-    payload: tab,
+    type: articleActionTypes.SET_PAGE_NUMBERS,
+    payload: { key, count },
   });
 };
 
@@ -90,5 +104,12 @@ export const moveTab = (from: number, to: number): ThunkResult => (
   dispatch({
     type: articleActionTypes.MOVE_TAB,
     payload: { from, to },
+  });
+};
+
+export const setTab = (tab: string): ThunkResult => (dispatch) => {
+  dispatch({
+    type: articleActionTypes.SET_TAB,
+    payload: tab,
   });
 };

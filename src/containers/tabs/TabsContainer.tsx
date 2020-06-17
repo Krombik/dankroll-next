@@ -21,7 +21,8 @@ import SortableList from "../common/SortableList";
 
 const selectData = createSelector(
   (state: State) => state.article.tabOrder,
-  (tabOrder) => ({ tabOrder })
+  (state: State) => state.article.articlesPagesNumber,
+  (tabOrder, articlesPagesNumber) => ({ tabOrder, articlesPagesNumber })
 );
 
 type Props = {
@@ -29,22 +30,21 @@ type Props = {
 };
 
 const TabsContainer: FC<Props> = ({ tabList }) => {
-  const { tabOrder } = useSelector(selectData);
+  const { tabOrder, articlesPagesNumber } = useSelector(selectData);
   const dispatch = useDispatch<ThunkDispatcher>();
   const handleChange = (_: any, newValue: string) => {
     if (newValue !== "add") {
       dispatch(setTab(newValue));
       const { type, value } = tabKeyDecoder(newValue);
-      Router.push(
-        "/",
+      const page = articlesPagesNumber[newValue] + 1;
+      const path =
         type !== "default"
           ? {
               pathname: "/",
-              query: { [type]: value },
+              query: { [type]: value, ...(page > 1 ? { page } : {}) },
             }
-          : "/",
-        { shallow: true }
-      );
+          : `/${page > 1 ? "?page=" + page : ""}`;
+      Router.push(path, path, { shallow: true });
     }
   };
   const onSortEnd = ({ oldIndex, newIndex }) => {
@@ -52,8 +52,7 @@ const TabsContainer: FC<Props> = ({ tabList }) => {
   };
   useEffect(() => {
     const clientOrder = getFromStorage<string[]>("tabOrder");
-    if (clientOrder && clientOrder.length > 0)
-      dispatch(addTabsFromStorage(clientOrder));
+    if (clientOrder?.length > 0) dispatch(addTabsFromStorage(clientOrder));
   }, []);
   useEffect(() => {
     setToStorage("tabOrder", tabOrder);
@@ -65,10 +64,15 @@ const TabsContainer: FC<Props> = ({ tabList }) => {
         value={tab.key}
         tab={tab}
         key={index + 2}
-        tabIndex={tabOrder.findIndex((item) => item === tab.key)}
+        articlesPagesNumber={articlesPagesNumber}
+        tabIndex={tabOrder.findIndex((key) => key === tab.key)}
       />
     )),
-    <AddNewTabButton key={tabOrder.length + 2} value={"add"} />,
+    <AddNewTabButton
+      key={tabOrder.length + 2}
+      value={"add"}
+      articlesPagesNumber={articlesPagesNumber}
+    />,
   ];
   return (
     <AppBar position="static" color="default">

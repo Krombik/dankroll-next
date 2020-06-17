@@ -14,15 +14,23 @@ import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import Chip from "@material-ui/core/Chip";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { useDispatch } from "react-redux";
-import { ThunkDispatcher } from "../../types";
-import { addTab, setTab } from "../../redux/actions/article";
+import { ThunkDispatcher, State } from "../../types";
+import { addTab } from "../../redux/actions/article";
 import Router from "next/router";
+import { createSelector } from "reselect";
+import { useSelector } from "react-redux";
 
 type Props = {
   article?: ArticleType;
 };
 
+const selectData = createSelector(
+  (state: State) => state.article.articlesPagesNumber,
+  (articlesPagesNumber) => ({ articlesPagesNumber })
+);
+
 const ArticlePreview: FC<Props> = ({ article }) => {
+  const { articlesPagesNumber } = useSelector(selectData);
   const content = article
     ? {
         avatar: (
@@ -61,14 +69,12 @@ const ArticlePreview: FC<Props> = ({ article }) => {
   const handleAddTag = (tag: string) => {
     window.scrollTo({ left: 0, top: 0, behavior: "smooth" });
     dispatch(addTab({ value: tag, type: "tag" }));
-    Router.push(
-      "/",
-      {
-        pathname: "/",
-        query: { tag },
-      },
-      { shallow: true }
-    );
+    const page = articlesPagesNumber[`tag-${tag}`];
+    const path = {
+      pathname: "/",
+      query: { tag, ...(page ? { page: page + 1 } : {}) },
+    };
+    Router.push(path, path, { shallow: true });
   };
   return (
     <Grid item xs={12} lg={6}>

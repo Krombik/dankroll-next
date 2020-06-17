@@ -14,26 +14,28 @@ type Props = {
   tab: TabType;
   tabIndex: number;
   value: string;
+  articlesPagesNumber: { [key: string]: number };
 };
 
 const SpecialTab: FC<Props> = memo((props) => {
-  const { tab, tabIndex, ...trueProps } = props;
+  const { tab, tabIndex, articlesPagesNumber, ...trueProps } = props;
   const dispatch = useDispatch<ThunkDispatcher>();
   const handleRemove = (e: SyntheticEvent) => {
     e.stopPropagation();
-    const { type, value } = tabKeyDecoder(dispatch(removeTab(tabIndex)));
-    Router.push(
-      "/",
+    const key = dispatch(removeTab(tabIndex));
+    const { type, value } = tabKeyDecoder(key);
+    const page = articlesPagesNumber[key];
+    const path =
       type !== "default"
         ? {
             pathname: "/",
             query: {
               [type]: value,
+              ...(page ? { page: page + 1 } : {}),
             },
           }
-        : "/",
-      { shallow: true }
-    );
+        : `/${page > 1 ? "?page=" + page : ""}`;
+    Router.push(path, path, { shallow: true });
   };
   return (
     <SortableItem index={tabIndex}>
