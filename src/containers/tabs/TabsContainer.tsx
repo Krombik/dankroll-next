@@ -21,8 +21,8 @@ import SortableList from "../common/SortableList";
 
 const selectData = createSelector(
   (state: State) => state.article.tabOrder,
-  (state: State) => state.article.articlesPagesNumber,
-  (tabOrder, articlesPagesNumber) => ({ tabOrder, articlesPagesNumber })
+  (state: State) => state.article.articlePageNumbers,
+  (tabOrder, articlePageNumbers) => ({ tabOrder, articlePageNumbers })
 );
 
 type Props = {
@@ -30,13 +30,13 @@ type Props = {
 };
 
 const TabsContainer: FC<Props> = ({ tabList }) => {
-  const { tabOrder, articlesPagesNumber } = useSelector(selectData);
+  const { tabOrder, articlePageNumbers } = useSelector(selectData);
   const dispatch = useDispatch<ThunkDispatcher>();
   const handleChange = (_: any, newValue: string) => {
     if (newValue !== "add") {
       dispatch(setTab(newValue));
       const { type, value } = tabKeyDecoder(newValue);
-      const page = articlesPagesNumber[newValue] + 1;
+      const page = articlePageNumbers[newValue] + 1;
       const path =
         type !== "default"
           ? {
@@ -64,14 +64,14 @@ const TabsContainer: FC<Props> = ({ tabList }) => {
         value={tab.key}
         tab={tab}
         key={index + 2}
-        articlesPagesNumber={articlesPagesNumber}
+        articlesPagesNumber={articlePageNumbers}
         tabIndex={tabOrder.findIndex((key) => key === tab.key)}
       />
     )),
     <AddNewTabButton
       key={tabOrder.length + 2}
       value={"add"}
-      articlesPagesNumber={articlesPagesNumber}
+      articlesPagesNumber={articlePageNumbers}
     />,
   ];
   return (

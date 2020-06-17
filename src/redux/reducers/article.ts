@@ -8,7 +8,7 @@ type State = {
   currTab: string;
   tabList: Tab[];
   tabOrder: string[];
-  articlesPagesNumber: { [key: string]: number };
+  articlePageNumbers: { [key: string]: number };
 };
 
 const initialState: State = {
@@ -16,7 +16,7 @@ const initialState: State = {
   tabList: [],
   tabOrder: [],
   currTab: "default-",
-  articlesPagesNumber: { "default-": 0 },
+  articlePageNumbers: { "default-": 0 },
 };
 
 export default function reducer(
@@ -40,9 +40,9 @@ export default function reducer(
         ...state,
         tabOrder: action.payload,
         tabList: action.payload.map((key) => ({ ...tabKeyDecoder(key), key })),
-        articlesPagesNumber: {
+        articlePageNumbers: {
           ...Object.fromEntries(action.payload.map((key) => [key, 0])),
-          ...state.articlesPagesNumber,
+          ...state.articlePageNumbers,
         },
       };
     case articleActionTypes.REMOVE_TAB:
@@ -50,8 +50,8 @@ export default function reducer(
         ...state,
         tabList: state.tabList.filter((item) => item.key !== action.payload),
         tabOrder: state.tabOrder.filter((item) => item !== action.payload),
-        articlesPagesNumber: {
-          ...state.articlesPagesNumber,
+        articlePageNumbers: {
+          ...state.articlePageNumbers,
           [action.payload]: undefined,
         },
       };
@@ -69,11 +69,11 @@ export default function reducer(
           action.payload.to
         ),
       };
-    case articleActionTypes.SET_PAGE_NUMBERS:
+    case articleActionTypes.SET_PAGE_NUMBER:
       return {
         ...state,
-        articlesPagesNumber: {
-          ...state.articlesPagesNumber,
+        articlePageNumbers: {
+          ...state.articlePageNumbers,
           [action.payload.key]: action.payload.count,
         },
       };

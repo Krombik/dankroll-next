@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { StyledArticlePreview, TagList } from "../../components/article/styled";
+import { StyledArticlePreview } from "../../components/article/styled";
 import { ArticleType } from "../../types/article";
 import { Grid } from "@material-ui/core";
 import { FC } from "react";
@@ -11,26 +11,14 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
-import Chip from "@material-ui/core/Chip";
 import Skeleton from "@material-ui/lab/Skeleton";
-import { useDispatch } from "react-redux";
-import { ThunkDispatcher, State } from "../../types";
-import { addTab } from "../../redux/actions/article";
-import Router from "next/router";
-import { createSelector } from "reselect";
-import { useSelector } from "react-redux";
+import TagList from "../common/TagList";
 
 type Props = {
   article?: ArticleType;
 };
 
-const selectData = createSelector(
-  (state: State) => state.article.articlesPagesNumber,
-  (articlesPagesNumber) => ({ articlesPagesNumber })
-);
-
 const ArticlePreview: FC<Props> = ({ article }) => {
-  const { articlesPagesNumber } = useSelector(selectData);
   const content = article
     ? {
         avatar: (
@@ -65,17 +53,6 @@ const ArticlePreview: FC<Props> = ({ article }) => {
           </>
         ),
       };
-  const dispatch = useDispatch<ThunkDispatcher>();
-  const handleAddTag = (tag: string) => {
-    window.scrollTo({ left: 0, top: 0, behavior: "smooth" });
-    dispatch(addTab({ value: tag, type: "tag" }));
-    const page = articlesPagesNumber[`tag-${tag}`];
-    const path = {
-      pathname: "/",
-      query: { tag, ...(page ? { page: page + 1 } : {}) },
-    };
-    Router.push(path, path, { shallow: true });
-  };
   return (
     <Grid item xs={12} lg={6}>
       <StyledArticlePreview>
@@ -102,27 +79,14 @@ const ArticlePreview: FC<Props> = ({ article }) => {
             <Typography variant="subtitle1">{content.about}</Typography>
           </CardContent>
           <CardActions>
-            <Button variant="contained" disabled={!article} color="primary">
-              Read more
-            </Button>
+            <Link as={`/article/${article?.slug}`} href={"/article/[slug]"}>
+              <Button variant="contained" disabled={!article} color="primary">
+                Read more
+              </Button>
+            </Link>
           </CardActions>
         </div>
-        {article?.tagList.length > 0 && (
-          <TagList>
-            {article.tagList.map((tag, index) => (
-              <Chip
-                label={"#" + tag}
-                variant="outlined"
-                size="small"
-                component="li"
-                key={index}
-                onClick={() => {
-                  handleAddTag(tag);
-                }}
-              />
-            ))}
-          </TagList>
-        )}
+        {article?.tagList.length > 0 && <TagList tagList={article.tagList} />}
       </StyledArticlePreview>
     </Grid>
   );

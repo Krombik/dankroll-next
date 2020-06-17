@@ -9,7 +9,7 @@ export const StyledArticlePreview = styled(Card)`
   padding: 8px 0;
 `;
 
-export const TagList = styled.ul`
+export const TagListComponent = styled.ul`
   padding: 0 8px;
   margin: 8px 0 0;
   & > li {

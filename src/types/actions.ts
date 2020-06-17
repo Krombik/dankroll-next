@@ -8,7 +8,7 @@ export enum articleActionTypes {
   REMOVE_TAB = "REMOVE_TAG",
   SET_TAB = "SET_TAB_BY_INDEX",
   MOVE_TAB = "MVE_TAB",
-  SET_PAGE_NUMBERS = "SET_PAGE_NUMBERS",
+  SET_PAGE_NUMBER = "SET_PAGE_NUMBERS",
 }
 
 type SetArticlesPerPageCount = {
@@ -42,7 +42,7 @@ type MoveTab = {
 };
 
 type SetPageNumbers = {
-  type: articleActionTypes.SET_PAGE_NUMBERS;
+  type: articleActionTypes.SET_PAGE_NUMBER;
   payload: { key: string; count: number };
 };
 

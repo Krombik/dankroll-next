@@ -22,27 +22,8 @@ export const getArticlesUrl = ({
     type !== "default" ? `${type}=${encodeURIComponent(value)}&` : ""
   }${getQuery(limit, page)}`;
 
-export const getAllArticles = (page: number, limit = 10) =>
-  axios
-    .get<AllArticles>(`${SERVER_BASE_URL}/articles?${getQuery(limit, page)}`)
-    .then((res) => res.data);
-
-export const getArticlesByAuthor = (author: string, page = 0, limit = 5) =>
-  axios.get(
-    `${SERVER_BASE_URL}/articles?author=${encodeURIComponent(
-      author
-    )}&${getQuery(limit, page)}`
-  );
-
-export const getArticlesByTag = (tag: string, page = 0, limit = 10) =>
-  axios
-    .get<AllArticles>(
-      `${SERVER_BASE_URL}/articles?tag=${encodeURIComponent(tag)}&${getQuery(
-        limit,
-        page
-      )}`
-    )
-    .then((res) => res.data);
+export const getArticleUrl = (slug: string) =>
+  `${SERVER_BASE_URL}/articles/${slug}`;
 
 export const deleteArticle = (id, token) =>
   axios.delete(`${SERVER_BASE_URL}/articles/${id}`, {
@@ -63,9 +44,6 @@ export const getArticlesFavoritedBy = (author, page) =>
 
 export const feed = (page, limit = 10) =>
   axios.get(`${SERVER_BASE_URL}/articles/feed?${getQuery(limit, page)}`);
-
-export const getArticle = (slug) =>
-  axios.get(`${SERVER_BASE_URL}/articles/${slug}`);
 
 export const unfavorite = (slug) =>
   axios.delete(`${SERVER_BASE_URL}/articles/${slug}/favorite`);

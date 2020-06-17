@@ -13,12 +13,12 @@ const updateOptions = () => {
   return {};
 };
 
-export const serverFetcher = async (url: string) => {
+export const serverFetcher = async <T = any>(url: string): Promise<T> => {
   const { data } = await axios.get(url);
   return data;
 };
 
-export const fetcher = async (url: string) => {
+export const fetcher = async <T = any>(url: string): Promise<T> => {
   const { data } = await axios.get(url, updateOptions());
   return data;
 };

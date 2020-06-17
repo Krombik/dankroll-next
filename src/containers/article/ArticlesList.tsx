@@ -23,7 +23,7 @@ const ArticleList: FC<Props> = ({ initialData, type, value, initialPage }) => {
   } = useRouter();
   let startPage = queryPage ? +queryPage : initialPage;
   startPage = startPage && startPage > 0 ? startPage - 1 : 0;
-  const { data, error, setPage, page, mutate } = useSWRInfinite<AllArticles>(
+  const { data, error, setPage, page, mutate } = useSWRInfinite(
     (index, previousPageData) =>
       previousPageData && previousPageData.articles.length !== 0
         ? getArticlesUrl({ page: startPage + index, type, value })
@@ -35,7 +35,7 @@ const ArticleList: FC<Props> = ({ initialData, type, value, initialPage }) => {
     data?.length > 0 ? data.flatMap(({ articles }) => articles) : [];
   const articlesCount = data ? data[0]?.articlesCount : 0;
   const isLoadMoreUnavailable = articles?.length >= articlesCount;
-  const isLoading = data?.length === 0 || data?.length < page;
+  const isLoading = data?.length === 0 || data?.length !== page;
   const pageCount = Math.ceil(articlesCount / 10);
   const resetPage = () => {
     window.scrollTo({ left: 0, top: 0, behavior: "smooth" });

@@ -11,7 +11,7 @@ import { createSelector } from "reselect";
 import { State } from "../src/types";
 import TabsContainer from "../src/containers/tabs/TabsContainer";
 import { serverAddTab } from "../src/redux/actions/article";
-import { useRouter } from "next/router";
+import { AllArticles } from "../src/types/article";
 
 const selectData = createSelector(
   (state: State) => state.article.tabList,
@@ -50,14 +50,13 @@ const Index: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
 export const getServerSideProps = wrapper.getServerSideProps(
   async ({ query, store: { dispatch } }: ServerSideContext) => {
     const { tag, author, page: queryPage }: any = query;
-    let page = +queryPage;
-    page = page && page > 0 ? page - 1 : 0;
+    const page = queryPage && +queryPage > 0 ? +queryPage - 1 : 0;
     const initialTab = tag
       ? { type: "tag", value: tag }
       : author
       ? { type: "author", value: author }
       : { type: "default", value: "" };
-    const initialArticles = await serverFetcher(
+    const initialArticles = await serverFetcher<AllArticles>(
       getArticlesUrl({ ...initialTab, page })
     );
     if (initialTab.type !== "default") dispatch(serverAddTab(initialTab, page));

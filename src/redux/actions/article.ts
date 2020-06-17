@@ -14,22 +14,20 @@ export const setArticlesCountPerPage = (count: number): ThunkResult => (
 
 export const addTab = (newTab: Tab): ThunkResult => (dispatch, useState) => {
   const key = newTab.type + "-" + newTab.value;
-  const { tabList, articlesPagesNumber } = useState().article;
-  if (!tabList.some((tab) => tab.key === key)) {
+  if (!useState().article.tabList.some((tab) => tab.key === key)) {
     dispatch({
       type: articleActionTypes.ADD_TAB,
       payload: { ...newTab, key },
     });
     dispatch({
-      type: articleActionTypes.SET_TAB,
-      payload: key,
+      type: articleActionTypes.SET_PAGE_NUMBER,
+      payload: { key, count: 0 },
     });
-    if (articlesPagesNumber[key])
-      dispatch({
-        type: articleActionTypes.SET_PAGE_NUMBERS,
-        payload: { key, count: 0 },
-      });
   }
+  dispatch({
+    type: articleActionTypes.SET_TAB,
+    payload: key,
+  });
 };
 
 export const serverAddTab = (newTab: Tab, page: number): ThunkResult => (
@@ -45,7 +43,7 @@ export const serverAddTab = (newTab: Tab, page: number): ThunkResult => (
     payload: key,
   });
   dispatch({
-    type: articleActionTypes.SET_PAGE_NUMBERS,
+    type: articleActionTypes.SET_PAGE_NUMBER,
     payload: { key, count: page },
   });
 };
@@ -89,11 +87,11 @@ export const removeTab = (tabOrderIndex: number): ThunkResult<string> => (
   return newTabKey;
 };
 
-export const setPageNumbers = (key: string, count: number): ThunkResult => (
+export const setPageNumber = (key: string, count: number): ThunkResult => (
   dispatch
 ) => {
   dispatch({
-    type: articleActionTypes.SET_PAGE_NUMBERS,
+    type: articleActionTypes.SET_PAGE_NUMBER,
     payload: { key, count },
   });
 };
