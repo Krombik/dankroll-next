@@ -1,4 +1,4 @@
-import { articleActionTypes, ArticleActions } from "../../types/actions";
+import { ActionTypes, ArticleActions } from "./type";
 import { Tab } from "../../types/article";
 import { moveFromTo } from "../../utils/moveFromTo";
 import { tabKeyDecoder } from "../../utils/tabKeyDecoder";
@@ -24,18 +24,18 @@ export default function reducer(
   action: ArticleActions
 ): State {
   switch (action.type) {
-    case articleActionTypes.SET_ARTICLES_PER_PAGE_COUNT:
+    case ActionTypes.SET_ARTICLES_PER_PAGE_COUNT:
       return {
         ...state,
         articlesPerPageCount: action.payload,
       };
-    case articleActionTypes.ADD_TAB:
+    case ActionTypes.ADD_TAB:
       return {
         ...state,
         tabOrder: [...state.tabOrder, action.payload.key],
         tabList: [...state.tabList, action.payload],
       };
-    case articleActionTypes.ADD_TABS:
+    case ActionTypes.ADD_TABS:
       return {
         ...state,
         tabOrder: action.payload,
@@ -45,7 +45,7 @@ export default function reducer(
           ...state.articlePageNumbers,
         },
       };
-    case articleActionTypes.REMOVE_TAB:
+    case ActionTypes.REMOVE_TAB:
       return {
         ...state,
         tabList: state.tabList.filter((item) => item.key !== action.payload),
@@ -55,12 +55,12 @@ export default function reducer(
           [action.payload]: undefined,
         },
       };
-    case articleActionTypes.SET_TAB:
+    case ActionTypes.SET_TAB:
       return {
         ...state,
         currTab: action.payload,
       };
-    case articleActionTypes.MOVE_TAB:
+    case ActionTypes.MOVE_TAB:
       return {
         ...state,
         tabOrder: moveFromTo(
@@ -69,7 +69,7 @@ export default function reducer(
           action.payload.to
         ),
       };
-    case articleActionTypes.SET_PAGE_NUMBER:
+    case ActionTypes.SET_PAGE_NUMBER:
       return {
         ...state,
         articlePageNumbers: {

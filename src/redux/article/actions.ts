@@ -1,5 +1,5 @@
 import { ThunkResult } from "../../types";
-import { articleActionTypes } from "../../types/actions";
+import { ActionTypes } from "./type";
 import { Tab } from "../../types/article";
 
 export const setArticlesCountPerPage = (count: number): ThunkResult => (
@@ -7,7 +7,7 @@ export const setArticlesCountPerPage = (count: number): ThunkResult => (
 ) => {
   if (count <= 100 && count > 0)
     dispatch({
-      type: articleActionTypes.SET_ARTICLES_PER_PAGE_COUNT,
+      type: ActionTypes.SET_ARTICLES_PER_PAGE_COUNT,
       payload: count,
     });
 };
@@ -16,16 +16,16 @@ export const addTab = (newTab: Tab): ThunkResult => (dispatch, useState) => {
   const key = newTab.type + "-" + newTab.value;
   if (!useState().article.tabList.some((tab) => tab.key === key)) {
     dispatch({
-      type: articleActionTypes.ADD_TAB,
+      type: ActionTypes.ADD_TAB,
       payload: { ...newTab, key },
     });
     dispatch({
-      type: articleActionTypes.SET_PAGE_NUMBER,
+      type: ActionTypes.SET_PAGE_NUMBER,
       payload: { key, count: 0 },
     });
   }
   dispatch({
-    type: articleActionTypes.SET_TAB,
+    type: ActionTypes.SET_TAB,
     payload: key,
   });
 };
@@ -35,15 +35,15 @@ export const serverAddTab = (newTab: Tab, page: number): ThunkResult => (
 ) => {
   const key = newTab.type + "-" + newTab.value;
   dispatch({
-    type: articleActionTypes.ADD_TAB,
+    type: ActionTypes.ADD_TAB,
     payload: { ...newTab, key },
   });
   dispatch({
-    type: articleActionTypes.SET_TAB,
+    type: ActionTypes.SET_TAB,
     payload: key,
   });
   dispatch({
-    type: articleActionTypes.SET_PAGE_NUMBER,
+    type: ActionTypes.SET_PAGE_NUMBER,
     payload: { key, count: page },
   });
 };
@@ -54,7 +54,7 @@ export const addTabsFromStorage = (clientOrder: string[]): ThunkResult => (
 ) => {
   const { tabOrder } = useState().article;
   dispatch({
-    type: articleActionTypes.ADD_TABS,
+    type: ActionTypes.ADD_TABS,
     payload:
       tabOrder.length > 0 && clientOrder.some((item) => item === tabOrder[0])
         ? clientOrder
@@ -77,11 +77,11 @@ export const removeTab = (tabOrderIndex: number): ThunkResult<string> => (
         : tabOrder[tabOrderIndex + 1]
       : currTab;
   dispatch({
-    type: articleActionTypes.SET_TAB,
+    type: ActionTypes.SET_TAB,
     payload: newTabKey,
   });
   dispatch({
-    type: articleActionTypes.REMOVE_TAB,
+    type: ActionTypes.REMOVE_TAB,
     payload: tabOrder[tabOrderIndex],
   });
   return newTabKey;
@@ -91,7 +91,7 @@ export const setPageNumber = (key: string, count: number): ThunkResult => (
   dispatch
 ) => {
   dispatch({
-    type: articleActionTypes.SET_PAGE_NUMBER,
+    type: ActionTypes.SET_PAGE_NUMBER,
     payload: { key, count },
   });
 };
@@ -100,14 +100,14 @@ export const moveTab = (from: number, to: number): ThunkResult => (
   dispatch
 ) => {
   dispatch({
-    type: articleActionTypes.MOVE_TAB,
+    type: ActionTypes.MOVE_TAB,
     payload: { from, to },
   });
 };
 
 export const setTab = (tab: string): ThunkResult => (dispatch) => {
   dispatch({
-    type: articleActionTypes.SET_TAB,
+    type: ActionTypes.SET_TAB,
     payload: tab,
   });
 };

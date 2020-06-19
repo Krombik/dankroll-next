@@ -2,7 +2,7 @@ import { memo, FC, SyntheticEvent } from "react";
 import Tab from "@material-ui/core/Tab";
 import { ThunkDispatcher } from "../../types";
 import { useDispatch } from "react-redux";
-import { removeTab } from "../../redux/actions/article";
+import { removeTab } from "../../redux/article/actions";
 import CloseIcon from "@material-ui/icons/Close";
 import { Tab as TabType } from "../../types/article";
 import Router from "next/router";

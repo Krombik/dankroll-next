@@ -9,7 +9,7 @@ import {
   setTab,
   moveTab,
   addTabsFromStorage,
-} from "../../redux/actions/article";
+} from "../../redux/article/actions";
 import Tab from "@material-ui/core/Tab";
 import { FC, useEffect } from "react";
 import { Tab as TabType } from "../../types/article";

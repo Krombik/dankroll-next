@@ -3,7 +3,7 @@ import { FC } from "react";
 import Chip from "@material-ui/core/Chip";
 import { useDispatch } from "react-redux";
 import { ThunkDispatcher, State } from "../../types";
-import { addTab } from "../../redux/actions/article";
+import { addTab } from "../../redux/article/actions";
 import Router from "next/router";
 import { createSelector } from "reselect";
 import { useSelector } from "react-redux";

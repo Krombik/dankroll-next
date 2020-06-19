@@ -1,5 +1,5 @@
 import { ThunkAction, ThunkDispatch } from "redux-thunk";
-import { combinedReducer } from "../redux/reducers";
+import { combinedReducer } from "../redux/reducer";
 import { Actions } from "./actions";
 import { Store } from "redux";
 import {

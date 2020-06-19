@@ -4,7 +4,7 @@ import PaginationItem from "@material-ui/lab/PaginationItem";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 import { ThunkDispatcher } from "../../types";
-import { setPageNumber } from "../../redux/actions/article";
+import { setPageNumber } from "../../redux/article/actions";
 import { FC } from "react";
 
 type Props = {

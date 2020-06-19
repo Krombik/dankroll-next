@@ -1,7 +1,7 @@
 import { createStore, applyMiddleware, Middleware } from "redux";
 import { HYDRATE, createWrapper } from "next-redux-wrapper";
 import thunkMiddleware from "redux-thunk";
-import { combinedReducer } from "./reducers";
+import { combinedReducer } from "./reducer";
 import { State } from "../types";
 import { Actions } from "../types/actions";
 

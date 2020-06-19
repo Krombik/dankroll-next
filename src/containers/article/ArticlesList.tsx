@@ -21,8 +21,11 @@ const ArticleList: FC<Props> = ({ initialData, type, value, initialPage }) => {
   const {
     query: { page: queryPage },
   } = useRouter();
-  let startPage = queryPage ? +queryPage : initialPage;
-  startPage = startPage && startPage > 0 ? startPage - 1 : 0;
+  const startPage = queryPage
+    ? +queryPage > 0
+      ? +queryPage - 1
+      : 0
+    : initialPage;
   const { data, error, setPage, page, mutate } = useSWRInfinite(
     (index, previousPageData) =>
       previousPageData && previousPageData.articles.length !== 0

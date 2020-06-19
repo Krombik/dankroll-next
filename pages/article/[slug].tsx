@@ -1,27 +1,45 @@
 import { wrapper } from "../../src/redux/store";
-import { ServerSideContext, PropsFromServer } from "../../src/types";
+import { ServerSideContext } from "../../src/types";
 import { getArticleUrl } from "../../src/api/article";
 import { NextPage } from "next";
 import { serverFetcher } from "../../src/utils/fetcher";
+import { Article as ArticleType } from "../../src/types/article";
+import DefaultErrorPage from "next/error";
+import Article from "../../src/containers/article/Article";
+import { useRouter } from "next/router";
 
-const Article: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
-  initialArticle,
-}) => {
-  console.log(initialArticle);
-  return <pre>234</pre>;
+type Props = {
+  initialData?: ArticleType;
+  status?: string;
+  error?: string;
+  serverSlug?: string;
 };
+
+const ArticlePage: NextPage<Props> = ({
+  initialData,
+  status,
+  error,
+  serverSlug,
+}) => {
+  const {
+    query: { slug },
+  }: any = useRouter();
+  if (status) return <DefaultErrorPage statusCode={+status} title={error} />;
+  return <Article initialData={initialData} slug={slug ?? serverSlug} />;
+};
+
 export const getServerSideProps = wrapper.getServerSideProps(
   async ({ query }: ServerSideContext) => {
     const { slug }: any = query;
-    const initialArticle = slug
-      ? await serverFetcher(getArticleUrl(slug))
-      : undefined;
-    return {
-      props: {
-        initialArticle,
-      },
-    };
+    try {
+      const initialData = await serverFetcher<ArticleType>(getArticleUrl(slug));
+      return {
+        props: { initialData, serverSlug: slug },
+      };
+    } catch (error) {
+      return { props: error.response.data };
+    }
   }
 );
 
-export default Article;
+export default ArticlePage;
