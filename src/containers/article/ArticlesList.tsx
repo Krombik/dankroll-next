@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { AllArticles } from "../../types/article";
+import { ArticlesObj } from "../../types/article";
 import { FC, memo } from "react";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -11,7 +11,7 @@ import Pagination from "../common/Pagination";
 import { useRouter } from "next/router";
 
 type Props = {
-  initialData?: AllArticles[];
+  initialData?: ArticlesObj[];
   type: string;
   value: string;
   initialPage?: number;

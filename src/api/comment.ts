@@ -2,6 +2,9 @@ import axios from "axios";
 
 import { SERVER_BASE_URL } from "../utils/constant";
 
+export const getArticleCommentsUrl = (slug: string) =>
+  `${SERVER_BASE_URL}/articles/${slug}/comments`;
+
 const CommentAPI = {
   create: async (slug, comment) => {
     try {
@@ -28,5 +31,3 @@ const CommentAPI = {
   forArticle: (slug) =>
     axios.get(`${SERVER_BASE_URL}/articles/${slug}/comments`),
 };
-
-export default CommentAPI;

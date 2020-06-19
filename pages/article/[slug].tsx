@@ -3,7 +3,7 @@ import { ServerSideContext } from "../../src/types";
 import { getArticleUrl } from "../../src/api/article";
 import { NextPage } from "next";
 import { serverFetcher } from "../../src/utils/fetcher";
-import { Article as ArticleType } from "../../src/types/article";
+import { ArticleObj as ArticleType } from "../../src/types/article";
 import DefaultErrorPage from "next/error";
 import Article from "../../src/containers/article/Article";
 import { useRouter } from "next/router";

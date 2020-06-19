@@ -1,4 +1,4 @@
-import { Tab } from "../../types/article";
+import { TabType } from "../../types/tab";
 
 export enum ActionTypes {
   SET_ARTICLES_PER_PAGE_COUNT = "SET_ARTICLES_COUNT_PER_PAGE",
@@ -17,7 +17,7 @@ type SetArticlesPerPageCount = {
 
 type AddTab = {
   type: ActionTypes.ADD_TAB;
-  payload: Tab;
+  payload: TabType;
 };
 
 type AddTabs = {

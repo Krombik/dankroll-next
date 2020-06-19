@@ -1,34 +1,23 @@
-export interface AllArticles {
+import { AuthorType } from "./author";
+
+export interface ArticlesObj {
   articles: ArticleType[];
   articlesCount: number;
 }
 
-export interface Article {
+export interface ArticleObj {
   article: ArticleType;
 }
 
 export type ArticleType = {
   tagList: string[];
-  createdAt: number;
-  author: Author;
+  createdAt: string;
+  author: AuthorType;
   description: string;
   title: string;
   body: string;
   slug: string;
-  updatedAt: number;
+  updatedAt: string;
   favoritesCount: number;
   favorited: boolean;
-};
-
-export type Author = {
-  username: string;
-  bio: string;
-  image: string;
-  following: boolean;
-};
-
-export type Tab = {
-  value: string;
-  type: string;
-  key?: string;
 };

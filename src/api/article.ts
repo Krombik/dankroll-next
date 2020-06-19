@@ -1,7 +1,4 @@
 import axios from "axios";
-
-import { AllArticles } from "../types/article";
-
 import { SERVER_BASE_URL } from "../utils/constant";
 import { getQuery } from "../utils/getQuery";
 

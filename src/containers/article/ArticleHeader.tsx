@@ -79,10 +79,10 @@ const ArticleHeader: FC<Props> = ({
         </Typography>
         {tagList.length > 0 && <TagList tagList={tagList} />}
         <StyledCardHeader
-          avatar={<Avatar src={avatar}>{username[0]}</Avatar>}
+          avatar={avatar}
           titleTypographyProps={{ color: "textPrimary" }}
-          title={username}
-          subheader={date}
+          username={username}
+          date={date}
         />
       </StyledArticleHeaderComponent>
     </ThemeProvider>

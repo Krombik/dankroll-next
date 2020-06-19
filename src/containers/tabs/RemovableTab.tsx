@@ -4,7 +4,7 @@ import { ThunkDispatcher } from "../../types";
 import { useDispatch } from "react-redux";
 import { removeTab } from "../../redux/article/actions";
 import CloseIcon from "@material-ui/icons/Close";
-import { Tab as TabType } from "../../types/article";
+import { TabType } from "../../types/tab";
 import Router from "next/router";
 import { tabKeyDecoder } from "../../utils/tabKeyDecoder";
 import Grid from "@material-ui/core/Grid";

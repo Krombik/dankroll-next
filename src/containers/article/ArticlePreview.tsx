@@ -13,6 +13,7 @@ import FavoriteIcon from "@material-ui/icons/Favorite";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import Skeleton from "@material-ui/lab/Skeleton";
 import TagList from "../common/TagList";
+import ContentInfo from "../../components/common/ContentInfo";
 
 type Props = {
   article?: ArticleType;
@@ -21,17 +22,13 @@ type Props = {
 const ArticlePreview: FC<Props> = ({ article }) => {
   const content = article
     ? {
-        avatar: (
-          <Avatar src={article.author.image}>
-            {article.author.username[0]}
-          </Avatar>
-        ),
+        avatar: article.author.image,
         like: article.favoritesCount,
         author: article.author.username,
         date:
           article.updatedAt === article.createdAt
-            ? new Date(article.createdAt).toDateString()
-            : new Date(article.updatedAt).toDateString().concat(" (Edited)"),
+            ? article.createdAt
+            : article.updatedAt,
         title: article.title,
         about: article.description,
       }
@@ -57,6 +54,11 @@ const ArticlePreview: FC<Props> = ({ article }) => {
     <Grid item xs={12} lg={6}>
       <StyledArticlePreview>
         <div>
+          <ContentInfo
+            avatar={content.avatar}
+            username={content.author}
+            date={content.date}
+          />
           <CardHeader
             avatar={content.avatar}
             action={

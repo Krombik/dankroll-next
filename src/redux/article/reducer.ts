@@ -1,12 +1,12 @@
 import { ActionTypes, ArticleActions } from "./type";
-import { Tab } from "../../types/article";
+import { TabType } from "../../types/tab";
 import { moveFromTo } from "../../utils/moveFromTo";
 import { tabKeyDecoder } from "../../utils/tabKeyDecoder";
 
 type State = {
   articlesPerPageCount: number;
   currTab: string;
-  tabList: Tab[];
+  tabList: TabType[];
   tabOrder: string[];
   articlePageNumbers: { [key: string]: number };
 };

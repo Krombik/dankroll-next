@@ -11,7 +11,7 @@ import { createSelector } from "reselect";
 import { State } from "../src/types";
 import TabsContainer from "../src/containers/tabs/TabsContainer";
 import { serverAddTab } from "../src/redux/article/actions";
-import { AllArticles } from "../src/types/article";
+import { ArticlesObj } from "../src/types/article";
 
 const selectData = createSelector(
   (state: State) => state.article.tabList,
@@ -56,7 +56,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
       : author
       ? { type: "author", value: author }
       : { type: "default", value: "" };
-    const initialArticles = await serverFetcher<AllArticles>(
+    const initialArticles = await serverFetcher<ArticlesObj>(
       getArticlesUrl({ ...initialTab, page })
     );
     if (initialTab.type !== "default") dispatch(serverAddTab(initialTab, page));

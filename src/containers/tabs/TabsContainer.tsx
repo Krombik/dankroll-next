@@ -12,7 +12,7 @@ import {
 } from "../../redux/article/actions";
 import Tab from "@material-ui/core/Tab";
 import { FC, useEffect } from "react";
-import { Tab as TabType } from "../../types/article";
+import { TabType } from "../../types/tab";
 import AddNewTabButton from "./AddNewTabButton";
 import Router from "next/router";
 import { tabKeyDecoder } from "../../utils/tabKeyDecoder";

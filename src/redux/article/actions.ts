@@ -1,6 +1,6 @@
 import { ThunkResult } from "../../types";
 import { ActionTypes } from "./type";
-import { Tab } from "../../types/article";
+import { TabType } from "../../types/tab";
 
 export const setArticlesCountPerPage = (count: number): ThunkResult => (
   dispatch
@@ -12,7 +12,10 @@ export const setArticlesCountPerPage = (count: number): ThunkResult => (
     });
 };
 
-export const addTab = (newTab: Tab): ThunkResult => (dispatch, useState) => {
+export const addTab = (newTab: TabType): ThunkResult => (
+  dispatch,
+  useState
+) => {
   const key = newTab.type + "-" + newTab.value;
   if (!useState().article.tabList.some((tab) => tab.key === key)) {
     dispatch({
@@ -30,7 +33,7 @@ export const addTab = (newTab: Tab): ThunkResult => (dispatch, useState) => {
   });
 };
 
-export const serverAddTab = (newTab: Tab, page: number): ThunkResult => (
+export const serverAddTab = (newTab: TabType, page: number): ThunkResult => (
   dispatch
 ) => {
   const key = newTab.type + "-" + newTab.value;
