@@ -8,24 +8,19 @@ type Props = CardHeaderProps & {
   date: string | JSX.Element;
 };
 
-const ContentInfo: FC<Props> = ({ username, avatar, date, ...props }) => {
-  console.log(typeof date);
-  return (
-    <CardHeader
-      {...props}
-      avatar={
-        typeof avatar === "string" ? (
-          <Avatar src={avatar}>{username[0]}</Avatar>
-        ) : (
-          avatar
-        )
-      }
-      title={username}
-      subheader={
-        typeof date === "string" ? new Date(date).toDateString() : date
-      }
-    />
-  );
-};
+const ContentInfo: FC<Props> = ({ username, avatar, date, ...props }) => (
+  <CardHeader
+    avatar={
+      typeof avatar === "string" ? (
+        <Avatar src={avatar}>{username[0]}</Avatar>
+      ) : (
+        avatar
+      )
+    }
+    title={username}
+    subheader={typeof date === "string" ? new Date(date).toDateString() : date}
+    {...props}
+  />
+);
 
 export default ContentInfo;

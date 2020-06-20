@@ -58,9 +58,6 @@ const ArticlePreview: FC<Props> = ({ article }) => {
             avatar={content.avatar}
             username={content.author}
             date={content.date}
-          />
-          <CardHeader
-            avatar={content.avatar}
             action={
               <Button
                 variant="outlined"
@@ -73,8 +70,6 @@ const ArticlePreview: FC<Props> = ({ article }) => {
                 {content.like}
               </Button>
             }
-            title={content.author}
-            subheader={content.date}
           />
           <CardContent>
             <Typography variant="h5">{content.title}</Typography>

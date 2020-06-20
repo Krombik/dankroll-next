@@ -9,9 +9,11 @@ import { useSWRInfinite } from "swr";
 import { fetcher } from "../../utils/fetcher";
 import Pagination from "../common/Pagination";
 import { useRouter } from "next/router";
+import { FetchRV } from "../../types";
+import DefaultErrorPage from "next/error";
 
 type Props = {
-  initialData?: ArticlesObj[];
+  initialData?: FetchRV<ArticlesObj>[];
   type: string;
   value: string;
   initialPage?: number;
@@ -26,7 +28,9 @@ const ArticleList: FC<Props> = ({ initialData, type, value, initialPage }) => {
       ? +queryPage - 1
       : 0
     : initialPage;
-  const { data, error, setPage, page, mutate } = useSWRInfinite(
+  const { data, error, setPage, page, mutate } = useSWRInfinite<
+    FetchRV<ArticlesObj>
+  >(
     (index, previousPageData) =>
       previousPageData && previousPageData.articles.length !== 0
         ? getArticlesUrl({ page: startPage + index, type, value })
@@ -34,6 +38,13 @@ const ArticleList: FC<Props> = ({ initialData, type, value, initialPage }) => {
     fetcher,
     { initialData }
   );
+  if (data?.length > 0 && data[data.length - 1].error)
+    return (
+      <DefaultErrorPage
+        statusCode={+data[data.length - 1]}
+        title={data[data.length - 1].error}
+      />
+    );
   const articles =
     data?.length > 0 ? data.flatMap(({ articles }) => articles) : [];
   const articlesCount = data ? data[0]?.articlesCount : 0;

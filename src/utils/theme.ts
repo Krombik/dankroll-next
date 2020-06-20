@@ -21,6 +21,7 @@ const useTheme = (isDark: boolean) =>
       palette: {
         type: isDark ? "dark" : "light",
       },
+
       overrides: {
         MuiCssBaseline: {
           "@global": {
@@ -56,6 +57,10 @@ const useTheme = (isDark: boolean) =>
                 fontStyle: "normal",
               },
             ],
+            body: {
+              "overflow-x": "hidden",
+              "max-width": "100vw",
+            },
           },
         },
       },

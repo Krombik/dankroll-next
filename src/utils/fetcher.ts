@@ -1,22 +1,25 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
+import { FetchError, FetchRV } from "../types";
 
 const updateOptions = () => {
-  const token = localStorage.user
-    ? JSON.parse(localStorage.user)?.token
-    : undefined;
-  if (token)
-    return {
-      headers: {
-        Authorization: `Token ${token}`,
-      },
-    };
+  if (typeof localStorage !== "undefined") {
+    const token = localStorage.user
+      ? JSON.parse(localStorage.user)?.token
+      : undefined;
+    if (token)
+      return {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      };
+  }
   return {};
 };
 
-export const serverFetcher = async <T = any>(url: string) =>
-  (await axios.get<T>(url)).data;
-
-export const fetcher = async <T = any>(url: string) => {
-  const { data } = await axios.get<T>(url, updateOptions());
-  return data;
+export const fetcher = async <T>(url: string): Promise<T> => {
+  try {
+    return (await axios.get<T>(url, updateOptions())).data;
+  } catch (error) {
+    return error.response.data;
+  }
 };

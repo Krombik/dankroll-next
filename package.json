@@ -21,7 +21,8 @@
     "@material-ui/lab": "4.0.0-alpha.55",
     "styled-components": "5.1.1",
     "react-sortable-hoc": "1.11.0",
-    "swr": "0.3.0-beta.3"
+    "swr": "0.3.0-beta.3",
+    "react-markdown": "4.3.1"
   },
   "devDependencies": {
     "@types/react-beautiful-dnd": "13.0.0",

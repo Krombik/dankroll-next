@@ -1,52 +1,83 @@
 import { ArticleObj } from "../../types/article";
 import Grid from "@material-ui/core/Grid";
 import { FC } from "react";
-import Typography from "@material-ui/core/Typography";
 import useSWR from "swr";
 import { fetcher } from "../../utils/fetcher";
 import { getArticleUrl } from "../../api/article";
 import ArticleHeader from "./ArticleHeader";
 import Comments from "../common/Comments";
 import { CommentsObj } from "../../types/comment";
-import Divider from "@material-ui/core/Divider";
 import GridDivider from "../../components/common/GridDivider";
+import Markdown from "react-markdown";
+import { Link, Divider } from "@material-ui/core";
+import { getArticleCommentsUrl } from "../../api/comment";
+import Typography from "@material-ui/core/Typography";
+import { FetchRV } from "../../types";
+import Pending from "../common/Pending";
 
 type Props = {
-  initialData?: ArticleObj;
-  initialComments?: CommentsObj;
+  initialArticle?: FetchRV<ArticleObj>;
+  initialComments?: FetchRV<CommentsObj>;
   slug: string;
 };
 
-const Article: FC<Props> = ({ initialData, initialComments, slug }) => {
-  const {
-    data: { article },
-  } = useSWR<ArticleObj>(getArticleUrl(slug), fetcher, {
-    initialData,
-  });
+const Article: FC<Props> = ({ initialArticle, initialComments, slug }) => {
+  const { data: articleData } = useSWR<FetchRV<ArticleObj>>(
+    getArticleUrl(slug),
+    fetcher,
+    {
+      initialData: initialArticle,
+    }
+  );
+  const { data: commentsData } = useSWR<FetchRV<CommentsObj>>(
+    getArticleCommentsUrl(slug),
+    fetcher,
+    {
+      initialData: initialComments,
+    }
+  );
+  const article = articleData?.article;
+  const comments = commentsData?.comments;
   return (
     <Grid container spacing={3}>
-      <Grid item xs={12}>
-        <ArticleHeader
-          date={
-            article.updatedAt === article.createdAt
-              ? article.createdAt
-              : article.updatedAt
-          }
-          title={article.title}
-          favoritesCount={article.favoritesCount}
-          isFavorite={article.favorited}
-          tagList={article.tagList}
-          avatar={article.author.image}
-          username={article.author.username}
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <Typography>{article.body}</Typography>
-      </Grid>
+      <Pending isLoading={!article}>
+        <Grid item xs={12}>
+          <ArticleHeader
+            date={
+              article.updatedAt === article.createdAt
+                ? article.createdAt
+                : article.updatedAt
+            }
+            title={article.title}
+            favoritesCount={article.favoritesCount}
+            isFavorite={article.favorited}
+            tagList={article.tagList}
+            avatar={article.author.image}
+            username={article.author.username}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <Markdown
+            source={article.body}
+            skipHtml={true}
+            renderers={{
+              link: Link,
+              thematicBreak: Divider,
+            }}
+          />
+        </Grid>
+      </Pending>
       <GridDivider item xs={12} />
-      <Grid item xs={12}>
-        <Comments slug={slug} initialData={initialComments} />
-      </Grid>
+      <Pending isLoading={!comments}>
+        <Grid item xs={12}>
+          <Typography variant="h4">Comments: {comments.length}</Typography>
+        </Grid>
+        {comments.length > 0 && (
+          <Grid item xs={12} container spacing={3}>
+            <Comments comments={comments} />
+          </Grid>
+        )}
+      </Pending>
     </Grid>
   );
 };

@@ -1,17 +1,18 @@
 import { wrapper } from "../src/redux/store";
-import { ServerSideContext, PropsFromServer } from "../src/types";
+import { ServerSideContext, PropsFromServer, FetchRV } from "../src/types";
 import ArticleList from "../src/containers/article/ArticlesList";
 import { getArticlesUrl } from "../src/api/article";
 import { NextPage } from "next";
 import TabContext from "@material-ui/lab/TabContext";
 import TabPanel from "@material-ui/lab/TabPanel";
-import { serverFetcher } from "../src/utils/fetcher";
+import { fetcher } from "../src/utils/fetcher";
 import { useSelector } from "react-redux";
 import { createSelector } from "reselect";
 import { State } from "../src/types";
 import TabsContainer from "../src/containers/tabs/TabsContainer";
 import { serverAddTab } from "../src/redux/article/actions";
 import { ArticlesObj } from "../src/types/article";
+import DefaultErrorPage from "next/error";
 
 const selectData = createSelector(
   (state: State) => state.article.tabList,
@@ -24,6 +25,13 @@ const Index: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
   initialKey,
   initialPage,
 }) => {
+  if (initialArticles && initialArticles.error)
+    return (
+      <DefaultErrorPage
+        statusCode={+initialArticles.status}
+        title={initialArticles.error}
+      />
+    );
   const { tabList, currTab } = useSelector(selectData);
   const isTabInitial = (key: string) =>
     initialKey !== key ? {} : { initialPage, initialData: [initialArticles] };
@@ -56,7 +64,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
       : author
       ? { type: "author", value: author }
       : { type: "default", value: "" };
-    const initialArticles = await serverFetcher<ArticlesObj>(
+    const initialArticles = await fetcher<FetchRV<ArticlesObj>>(
       getArticlesUrl({ ...initialTab, page })
     );
     if (initialTab.type !== "default") dispatch(serverAddTab(initialTab, page));
