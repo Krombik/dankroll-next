@@ -3,7 +3,6 @@ import { StyledArticlePreview } from "../../components/article/styled";
 import { ArticleType } from "../../types/article";
 import { Grid } from "@material-ui/core";
 import { FC } from "react";
-import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
 import Avatar from "@material-ui/core/Avatar";
@@ -14,6 +13,10 @@ import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import Skeleton from "@material-ui/lab/Skeleton";
 import TagList from "../common/TagList";
 import ContentInfo from "../../components/common/ContentInfo";
+import { useDispatch } from "react-redux";
+import { ThunkDispatcher } from "../../types";
+import { setArticleModalOpen } from "../../redux/articleModal/actions";
+import { useRouter } from "next/router";
 
 type Props = {
   article?: ArticleType;
@@ -50,6 +53,12 @@ const ArticlePreview: FC<Props> = ({ article }) => {
           </>
         ),
       };
+  const dispatch = useDispatch<ThunkDispatcher>();
+  const { pathname, push } = useRouter();
+  const handleModalOpen = () => {
+    dispatch(setArticleModalOpen(true, article.slug));
+    push(pathname, `/article/${article?.slug}`, { shallow: true });
+  };
   return (
     <Grid item xs={12} lg={6}>
       <StyledArticlePreview>
@@ -76,11 +85,16 @@ const ArticlePreview: FC<Props> = ({ article }) => {
             <Typography variant="subtitle1">{content.about}</Typography>
           </CardContent>
           <CardActions>
-            <Link as={`/article/${article?.slug}`} href={"/article/[slug]"}>
-              <Button variant="contained" disabled={!article} color="primary">
-                Read more
-              </Button>
-            </Link>
+            {/* <Link as={`/article/${article?.slug}`} href={"/article/[slug]"}> */}
+            <Button
+              variant="contained"
+              disabled={!article}
+              color="primary"
+              onClick={handleModalOpen}
+            >
+              Read more
+            </Button>
+            {/* </Link> */}
           </CardActions>
         </div>
         {article?.tagList.length > 0 && <TagList tagList={article.tagList} />}

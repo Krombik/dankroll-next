@@ -13,6 +13,7 @@ const useTheme = (isDark: boolean) =>
           fontWeight: "bold",
           textTransform: "capitalize",
           marginBottom: 15,
+          position: "relative",
         },
         body1: {
           textTransform: "capitalize",

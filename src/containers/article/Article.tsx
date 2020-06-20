@@ -13,7 +13,7 @@ import { Link, Divider } from "@material-ui/core";
 import { getArticleCommentsUrl } from "../../api/comment";
 import Typography from "@material-ui/core/Typography";
 import { FetchRV } from "../../types";
-import Pending from "../common/Pending";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 type Props = {
   initialArticle?: FetchRV<ArticleObj>;
@@ -38,46 +38,59 @@ const Article: FC<Props> = ({ initialArticle, initialComments, slug }) => {
   );
   const article = articleData?.article;
   const comments = commentsData?.comments;
+  console.log(!article);
   return (
     <Grid container spacing={3}>
-      <Pending isLoading={!article}>
-        <Grid item xs={12}>
-          <ArticleHeader
-            date={
-              article.updatedAt === article.createdAt
-                ? article.createdAt
-                : article.updatedAt
-            }
-            title={article.title}
-            favoritesCount={article.favoritesCount}
-            isFavorite={article.favorited}
-            tagList={article.tagList}
-            avatar={article.author.image}
-            username={article.author.username}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <Markdown
-            source={article.body}
-            skipHtml={true}
-            renderers={{
-              link: Link,
-              thematicBreak: Divider,
-            }}
-          />
-        </Grid>
-      </Pending>
-      <GridDivider item xs={12} />
-      <Pending isLoading={!comments}>
-        <Grid item xs={12}>
-          <Typography variant="h4">Comments: {comments.length}</Typography>
-        </Grid>
-        {comments.length > 0 && (
-          <Grid item xs={12} container spacing={3}>
-            <Comments comments={comments} />
+      {article ? (
+        <>
+          <Grid item xs={12}>
+            <ArticleHeader
+              date={
+                article.updatedAt === article.createdAt
+                  ? article.createdAt
+                  : article.updatedAt
+              }
+              title={article.title}
+              favoritesCount={article.favoritesCount}
+              isFavorite={article.favorited}
+              tagList={article.tagList}
+              avatar={article.author.image}
+              username={article.author.username}
+            />
           </Grid>
-        )}
-      </Pending>
+          <Grid item xs={12}>
+            <Markdown
+              source={article.body}
+              skipHtml={true}
+              renderers={{
+                link: Link,
+                thematicBreak: Divider,
+              }}
+            />
+          </Grid>
+        </>
+      ) : (
+        <Grid item xs={12} container justify="center">
+          <CircularProgress />
+        </Grid>
+      )}
+      <GridDivider item xs={12} />
+      {comments ? (
+        <>
+          <Grid item xs={12}>
+            <Typography variant="h4">Comments: {comments.length}</Typography>
+          </Grid>
+          {comments.length > 0 && (
+            <Grid item xs={12} container spacing={3}>
+              <Comments comments={comments} />
+            </Grid>
+          )}
+        </>
+      ) : (
+        <Grid item xs={12} container justify="center">
+          <CircularProgress />
+        </Grid>
+      )}
     </Grid>
   );
 };

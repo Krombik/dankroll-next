@@ -1,6 +1,5 @@
-import Link from "next/link";
 import { ArticlesObj } from "../../types/article";
-import { FC, memo } from "react";
+import { FC } from "react";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import ArticlePreview from "./ArticlePreview";
@@ -11,6 +10,7 @@ import Pagination from "../common/Pagination";
 import { useRouter } from "next/router";
 import { FetchRV } from "../../types";
 import DefaultErrorPage from "next/error";
+import ArticleModal from "./ArticleModal";
 
 type Props = {
   initialData?: FetchRV<ArticlesObj>[];
@@ -96,6 +96,7 @@ const ArticleList: FC<Props> = ({ initialData, type, value, initialPage }) => {
           </Grid>
         </>
       )}
+      <ArticleModal />
     </Grid>
   );
 };
