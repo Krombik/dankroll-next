@@ -17,6 +17,7 @@ const useTheme = (isDark: boolean) =>
         },
         body1: {
           textTransform: "capitalize",
+          position: "relative",
         },
       },
       palette: {

@@ -4,7 +4,7 @@ import PaginationItem from "@material-ui/lab/PaginationItem";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 import { ThunkDispatcher } from "../../types";
-import { setPageNumber } from "../../redux/article/actions";
+import { setPageNumber } from "../../redux/articleTabs/actions";
 import { FC } from "react";
 
 type Props = {
@@ -27,7 +27,6 @@ const Pagination: FC<Props> = ({ page, count, tabKey, resetPage }) => {
     if (tabKey) dispatch(setPageNumber(tabKey, number - 1));
     resetPage();
   };
-  console.log(page, count);
   return (
     <PaginationContainer
       page={page}

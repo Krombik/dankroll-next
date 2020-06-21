@@ -12,7 +12,7 @@ import { FetchRV, ThunkDispatcher } from "../../types";
 import ArticleModal from "./ArticleModal";
 import Router from "next/router";
 import { useDispatch } from "react-redux";
-import { setTab } from "../../redux/article/actions";
+import { setTab } from "../../redux/articleTabs/actions";
 import urlToQuery from "../../utils/urlToQuery";
 
 type Props = {
@@ -23,6 +23,7 @@ type Props = {
 };
 
 const ArticleList: FC<Props> = ({ initialData, type, value, initialPage }) => {
+  console.log(type);
   const {
     query: { page: queryPage },
   } = useRouter();

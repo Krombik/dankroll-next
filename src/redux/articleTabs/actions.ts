@@ -17,7 +17,7 @@ export const addTab = (newTab: TabType): ThunkResult => (
   useState
 ) => {
   const key = newTab.type + "-" + newTab.value;
-  if (!useState().article.tabList.some((tab) => tab.key === key)) {
+  if (!useState().articleTabs.tabList.some((tab) => tab.key === key)) {
     dispatch({
       type: ActionTypes.ADD_TAB,
       payload: { ...newTab, key },
@@ -51,7 +51,7 @@ export const addTabsFromStorage = (clientOrder: string[]): ThunkResult => (
   dispatch,
   useState
 ) => {
-  const { tabOrder } = useState().article;
+  const { tabOrder } = useState().articleTabs;
   dispatch({
     type: ActionTypes.ADD_TABS,
     payload:
@@ -65,7 +65,7 @@ export const removeTab = (tabOrderIndex: number): ThunkResult<string> => (
   dispatch,
   useState
 ) => {
-  const { currTab, tabOrder } = useState().article;
+  const { currTab, tabOrder } = useState().articleTabs;
   const currTabOrderIndex = tabOrder.indexOf(currTab);
   const newTabKey =
     currTabOrderIndex === tabOrderIndex

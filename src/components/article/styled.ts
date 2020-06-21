@@ -39,11 +39,12 @@ export const StyledCardHeader = styled(ContentInfo)`
   position: relative;
 `;
 
-type StyledArticleHeaderComponentProps = { backgroundColor: string };
+type StyledBannerProps = { backgroundColor: string };
 
-export const StyledArticleHeaderComponent = styled.div`
+export const StyledBanner = styled.div`
   padding: 25px 0;
   position: relative;
+  width: 100%;
   &::before {
     content: "";
     position: absolute;
@@ -52,7 +53,6 @@ export const StyledArticleHeaderComponent = styled.div`
     transform: translateX(-50%);
     left: 50%;
     height: 100%;
-    background: ${(props: StyledArticleHeaderComponentProps) =>
-      props.backgroundColor};
+    background: ${(props: StyledBannerProps) => props.backgroundColor};
   }
 `;

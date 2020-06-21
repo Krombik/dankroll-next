@@ -1,10 +1,10 @@
 import { combineReducers } from "redux";
-import article from "./article/reducer";
+import articleTabs from "./articleTabs/reducer";
 import common from "./common/reducer";
 import articleModal from "./articleModal/reducer";
 
 export const combinedReducer = combineReducers({
-  article,
+  articleTabs,
   common,
   articleModal,
 });

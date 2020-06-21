@@ -10,13 +10,13 @@ import { useSelector } from "react-redux";
 import { createSelector } from "reselect";
 import { State } from "../src/types";
 import TabsContainer from "../src/containers/tabs/TabsContainer";
-import { serverAddTab } from "../src/redux/article/actions";
+import { serverAddTab, setPageNumber } from "../src/redux/articleTabs/actions";
 import { ArticlesObj } from "../src/types/article";
 import DefaultErrorPage from "next/error";
 
 const selectData = createSelector(
-  (state: State) => state.article.tabList,
-  (state: State) => state.article.currTab,
+  (state: State) => state.articleTabs.tabList,
+  (state: State) => state.articleTabs.currTab,
   (tabList, currTab) => ({ tabList, currTab })
 );
 
@@ -68,6 +68,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
       getArticlesUrl({ ...initialTab, page })
     );
     if (initialTab.type !== "default") dispatch(serverAddTab(initialTab, page));
+    else dispatch(setPageNumber("default-", page));
     return {
       props: {
         initialArticles: initialArticles,

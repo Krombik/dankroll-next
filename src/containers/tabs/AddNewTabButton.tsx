@@ -1,6 +1,6 @@
 import { ThunkDispatcher } from "../../types";
 import { useDispatch } from "react-redux";
-import { addTab } from "../../redux/article/actions";
+import { addTab } from "../../redux/articleTabs/actions";
 import AddIcon from "@material-ui/icons/Add";
 import Grid from "@material-ui/core/Grid";
 import Input from "@material-ui/core/Input";

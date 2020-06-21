@@ -3,7 +3,7 @@ import { FC } from "react";
 import Chip from "@material-ui/core/Chip";
 import { useDispatch } from "react-redux";
 import { ThunkDispatcher, State } from "../../types";
-import { addTab } from "../../redux/article/actions";
+import { addTab } from "../../redux/articleTabs/actions";
 import Router from "next/router";
 import { createSelector } from "reselect";
 import { useSelector } from "react-redux";
@@ -13,7 +13,7 @@ type Props = {
 };
 
 const selectData = createSelector(
-  (state: State) => state.article.articlePageNumbers,
+  (state: State) => state.articleTabs.articlePageNumbers,
   (articlePageNumbers) => ({ articlePageNumbers })
 );
 

@@ -1,4 +1,4 @@
-import { AuthorType } from "./author";
+import { UserType } from "./user";
 
 export interface CommentsObj {
   comments: CommentType[];
@@ -9,6 +9,6 @@ export type CommentType = {
   id: string;
   body: string;
   slug: string;
-  author: AuthorType;
+  author: UserType;
   updatedAt: string;
 };

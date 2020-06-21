@@ -1,6 +1,8 @@
 import axios from "axios";
-
 import { SERVER_BASE_URL } from "../utils/constant";
+
+export const getUserUrl = (username: string) =>
+  `${SERVER_BASE_URL}/profiles/${username}`;
 
 const UserAPI = {
   current: async () => {

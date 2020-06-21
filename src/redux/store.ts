@@ -16,8 +16,11 @@ const bindMiddleware = (middleware: Middleware[]) => {
 const reducer = (state: State, action: Actions) => {
   if (action.type === HYDRATE) {
     const newState = { ...state, ...action.payload };
-    if (state.article.tabList.length > action.payload.article.tabList.length)
-      return { ...newState, article: { ...state.article } };
+    if (
+      state.articleTabs.tabList.length >
+      action.payload.articleTabs.tabList.length
+    )
+      return { ...newState, articleTabs: { ...state.articleTabs } };
     return newState;
   }
   return combinedReducer(state, action);

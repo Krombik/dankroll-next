@@ -1,12 +1,12 @@
 import RemovableTab from "./RemovableTab";
 import AppBar from "@material-ui/core/AppBar";
+import Tab from "@material-ui/core/Tab";
 import TabList from "@material-ui/lab/TabList";
 import { useSelector } from "react-redux";
 import { createSelector } from "reselect";
 import { State, ThunkDispatcher } from "../../types";
 import { useDispatch } from "react-redux";
-import { moveTab, addTabsFromStorage } from "../../redux/article/actions";
-import Tab from "@material-ui/core/Tab";
+import { moveTab, addTabsFromStorage } from "../../redux/articleTabs/actions";
 import { FC, useEffect } from "react";
 import { TabType } from "../../types/tab";
 import AddNewTabButton from "./AddNewTabButton";
@@ -16,8 +16,8 @@ import { setToStorage, getFromStorage } from "../../utils/storage";
 import SortableList from "../common/SortableList";
 
 const selectData = createSelector(
-  (state: State) => state.article.tabOrder,
-  (state: State) => state.article.articlePageNumbers,
+  (state: State) => state.articleTabs.tabOrder,
+  (state: State) => state.articleTabs.articlePageNumbers,
   (tabOrder, articlePageNumbers) => ({ tabOrder, articlePageNumbers })
 );
 

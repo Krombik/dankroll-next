@@ -15,6 +15,7 @@ import Typography from "@material-ui/core/Typography";
 import { FetchRV } from "../../types";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Spinner from "../../components/common/Spinner";
+import Banner from "../common/Banner";
 
 type Props = {
   initialArticle?: FetchRV<ArticleObj>;
@@ -44,19 +45,21 @@ const Article: FC<Props> = ({ initialArticle, initialComments, slug }) => {
       {article ? (
         <>
           <Grid item xs={12}>
-            <ArticleHeader
-              date={
-                article.updatedAt === article.createdAt
-                  ? article.createdAt
-                  : article.updatedAt
-              }
-              title={article.title}
-              favoritesCount={article.favoritesCount}
-              isFavorite={article.favorited}
-              tagList={article.tagList}
-              avatar={article.author.image}
-              username={article.author.username}
-            />
+            <Banner>
+              <ArticleHeader
+                date={
+                  article.updatedAt === article.createdAt
+                    ? article.createdAt
+                    : article.updatedAt
+                }
+                title={article.title}
+                favoritesCount={article.favoritesCount}
+                isFavorite={article.favorited}
+                tagList={article.tagList}
+                avatar={article.author.image}
+                username={article.author.username}
+              />
+            </Banner>
           </Grid>
           <Grid item xs={12}>
             <Markdown

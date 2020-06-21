@@ -1,4 +1,4 @@
-import { AuthorType } from "./author";
+import { UserType } from "./user";
 
 export interface ArticlesObj {
   articles: ArticleType[];
@@ -12,7 +12,7 @@ export interface ArticleObj {
 export type ArticleType = {
   tagList: string[];
   createdAt: string;
-  author: AuthorType;
+  author: UserType;
   description: string;
   title: string;
   body: string;
