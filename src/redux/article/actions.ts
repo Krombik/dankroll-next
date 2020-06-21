@@ -24,13 +24,9 @@ export const addTab = (newTab: TabType): ThunkResult => (
     });
     dispatch({
       type: ActionTypes.SET_PAGE_NUMBER,
-      payload: { key, count: 0 },
+      payload: { key, page: 0 },
     });
   }
-  dispatch({
-    type: ActionTypes.SET_TAB,
-    payload: key,
-  });
 };
 
 export const serverAddTab = (newTab: TabType, page: number): ThunkResult => (
@@ -47,7 +43,7 @@ export const serverAddTab = (newTab: TabType, page: number): ThunkResult => (
   });
   dispatch({
     type: ActionTypes.SET_PAGE_NUMBER,
-    payload: { key, count: page },
+    payload: { key, page },
   });
 };
 
@@ -80,22 +76,18 @@ export const removeTab = (tabOrderIndex: number): ThunkResult<string> => (
         : tabOrder[tabOrderIndex + 1]
       : currTab;
   dispatch({
-    type: ActionTypes.SET_TAB,
-    payload: newTabKey,
-  });
-  dispatch({
     type: ActionTypes.REMOVE_TAB,
     payload: tabOrder[tabOrderIndex],
   });
   return newTabKey;
 };
 
-export const setPageNumber = (key: string, count: number): ThunkResult => (
+export const setPageNumber = (key: string, page: number): ThunkResult => (
   dispatch
 ) => {
   dispatch({
     type: ActionTypes.SET_PAGE_NUMBER,
-    payload: { key, count },
+    payload: { key, page },
   });
 };
 

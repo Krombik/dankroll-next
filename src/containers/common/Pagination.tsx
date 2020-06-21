@@ -27,6 +27,7 @@ const Pagination: FC<Props> = ({ page, count, tabKey, resetPage }) => {
     if (tabKey) dispatch(setPageNumber(tabKey, number - 1));
     resetPage();
   };
+  console.log(page, count);
   return (
     <PaginationContainer
       page={page}

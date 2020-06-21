@@ -14,6 +14,7 @@ import { getArticleCommentsUrl } from "../../api/comment";
 import Typography from "@material-ui/core/Typography";
 import { FetchRV } from "../../types";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import Spinner from "../../components/common/Spinner";
 
 type Props = {
   initialArticle?: FetchRV<ArticleObj>;
@@ -38,7 +39,6 @@ const Article: FC<Props> = ({ initialArticle, initialComments, slug }) => {
   );
   const article = articleData?.article;
   const comments = commentsData?.comments;
-  console.log(!article);
   return (
     <Grid container spacing={3}>
       {article ? (
@@ -70,9 +70,7 @@ const Article: FC<Props> = ({ initialArticle, initialComments, slug }) => {
           </Grid>
         </>
       ) : (
-        <Grid item xs={12} container justify="center">
-          <CircularProgress />
-        </Grid>
+        <Spinner />
       )}
       <GridDivider item xs={12} />
       {comments ? (
@@ -87,9 +85,7 @@ const Article: FC<Props> = ({ initialArticle, initialComments, slug }) => {
           )}
         </>
       ) : (
-        <Grid item xs={12} container justify="center">
-          <CircularProgress />
-        </Grid>
+        <Spinner />
       )}
     </Grid>
   );

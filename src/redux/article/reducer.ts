@@ -74,7 +74,7 @@ export default function reducer(
         ...state,
         articlePageNumbers: {
           ...state.articlePageNumbers,
-          [action.payload.key]: action.payload.count,
+          [action.payload.key]: action.payload.page,
         },
       };
     default:

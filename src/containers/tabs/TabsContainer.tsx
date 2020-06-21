@@ -5,11 +5,7 @@ import { useSelector } from "react-redux";
 import { createSelector } from "reselect";
 import { State, ThunkDispatcher } from "../../types";
 import { useDispatch } from "react-redux";
-import {
-  setTab,
-  moveTab,
-  addTabsFromStorage,
-} from "../../redux/article/actions";
+import { moveTab, addTabsFromStorage } from "../../redux/article/actions";
 import Tab from "@material-ui/core/Tab";
 import { FC, useEffect } from "react";
 import { TabType } from "../../types/tab";
@@ -34,7 +30,6 @@ const TabsContainer: FC<Props> = ({ tabList }) => {
   const dispatch = useDispatch<ThunkDispatcher>();
   const handleChange = (_: any, newValue: string) => {
     if (newValue !== "add") {
-      dispatch(setTab(newValue));
       const { type, value } = tabKeyDecoder(newValue);
       const page = articlePageNumbers[newValue] + 1;
       const path =

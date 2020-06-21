@@ -42,7 +42,7 @@ type MoveTab = {
 
 type SetPageNumbers = {
   type: ActionTypes.SET_PAGE_NUMBER;
-  payload: { key: string; count: number };
+  payload: { key: string; page: number };
 };
 
 export type ArticleActions =

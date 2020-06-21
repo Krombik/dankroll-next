@@ -7,21 +7,19 @@ type Props = {
   comments: CommentType[];
 };
 
-const Comments: FC<Props> = ({ comments }) => {
-  return (
-    <>
-      {comments.map((comment, index) => (
-        <Grid item xs={12} key={index}>
-          <Comment
-            username={comment.author.username}
-            avatar={comment.author.image}
-            date={comment.createdAt}
-            body={comment.body}
-          />
-        </Grid>
-      ))}
-    </>
-  );
-};
+const Comments: FC<Props> = ({ comments }) => (
+  <>
+    {comments.map((comment, index) => (
+      <Grid item xs={12} key={index}>
+        <Comment
+          username={comment.author.username}
+          avatar={comment.author.image}
+          date={comment.createdAt}
+          body={comment.body}
+        />
+      </Grid>
+    ))}
+  </>
+);
 
 export default Comments;

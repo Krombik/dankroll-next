@@ -1,5 +1,5 @@
 import { ArticlesObj } from "../../types/article";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import ArticlePreview from "./ArticlePreview";
@@ -8,9 +8,12 @@ import { useSWRInfinite } from "swr";
 import { fetcher } from "../../utils/fetcher";
 import Pagination from "../common/Pagination";
 import { useRouter } from "next/router";
-import { FetchRV } from "../../types";
-import DefaultErrorPage from "next/error";
+import { FetchRV, ThunkDispatcher } from "../../types";
 import ArticleModal from "./ArticleModal";
+import Router from "next/router";
+import { useDispatch } from "react-redux";
+import { setTab } from "../../redux/article/actions";
+import urlToQuery from "../../utils/urlToQuery";
 
 type Props = {
   initialData?: FetchRV<ArticlesObj>[];
@@ -27,10 +30,8 @@ const ArticleList: FC<Props> = ({ initialData, type, value, initialPage }) => {
     ? +queryPage > 0
       ? +queryPage - 1
       : 0
-    : initialPage;
-  const { data, error, setPage, page, mutate } = useSWRInfinite<
-    FetchRV<ArticlesObj>
-  >(
+    : initialPage || 0;
+  const { data, setPage, page, mutate } = useSWRInfinite<FetchRV<ArticlesObj>>(
     (index, previousPageData) =>
       previousPageData && previousPageData.articles.length !== 0
         ? getArticlesUrl({ page: startPage + index, type, value })
@@ -38,24 +39,32 @@ const ArticleList: FC<Props> = ({ initialData, type, value, initialPage }) => {
     fetcher,
     { initialData }
   );
-  if (data?.length > 0 && data[data.length - 1].error)
-    return (
-      <DefaultErrorPage
-        statusCode={+data[data.length - 1]}
-        title={data[data.length - 1].error}
-      />
-    );
+  const dispatch = useDispatch<ThunkDispatcher>();
+  const resetPage = () => {
+    window.scrollTo({ left: 0, top: 0, behavior: "smooth" });
+    mutate([]);
+  };
+  useEffect(() => {
+    const handleRouteChange = (url: string) => {
+      const oldQuery = Router.query;
+      const { tag, author, page } = urlToQuery(url);
+      if (tag !== oldQuery.tag || author !== oldQuery.author)
+        dispatch(
+          setTab(tag ? "tag-" + tag : author ? "author-" + author : "default-")
+        );
+      else if (page !== oldQuery.page) setPage(1);
+    };
+    Router.events.on("routeChangeStart", handleRouteChange);
+    return () => {
+      Router.events.off("routeChangeStart", handleRouteChange);
+    };
+  }, []);
   const articles =
     data?.length > 0 ? data.flatMap(({ articles }) => articles) : [];
   const articlesCount = data ? data[0]?.articlesCount : 0;
   const isLoadMoreUnavailable = articles?.length >= articlesCount;
   const isLoading = data?.length === 0 || data?.length !== page;
   const pageCount = Math.ceil(articlesCount / 10);
-  const resetPage = () => {
-    window.scrollTo({ left: 0, top: 0, behavior: "smooth" });
-    mutate([]);
-    setPage(1);
-  };
   return (
     <Grid container spacing={3}>
       {articles?.map((article, index) => (

@@ -20,14 +20,16 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     modal: {
       display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
+      flexDirection: "column",
+      maxWidth: "90vw",
+      margin: "auto",
+      justifyContent: "space-between",
+      overflowY: "auto",
     },
     paper: {
       backgroundColor: theme.palette.background.default,
       padding: theme.spacing(0, 4, 3),
       overflowX: "hidden",
-      maxWidth: "95vw",
     },
   })
 );

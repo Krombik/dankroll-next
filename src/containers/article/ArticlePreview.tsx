@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { StyledArticlePreview } from "../../components/article/styled";
 import { ArticleType } from "../../types/article";
 import { Grid } from "@material-ui/core";
@@ -57,7 +56,7 @@ const ArticlePreview: FC<Props> = ({ article }) => {
   const { pathname, push } = useRouter();
   const handleModalOpen = () => {
     dispatch(setArticleModalOpen(true, article.slug));
-    push(pathname, `/article/${article?.slug}`, { shallow: true });
+    push(pathname, `/article/${article.slug}`, { shallow: true });
   };
   return (
     <Grid item xs={12} lg={6}>
@@ -85,7 +84,6 @@ const ArticlePreview: FC<Props> = ({ article }) => {
             <Typography variant="subtitle1">{content.about}</Typography>
           </CardContent>
           <CardActions>
-            {/* <Link as={`/article/${article?.slug}`} href={"/article/[slug]"}> */}
             <Button
               variant="contained"
               disabled={!article}
@@ -94,7 +92,6 @@ const ArticlePreview: FC<Props> = ({ article }) => {
             >
               Read more
             </Button>
-            {/* </Link> */}
           </CardActions>
         </div>
         {article?.tagList.length > 0 && <TagList tagList={article.tagList} />}
