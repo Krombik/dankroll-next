@@ -31,7 +31,7 @@ const ArticleList: FC<Props> = ({ initialData, type, value, initialPage }) => {
     ? +queryPage > 0
       ? +queryPage - 1
       : 0
-    : initialPage || 0;
+    : initialPage;
   const { data, setPage, page, mutate } = useSWRInfinite<FetchRV<ArticlesObj>>(
     (index, previousPageData) =>
       previousPageData && previousPageData.articles.length !== 0

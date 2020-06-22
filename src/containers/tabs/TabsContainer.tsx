@@ -6,13 +6,12 @@ import { useSelector } from "react-redux";
 import { createSelector } from "reselect";
 import { State, ThunkDispatcher } from "../../types";
 import { useDispatch } from "react-redux";
-import { moveTab, addTabsFromStorage } from "../../redux/articleTabs/actions";
-import { FC, useEffect } from "react";
+import { moveTab } from "../../redux/articleTabs/actions";
+import { FC } from "react";
 import { TabType } from "../../types/tab";
 import AddNewTabButton from "./AddNewTabButton";
 import Router from "next/router";
 import { tabKeyDecoder } from "../../utils/tabKeyDecoder";
-import { setToStorage, getFromStorage } from "../../utils/storage";
 import SortableList from "../common/SortableList";
 
 const selectData = createSelector(
@@ -45,13 +44,6 @@ const TabsContainer: FC<Props> = ({ tabList }) => {
   const onSortEnd = ({ oldIndex, newIndex }) => {
     dispatch(moveTab(oldIndex, newIndex));
   };
-  useEffect(() => {
-    const clientOrder = getFromStorage<string[]>("tabOrder");
-    if (clientOrder?.length > 0) dispatch(addTabsFromStorage(clientOrder));
-  }, []);
-  useEffect(() => {
-    setToStorage("tabOrder", tabOrder);
-  }, [tabOrder]);
   const tabs = [
     <Tab value="default-" label="Last articles" key={1} />,
     ...tabList.map((tab, index) => (

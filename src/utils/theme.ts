@@ -15,6 +15,13 @@ const useTheme = (isDark: boolean) =>
           marginBottom: 15,
           position: "relative",
         },
+        h1: {
+          fontWeight: "bold",
+          textTransform: "capitalize",
+          marginTop: 25,
+          marginBottom: 25,
+          position: "relative",
+        },
         body1: {
           textTransform: "capitalize",
           position: "relative",

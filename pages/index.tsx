@@ -13,6 +13,9 @@ import TabsContainer from "../src/containers/tabs/TabsContainer";
 import { serverAddTab, setPageNumber } from "../src/redux/articleTabs/actions";
 import { ArticlesObj } from "../src/types/article";
 import DefaultErrorPage from "next/error";
+import Banner from "../src/containers/common/Banner";
+import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
 
 const selectData = createSelector(
   (state: State) => state.articleTabs.tabList,
@@ -34,25 +37,42 @@ const Index: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
     );
   const { tabList, currTab } = useSelector(selectData);
   const isTabInitial = (key: string) =>
-    initialKey !== key ? {} : { initialPage, initialData: [initialArticles] };
+    initialKey !== key
+      ? { initialPage: 0 }
+      : { initialPage, initialData: [initialArticles] };
   return (
-    <div>
-      <TabContext value={currTab}>
-        <TabsContainer tabList={tabList} />
-        <TabPanel value="default-">
-          <ArticleList {...isTabInitial("default-")} value="" type="default" />
-        </TabPanel>
-        {tabList.map((tab, index) => (
-          <TabPanel value={tab.key} key={index}>
+    <Grid container spacing={3}>
+      <Grid item xs={12}>
+        <Banner>
+          <Grid item container justify="center">
+            <Typography variant="h1" color="textPrimary">
+              Blog-test
+            </Typography>
+          </Grid>
+        </Banner>
+      </Grid>
+      <Grid item xs={12}>
+        <TabContext value={currTab}>
+          <TabsContainer tabList={tabList} />
+          <TabPanel value="default-">
             <ArticleList
-              {...isTabInitial(tab.key)}
-              value={tab.value}
-              type={tab.type}
+              {...isTabInitial("default-")}
+              value=""
+              type="default"
             />
           </TabPanel>
-        ))}
-      </TabContext>
-    </div>
+          {tabList.map((tab, index) => (
+            <TabPanel value={tab.key} key={index}>
+              <ArticleList
+                {...isTabInitial(tab.key)}
+                value={tab.value}
+                type={tab.type}
+              />
+            </TabPanel>
+          ))}
+        </TabContext>
+      </Grid>
+    </Grid>
   );
 };
 export const getServerSideProps = wrapper.getServerSideProps(

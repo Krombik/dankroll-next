@@ -5,12 +5,11 @@ import {
   FetchRV,
   State,
 } from "../../src/types";
-import { getArticleUrl, getArticlesUrl } from "../../src/api/article";
+import { getArticlesUrl } from "../../src/api/article";
 import { NextPage } from "next";
 import { fetcher } from "../../src/utils/fetcher";
-import { ArticleObj, ArticlesObj } from "../../src/types/article";
+import { ArticlesObj } from "../../src/types/article";
 import DefaultErrorPage from "next/error";
-import Article from "../../src/containers/article/Article";
 import { useRouter } from "next/router";
 import AppBar from "@material-ui/core/AppBar";
 import Tab from "@material-ui/core/Tab";
@@ -63,7 +62,9 @@ const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
   const [tab, setTab] = useState(initialTab);
   const user = userData?.profile;
   const isTabInitial = (type: string) =>
-    initialTab !== type ? {} : { initialPage, initialData: [initialArticles] };
+    initialTab !== type
+      ? { initialPage: 0 }
+      : { initialPage, initialData: [initialArticles] };
   const { articlePageNumbers } = useSelector(selectData);
   const handleChange = (_: any, newValue: string) => {
     const page = articlePageNumbers[newValue] + 1;
