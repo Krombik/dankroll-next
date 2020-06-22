@@ -23,7 +23,6 @@ type Props = {
 };
 
 const ArticleList: FC<Props> = ({ initialData, type, value, initialPage }) => {
-  console.log(type);
   const {
     query: { page: queryPage },
   } = useRouter();

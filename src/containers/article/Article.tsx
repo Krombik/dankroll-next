@@ -49,8 +49,10 @@ const Article: FC<Props> = ({ initialArticle, initialComments, slug }) => {
               <ArticleHeader
                 date={
                   article.updatedAt === article.createdAt
-                    ? article.createdAt
-                    : article.updatedAt
+                    ? new Date(article.createdAt).toDateString()
+                    : new Date(article.updatedAt)
+                        .toDateString()
+                        .concat(" (Edited)")
                 }
                 title={article.title}
                 favoritesCount={article.favoritesCount}

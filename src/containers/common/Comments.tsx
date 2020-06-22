@@ -14,7 +14,7 @@ const Comments: FC<Props> = ({ comments }) => (
         <Comment
           username={comment.author.username}
           avatar={comment.author.image}
-          date={comment.createdAt}
+          date={new Date(comment.createdAt).toDateString()}
           body={comment.body}
         />
       </Grid>

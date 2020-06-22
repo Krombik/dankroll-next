@@ -29,8 +29,8 @@ const ArticlePreview: FC<Props> = ({ article }) => {
         author: article.author.username,
         date:
           article.updatedAt === article.createdAt
-            ? article.createdAt
-            : article.updatedAt,
+            ? new Date(article.createdAt).toDateString()
+            : new Date(article.updatedAt).toDateString().concat(" (Edited)"),
         title: article.title,
         about: article.description,
       }
