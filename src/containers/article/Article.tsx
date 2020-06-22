@@ -13,7 +13,6 @@ import { Link, Divider } from "@material-ui/core";
 import { getArticleCommentsUrl } from "../../api/comment";
 import Typography from "@material-ui/core/Typography";
 import { FetchRV } from "../../types";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import Spinner from "../../components/common/Spinner";
 import Banner from "../common/Banner";
 

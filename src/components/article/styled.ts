@@ -54,5 +54,6 @@ export const StyledBanner = styled.div`
     left: 50%;
     height: 100%;
     background: ${(props: StyledBannerProps) => props.backgroundColor};
+    box-shadow: inset 0px 0px 25px 20px rgba(0, 0, 0, 0.1);
   }
 `;

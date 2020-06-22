@@ -1,14 +1,16 @@
-import Header from "./HeaderComponent";
 import Footer from "./FooterComponent";
 import Container from "@material-ui/core/Container";
 import { FC } from "react";
+import Header from "../../containers/common/Header";
 
 const Layout: FC = ({ children }) => (
-  <Container maxWidth="lg">
+  <>
     <Header />
-    {children}
-    <Footer />
-  </Container>
+    <Container maxWidth="lg">
+      {children}
+      <Footer />
+    </Container>
+  </>
 );
 
 export default Layout;

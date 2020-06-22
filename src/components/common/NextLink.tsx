@@ -14,9 +14,7 @@ const _NextLink: FC<LinkProps & { to: string; className?: string }> = ({
 );
 
 const NextLink = styled(_NextLink)`
-  > * {
-    cursor: pointer;
-  }
+  cursor: pointer;
 `;
 
 export default NextLink;

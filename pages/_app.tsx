@@ -1,5 +1,5 @@
 import { wrapper } from "../src/redux/store";
-import Layout from "../src/components/common/LayoutComponent";
+import Layout from "../src/components/common/Layout";
 import { StylesProvider, ThemeProvider } from "@material-ui/core/styles";
 import { useEffect, FC, useMemo } from "react";
 import CssBaseline from "@material-ui/core/CssBaseline";

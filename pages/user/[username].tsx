@@ -51,7 +51,6 @@ const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
     );
   const {
     query: { username },
-    favorited,
     push,
   }: any = useRouter();
   const { data: userData } = useSWR<FetchRV<UserObj>>(
