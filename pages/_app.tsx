@@ -10,6 +10,7 @@ import { createSelector } from "reselect";
 import { State, ThunkDispatcher } from "../src/types";
 import { getFromStorage, setToStorage } from "../src/utils/storage";
 import { addTabsFromStorage } from "../src/redux/articleTabs/actions";
+import { setDark } from "../src/redux/common/actions";
 
 const selectData = createSelector(
   (state: State) => state.common.isDark,
@@ -25,10 +26,15 @@ const WrappedApp: FC<AppProps> = ({ Component, pageProps }) => {
     if (jssStyles) jssStyles.parentElement.removeChild(jssStyles);
     const clientOrder = getFromStorage<string[]>("tabOrder");
     if (clientOrder?.length > 0) dispatch(addTabsFromStorage(clientOrder));
+    const clientTheme = getFromStorage<boolean>("isDark");
+    if (clientTheme !== undefined) dispatch(setDark(clientTheme));
   }, []);
   useEffect(() => {
     setToStorage("tabOrder", tabOrder);
   }, [tabOrder]);
+  useEffect(() => {
+    setToStorage("isDark", isDark);
+  }, [isDark]);
   const theme = useMemo(() => useTheme(isDark), [isDark]);
   return (
     <StylesProvider injectFirst>

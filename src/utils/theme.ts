@@ -30,7 +30,6 @@ const useTheme = (isDark: boolean) =>
       palette: {
         type: isDark ? "dark" : "light",
       },
-
       overrides: {
         MuiCssBaseline: {
           "@global": {

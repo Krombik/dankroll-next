@@ -16,8 +16,22 @@ import Tooltip from "@material-ui/core/Tooltip";
 import NextLink from "../../components/common/NextLink";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
+import { createSelector } from "reselect";
+import { useSelector, useDispatch } from "react-redux";
+import { State, ThunkDispatcher } from "../../types";
+import { setDark } from "../../redux/common/actions";
+
+const selectData = createSelector(
+  (state: State) => state.common.isDark,
+  (isDark) => ({ isDark })
+);
 
 const Header: FC = () => {
+  const dispatch = useDispatch<ThunkDispatcher>();
+  const { isDark } = useSelector(selectData);
+  const handleTheme = () => {
+    dispatch(setDark(!isDark));
+  };
   return (
     <AppBar position="static" color="default">
       <Container maxWidth="lg">
@@ -46,6 +60,14 @@ const Header: FC = () => {
                 >
                   <PersonAddIcon />
                 </IconButton>
+              </Tooltip>
+              <Tooltip disableFocusListener title="Switch theme">
+                <Switch
+                  checked={isDark}
+                  onChange={handleTheme}
+                  color="default"
+                  inputProps={{ "aria-label": "switch theme" }}
+                />
               </Tooltip>
             </div>
           </Grid>
