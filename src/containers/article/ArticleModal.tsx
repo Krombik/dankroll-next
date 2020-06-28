@@ -1,14 +1,12 @@
-import Modal from "@material-ui/core/Modal";
-import Fade from "@material-ui/core/Fade";
 import { FC } from "react";
 import Article from "./Article";
 import { createSelector } from "reselect";
 import { useSelector, useDispatch } from "react-redux";
 import { State, ThunkDispatcher } from "../../types";
 import { setArticleModalOpen } from "../../redux/articleModal/actions";
-import { Paper, Grid } from "@material-ui/core";
-import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
 import Router from "next/router";
+import CustomModal from "../../components/common/CustomModal";
 
 const selectData = createSelector(
   (state: State) => state.articleModal.isOpen,
@@ -16,26 +14,7 @@ const selectData = createSelector(
   (isOpen, slug) => ({ isOpen, slug })
 );
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    modal: {
-      display: "flex",
-      flexDirection: "column",
-      maxWidth: "90vw",
-      margin: "auto",
-      justifyContent: "space-between",
-      overflowY: "auto",
-    },
-    paper: {
-      backgroundColor: theme.palette.background.default,
-      padding: theme.spacing(0, 4, 3),
-      overflowX: "hidden",
-    },
-  })
-);
-
 const ArticleModal: FC = () => {
-  const classes = useStyles();
   const { isOpen, slug } = useSelector(selectData);
   const dispatch = useDispatch<ThunkDispatcher>();
   const handleClose = () => {
@@ -43,29 +22,11 @@ const ArticleModal: FC = () => {
     Router.back();
   };
   return (
-    <Modal
-      className={classes.modal}
-      disableEnforceFocus
-      disableAutoFocus
-      open={isOpen}
-      onClose={handleClose}
-      closeAfterTransition
-      BackdropProps={{
-        timeout: 500,
-      }}
-    >
-      <Fade in={isOpen}>
-        <div>
-          <Grid container justify="center" alignItems="center">
-            <Grid item>
-              <Paper className={classes.paper}>
-                <Article slug={slug} />
-              </Paper>
-            </Grid>
-          </Grid>
-        </div>
-      </Fade>
-    </Modal>
+    <CustomModal open={isOpen} onClose={handleClose}>
+      <Grid item container spacing={3} justify="center">
+        <Article slug={slug} />
+      </Grid>
+    </CustomModal>
   );
 };
 

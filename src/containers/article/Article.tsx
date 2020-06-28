@@ -40,7 +40,7 @@ const Article: FC<Props> = ({ initialArticle, initialComments, slug }) => {
   const article = articleData?.article;
   const comments = commentsData?.comments;
   return (
-    <Grid container spacing={3}>
+    <>
       {article ? (
         <>
           <Grid item xs={12}>
@@ -82,16 +82,12 @@ const Article: FC<Props> = ({ initialArticle, initialComments, slug }) => {
           <Grid item xs={12}>
             <Typography variant="h4">Comments: {comments.length}</Typography>
           </Grid>
-          {comments.length > 0 && (
-            <Grid item xs={12} container spacing={3}>
-              <Comments comments={comments} />
-            </Grid>
-          )}
+          {comments.length > 0 && <Comments comments={comments} />}
         </>
       ) : (
         <Spinner />
       )}
-    </Grid>
+    </>
   );
 };
 

@@ -9,7 +9,6 @@ import Typography from "@material-ui/core/Typography";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import TagList from "../common/TagList";
-import Banner from "../common/Banner";
 
 type Props = {
   title: string;

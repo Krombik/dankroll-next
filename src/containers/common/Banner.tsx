@@ -1,4 +1,4 @@
-import { StyledBanner } from "../../components/article/styled";
+import { StyledBanner } from "../../components/common/styled";
 import { FC, useMemo } from "react";
 import { createMuiTheme, useTheme } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/styles";

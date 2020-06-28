@@ -1,7 +1,7 @@
 import Footer from "./FooterComponent";
 import Container from "@material-ui/core/Container";
 import { FC } from "react";
-import Header from "../../containers/common/Header";
+import Header from "../../containers/header/Header";
 
 const Layout: FC = ({ children }) => (
   <>

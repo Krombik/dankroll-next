@@ -9,6 +9,7 @@ import Article from "../../src/containers/article/Article";
 import { useRouter } from "next/router";
 import { getArticleCommentsUrl } from "../../src/api/comment";
 import { CommentsObj } from "../../src/types/comment";
+import Grid from "@material-ui/core/Grid";
 
 const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
   initialArticle,
@@ -26,11 +27,13 @@ const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
     query: { slug },
   }: any = useRouter();
   return (
-    <Article
-      initialArticle={initialArticle}
-      initialComments={initialComments}
-      slug={slug ?? serverSlug}
-    />
+    <Grid container spacing={3}>
+      <Article
+        initialArticle={initialArticle}
+        initialComments={initialComments}
+        slug={slug ?? serverSlug}
+      />
+    </Grid>
   );
 };
 
