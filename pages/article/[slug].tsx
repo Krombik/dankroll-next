@@ -1,14 +1,11 @@
 import { wrapper } from "../../src/redux/store";
-import { ServerSideContext, PropsFromServer, FetchRV } from "../../src/types";
-import { getArticleUrl } from "../../src/api/article";
+import { ServerSideContext, PropsFromServer } from "../../src/types";
+import { getArticle } from "../../src/api/article";
 import { NextPage } from "next";
-import { fetcher } from "../../src/utils/fetcher";
-import { ArticleObj } from "../../src/types/article";
 import DefaultErrorPage from "next/error";
 import Article from "../../src/containers/article/Article";
 import { useRouter } from "next/router";
-import { getArticleCommentsUrl } from "../../src/api/comment";
-import { CommentsObj } from "../../src/types/comment";
+import { getArticleComments } from "../../src/api/comment";
 import Grid from "@material-ui/core/Grid";
 
 const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
@@ -40,12 +37,8 @@ const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
 export const getServerSideProps = wrapper.getServerSideProps(
   async ({ query }: ServerSideContext) => {
     const { slug }: any = query;
-    const initialArticle = await fetcher<FetchRV<ArticleObj>>(
-      getArticleUrl(slug)
-    );
-    const initialComments = await fetcher<FetchRV<CommentsObj>>(
-      getArticleCommentsUrl(slug)
-    );
+    const initialArticle = await getArticle(slug);
+    const initialComments = await getArticleComments(slug);
     return {
       props: { serverSlug: slug, initialComments, initialArticle },
     };

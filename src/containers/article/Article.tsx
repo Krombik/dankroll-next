@@ -2,19 +2,25 @@ import { ArticleObj } from "../../types/article";
 import Grid from "@material-ui/core/Grid";
 import { FC } from "react";
 import useSWR from "swr";
-import { fetcher } from "../../utils/fetcher";
-import { getArticleUrl } from "../../api/article";
+import { getArticle } from "../../api/article";
 import ArticleHeader from "./ArticleHeader";
 import Comments from "../common/Comments";
 import { CommentsObj } from "../../types/comment";
 import GridDivider from "../../components/common/GridDivider";
 import Markdown from "react-markdown";
 import { Link, Divider } from "@material-ui/core";
-import { getArticleCommentsUrl } from "../../api/comment";
+import { getArticleComments } from "../../api/comment";
 import Typography from "@material-ui/core/Typography";
-import { FetchRV } from "../../types";
+import { FetchRV, State } from "../../types";
 import Spinner from "../../components/common/Spinner";
 import Banner from "../common/Banner";
+import { createSelector } from "reselect";
+import { useSelector } from "react-redux";
+
+const selectData = createSelector(
+  (state: State) => state.common.token,
+  (token) => ({ token })
+);
 
 type Props = {
   initialArticle?: FetchRV<ArticleObj>;
@@ -23,20 +29,13 @@ type Props = {
 };
 
 const Article: FC<Props> = ({ initialArticle, initialComments, slug }) => {
-  const { data: articleData } = useSWR<FetchRV<ArticleObj>>(
-    getArticleUrl(slug),
-    fetcher,
-    {
-      initialData: initialArticle,
-    }
-  );
-  const { data: commentsData } = useSWR<FetchRV<CommentsObj>>(
-    getArticleCommentsUrl(slug),
-    fetcher,
-    {
-      initialData: initialComments,
-    }
-  );
+  const { token } = useSelector(selectData);
+  const { data: articleData } = useSWR([slug, token], getArticle, {
+    initialData: initialArticle,
+  });
+  const { data: commentsData } = useSWR([slug, token], getArticleComments, {
+    initialData: initialComments,
+  });
   const article = articleData?.article;
   const comments = commentsData?.comments;
   return (

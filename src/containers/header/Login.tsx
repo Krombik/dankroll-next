@@ -4,12 +4,19 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Link from "@material-ui/core/Link";
+import { loginUser } from "../../api/user";
+import { useDispatch } from "react-redux";
+import { ThunkDispatcher } from "../../types";
+import { setAuthorized } from "../../redux/common/actions";
 
 type Props = {
-  setModal: () => void;
+  openModal: () => void;
+  closeModal: () => void;
 };
 
-const Login: FC<Props> = ({ setModal }) => {
+const Login: FC<Props> = ({ openModal, closeModal }) => {
+  const dispatch = useDispatch<ThunkDispatcher>();
+  const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const handleEmail = (e: ChangeEvent<HTMLInputElement>) => {
@@ -17,6 +24,13 @@ const Login: FC<Props> = ({ setModal }) => {
   };
   const handlePassword = (e: ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
+  };
+  const handleLogin = async () => {
+    setLoading(true);
+    const { user } = await loginUser(email, password);
+    if (user) dispatch(setAuthorized(user.token));
+    setLoading(false);
+    closeModal();
   };
   return (
     <>
@@ -28,7 +42,7 @@ const Login: FC<Props> = ({ setModal }) => {
         variant="body2"
         color="inherit"
         component="button"
-        onClick={setModal}
+        onClick={openModal}
       >
         Need an account?
       </Link>
@@ -53,7 +67,12 @@ const Login: FC<Props> = ({ setModal }) => {
         />
       </Grid>
       <Grid item>
-        <Button variant="contained" color="primary">
+        <Button
+          variant="contained"
+          color="primary"
+          disabled={loading}
+          onClick={handleLogin}
+        >
           Login
         </Button>
       </Grid>

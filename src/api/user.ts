@@ -1,8 +1,34 @@
 import axios from "axios";
 import { SERVER_BASE_URL } from "../utils/constant";
+import fetcher from "../utils/fetcher";
+import { FetchRV } from "../types";
+import { UserObj, AuthorizedUser } from "../types/user";
 
-export const getUserUrl = (username: string) =>
-  `${SERVER_BASE_URL}/profiles/${username}`;
+export const getUser = async (username: string, token?: string) =>
+  await fetcher.get<FetchRV<UserObj>>(
+    `${SERVER_BASE_URL}/profiles/${username}`,
+    token
+  );
+
+export const registerUser = async (
+  username: string,
+  email: string,
+  password: string
+) =>
+  await fetcher.post<FetchRV<AuthorizedUser>>(`${SERVER_BASE_URL}/users`, {
+    user: { username, email, password },
+  });
+
+export const loginUser = async (email: string, password: string) =>
+  await fetcher.post<FetchRV<AuthorizedUser>>(
+    `${SERVER_BASE_URL}/users/login`,
+    {
+      user: { email, password },
+    }
+  );
+
+export const getCurrentUserName = async (token: string) =>
+  await fetcher.get<FetchRV<AuthorizedUser>>(`${SERVER_BASE_URL}/user`, token);
 
 const UserAPI = {
   current: async () => {

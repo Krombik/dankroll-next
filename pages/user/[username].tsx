@@ -1,14 +1,7 @@
 import { wrapper } from "../../src/redux/store";
-import {
-  ServerSideContext,
-  PropsFromServer,
-  FetchRV,
-  State,
-} from "../../src/types";
-import { getArticlesUrl } from "../../src/api/article";
+import { ServerSideContext, PropsFromServer, State } from "../../src/types";
+import { getArticles } from "../../src/api/article";
 import { NextPage } from "next";
-import { fetcher } from "../../src/utils/fetcher";
-import { ArticlesObj } from "../../src/types/article";
 import DefaultErrorPage from "next/error";
 import Router, { useRouter } from "next/router";
 import AppBar from "@material-ui/core/AppBar";
@@ -16,8 +9,7 @@ import Tab from "@material-ui/core/Tab";
 import TabList from "@material-ui/lab/TabList";
 import TabContext from "@material-ui/lab/TabContext";
 import TabPanel from "@material-ui/lab/TabPanel";
-import { getUserUrl } from "../../src/api/user";
-import { UserObj } from "../../src/types/user";
+import { getUser } from "../../src/api/user";
 import Grid from "@material-ui/core/Grid";
 import useSWR from "swr";
 import Banner from "../../src/containers/common/Banner";
@@ -33,7 +25,8 @@ import urlToQuery from "../../src/utils/urlToQuery";
 
 const selectData = createSelector(
   (state: State) => state.articleTabs.articlePageNumbers,
-  (articlePageNumbers) => ({ articlePageNumbers })
+  (state: State) => state.common.token,
+  (articlePageNumbers, token) => ({ articlePageNumbers, token })
 );
 
 const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
@@ -53,13 +46,10 @@ const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
     query: { username },
     push,
   }: any = useRouter();
-  const { data: userData } = useSWR<FetchRV<UserObj>>(
-    getUserUrl(username),
-    fetcher,
-    {
-      initialData: initialUser,
-    }
-  );
+  const { articlePageNumbers, token } = useSelector(selectData);
+  const { data: userData } = useSWR([username, token], getUser, {
+    initialData: initialUser,
+  });
   const [tab, setTab] = useState(initialTab);
   useEffect(() => {
     const handleRouteChange = (url: string) => {
@@ -78,7 +68,6 @@ const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
     initialTab !== type
       ? { initialPage: 0 }
       : { initialPage, initialData: [initialArticles] };
-  const { articlePageNumbers } = useSelector(selectData);
   const handleChange = (_: any, newValue: string) => {
     const page = articlePageNumbers[newValue] + 1;
     const query = {
@@ -146,11 +135,9 @@ export const getServerSideProps = wrapper.getServerSideProps(
   async ({ query, store: { dispatch } }: ServerSideContext) => {
     const { username, page: queryPage, favorited }: any = query;
     const page = queryPage && +queryPage > 0 ? +queryPage - 1 : 0;
-    const initialUser = await fetcher<FetchRV<UserObj>>(getUserUrl(username));
+    const initialUser = await getUser(username);
     const initialTab = favorited ? "favorited" : "author";
-    const initialArticles = await fetcher<FetchRV<ArticlesObj>>(
-      getArticlesUrl({ type: initialTab, value: username, page })
-    );
+    const initialArticles = await getArticles(initialTab, username, page);
     dispatch(setPageNumber(initialTab + "-" + username, page));
     return {
       props: { initialUser, initialArticles, initialPage: page, initialTab },

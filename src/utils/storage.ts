@@ -1,5 +1,3 @@
-import { error } from "console";
-
 export const getFromStorage = <T = any>(key: string): T => {
   try {
     return JSON.parse(localStorage.getItem(key));

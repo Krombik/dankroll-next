@@ -1,9 +1,15 @@
 import axios from "axios";
 
 import { SERVER_BASE_URL } from "../utils/constant";
+import fetcher from "../utils/fetcher";
+import { FetchRV } from "../types";
+import { CommentsObj } from "../types/comment";
 
-export const getArticleCommentsUrl = (slug: string) =>
-  `${SERVER_BASE_URL}/articles/${slug}/comments`;
+export const getArticleComments = async (slug: string, token?: string) =>
+  await fetcher.get<FetchRV<CommentsObj>>(
+    `${SERVER_BASE_URL}/articles/${slug}/comments`,
+    token
+  );
 
 const CommentAPI = {
   create: async (slug, comment) => {

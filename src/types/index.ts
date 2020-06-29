@@ -29,11 +29,7 @@ type ThunkStore = {
 export type ServerSideContext = GetServerSidePropsContext & ThunkStore;
 export type StaticPropsContext = GetStaticPropsContext & ThunkStore;
 
-export type FetchError = { status: string; error: string };
+type Fetcher404Error = { status: string; error: string };
+type FetcherFailError = { errors: { [key: string]: string } };
 
-type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };
-type XOR<T, U> = T | U extends object
-  ? (Without<T, U> & U) | (Without<U, T> & T)
-  : T | U;
-
-export type FetchRV<T> = XOR<T, FetchError>;
+export type FetchRV<T> = Partial<T & Fetcher404Error & FetcherFailError>;

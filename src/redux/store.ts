@@ -16,11 +16,14 @@ const bindMiddleware = (middleware: Middleware[]) => {
 const reducer = (state: State, action: Actions) => {
   if (action.type === HYDRATE) {
     const newState = { ...state, ...action.payload };
-    if (
-      state.articleTabs.tabList.length >
-      action.payload.articleTabs.tabList.length
-    )
-      return { ...newState, articleTabs: { ...state.articleTabs } };
+    if (state.articleTabs.tabList.length > newState.articleTabs.tabList.length)
+      newState.articleTabs = state.articleTabs;
+    if (state.common.isDark !== newState.common.isDark)
+      newState.common.isDark = state.common.isDark;
+    if (state.common.token !== newState.common.token) {
+      newState.common.token = state.common.token;
+      newState.common.currentUserName = state.common.currentUserName;
+    }
     return newState;
   }
   return combinedReducer(state, action);

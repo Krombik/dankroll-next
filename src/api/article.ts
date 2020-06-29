@@ -1,33 +1,32 @@
 import axios from "axios";
 import { SERVER_BASE_URL } from "../utils/constant";
 import { getQuery } from "../utils/getQuery";
+import fetcher from "../utils/fetcher";
+import { FetchRV } from "../types";
+import { ArticlesObj, ArticleObj } from "../types/article";
 
-type GetArticlesUrlProps = {
-  page?: number;
-  limit?: number;
-  type: string;
-  value: string;
-};
-
-export const getArticlesUrl = ({
+export const getArticles = async (
+  type: string,
+  value: string,
   page = 0,
-  limit = 10,
-  type,
-  value,
-}: GetArticlesUrlProps) =>
-  `${SERVER_BASE_URL}/articles?${
-    type !== "default" ? `${type}=${encodeURIComponent(value)}&` : ""
-  }${getQuery(limit, page)}`;
+  limit = 20,
+  token?: string
+) =>
+  await fetcher.get<FetchRV<ArticlesObj>>(
+    `${SERVER_BASE_URL}/articles?${
+      type !== "default" ? `${type}=${encodeURIComponent(value)}&` : ""
+    }${getQuery(limit, page)}`,
+    token
+  );
 
-export const getArticleUrl = (slug: string) =>
-  `${SERVER_BASE_URL}/articles/${slug}`;
+export const getArticle = async (slug: string, token?: string) =>
+  await fetcher.get<FetchRV<ArticleObj>>(
+    `${SERVER_BASE_URL}/articles/${slug}`,
+    token
+  );
 
-export const deleteArticle = (id, token) =>
-  axios.delete(`${SERVER_BASE_URL}/articles/${id}`, {
-    headers: {
-      Authorization: `Token ${token}`,
-    },
-  });
+export const deleteArticle = (slug: string, token: string) =>
+  fetcher.delete(`${SERVER_BASE_URL}/articles/${slug}`, token);
 
 export const setFavoriteArticle = (slug) =>
   axios.post(`${SERVER_BASE_URL}/articles/${slug}/favorite`);
