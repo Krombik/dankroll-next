@@ -4,11 +4,8 @@ import fetcher from "../utils/fetcher";
 import { FetchRV } from "../types";
 import { UserObj, AuthorizedUser } from "../types/user";
 
-export const getUser = async (username: string, token?: string) =>
-  await fetcher.get<FetchRV<UserObj>>(
-    `${SERVER_BASE_URL}/profiles/${username}`,
-    token
-  );
+export const getUserUrl = (username: string) =>
+  `${SERVER_BASE_URL}/profiles/${username}`;
 
 export const registerUser = async (
   username: string,

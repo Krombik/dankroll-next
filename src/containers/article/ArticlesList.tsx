@@ -3,7 +3,7 @@ import { FC, useEffect } from "react";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import ArticlePreview from "./ArticlePreview";
-import { getArticles } from "../../api/article";
+import { getArticlesUrl } from "../../api/article";
 import { useSWRInfinite } from "swr";
 import Pagination from "../common/Pagination";
 import { useRouter } from "next/router";
@@ -15,6 +15,7 @@ import { setTab } from "../../redux/articleTabs/actions";
 import urlToQuery from "../../utils/urlToQuery";
 import { createSelector } from "reselect";
 import { useSelector } from "react-redux";
+import fetcher from "../../utils/fetcher";
 
 const selectData = createSelector(
   (state: State) => state.common.token,
@@ -38,12 +39,12 @@ const ArticleList: FC<Props> = ({ initialData, type, value, initialPage }) => {
       ? +queryPage - 1
       : 0
     : initialPage;
-  const { data, setSize, size, mutate } = useSWRInfinite(
+  const { data, setSize, size, mutate } = useSWRInfinite<FetchRV<ArticlesObj>>(
     (index, previousPageData) =>
       previousPageData && previousPageData.articles.length !== 0
-        ? [type, value, startPage + index, 20, token]
-        : [type, value, startPage, 20, token],
-    getArticles,
+        ? [getArticlesUrl(type, value, startPage + index, 20), token]
+        : [getArticlesUrl(type, value, startPage, 20), token],
+    fetcher.get,
     { initialData }
   );
   const dispatch = useDispatch<ThunkDispatcher>();

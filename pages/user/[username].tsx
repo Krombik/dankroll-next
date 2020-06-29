@@ -1,6 +1,11 @@
 import { wrapper } from "../../src/redux/store";
-import { ServerSideContext, PropsFromServer, State } from "../../src/types";
-import { getArticles } from "../../src/api/article";
+import {
+  ServerSideContext,
+  PropsFromServer,
+  State,
+  FetchRV,
+} from "../../src/types";
+import { getArticlesUrl } from "../../src/api/article";
 import { NextPage } from "next";
 import DefaultErrorPage from "next/error";
 import Router, { useRouter } from "next/router";
@@ -9,7 +14,7 @@ import Tab from "@material-ui/core/Tab";
 import TabList from "@material-ui/lab/TabList";
 import TabContext from "@material-ui/lab/TabContext";
 import TabPanel from "@material-ui/lab/TabPanel";
-import { getUser } from "../../src/api/user";
+import { getUserUrl } from "../../src/api/user";
 import Grid from "@material-ui/core/Grid";
 import useSWR from "swr";
 import Banner from "../../src/containers/common/Banner";
@@ -22,6 +27,9 @@ import { useSelector } from "react-redux";
 import { createSelector } from "reselect";
 import { setPageNumber } from "../../src/redux/articleTabs/actions";
 import urlToQuery from "../../src/utils/urlToQuery";
+import { ArticlesObj } from "../../src/types/article";
+import fetcher from "../../src/utils/fetcher";
+import { UserObj } from "../../src/types/user";
 
 const selectData = createSelector(
   (state: State) => state.articleTabs.articlePageNumbers,
@@ -47,9 +55,13 @@ const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
     push,
   }: any = useRouter();
   const { articlePageNumbers, token } = useSelector(selectData);
-  const { data: userData } = useSWR([username, token], getUser, {
-    initialData: initialUser,
-  });
+  const { data: userData } = useSWR<FetchRV<UserObj>>(
+    [getUserUrl(username), token],
+    fetcher.get,
+    {
+      initialData: initialUser,
+    }
+  );
   const [tab, setTab] = useState(initialTab);
   useEffect(() => {
     const handleRouteChange = (url: string) => {
@@ -135,9 +147,13 @@ export const getServerSideProps = wrapper.getServerSideProps(
   async ({ query, store: { dispatch } }: ServerSideContext) => {
     const { username, page: queryPage, favorited }: any = query;
     const page = queryPage && +queryPage > 0 ? +queryPage - 1 : 0;
-    const initialUser = await getUser(username);
+    const initialUser = await fetcher.get<FetchRV<UserObj>>(
+      getUserUrl(username)
+    );
     const initialTab = favorited ? "favorited" : "author";
-    const initialArticles = await getArticles(initialTab, username, page);
+    const initialArticles = await fetcher.get<FetchRV<ArticlesObj>>(
+      getArticlesUrl(initialTab, username, page)
+    );
     dispatch(setPageNumber(initialTab + "-" + username, page));
     return {
       props: { initialUser, initialArticles, initialPage: page, initialTab },

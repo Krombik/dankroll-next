@@ -5,7 +5,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { State, ThunkDispatcher } from "../../types";
 import { setArticleModalOpen } from "../../redux/articleModal/actions";
 import Grid from "@material-ui/core/Grid";
-import Router from "next/router";
 import CustomModal from "../../components/common/CustomModal";
 
 const selectData = createSelector(
@@ -19,7 +18,7 @@ const ArticleModal: FC = () => {
   const dispatch = useDispatch<ThunkDispatcher>();
   const handleClose = () => {
     dispatch(setArticleModalOpen(false));
-    Router.back();
+    window.history.go(-1);
   };
   return (
     <CustomModal open={isOpen} onClose={handleClose}>

@@ -1,7 +1,7 @@
 import { wrapper } from "../src/redux/store";
-import { ServerSideContext, PropsFromServer } from "../src/types";
+import { ServerSideContext, PropsFromServer, FetchRV } from "../src/types";
 import ArticleList from "../src/containers/article/ArticlesList";
-import { getArticles } from "../src/api/article";
+import { getArticlesUrl } from "../src/api/article";
 import { NextPage } from "next";
 import TabContext from "@material-ui/lab/TabContext";
 import TabPanel from "@material-ui/lab/TabPanel";
@@ -14,6 +14,8 @@ import DefaultErrorPage from "next/error";
 import Banner from "../src/containers/common/Banner";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
+import { ArticlesObj } from "../src/types/article";
+import fetcher from "../src/utils/fetcher";
 
 const selectData = createSelector(
   (state: State) => state.articleTabs.tabList,
@@ -82,10 +84,8 @@ export const getServerSideProps = wrapper.getServerSideProps(
       : author
       ? { type: "author", value: author }
       : { type: "default", value: "" };
-    const initialArticles = await getArticles(
-      initialTab.type,
-      initialTab.value,
-      page
+    const initialArticles = await fetcher.get<FetchRV<ArticlesObj>>(
+      getArticlesUrl(initialTab.type, initialTab.value, page)
     );
     if (initialTab.type !== "default") dispatch(serverAddTab(initialTab, page));
     else dispatch(setPageNumber("default-", page));

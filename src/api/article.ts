@@ -5,25 +5,18 @@ import fetcher from "../utils/fetcher";
 import { FetchRV } from "../types";
 import { ArticlesObj, ArticleObj } from "../types/article";
 
-export const getArticles = async (
+export const getArticlesUrl = (
   type: string,
   value: string,
   page = 0,
-  limit = 20,
-  token?: string
+  limit = 20
 ) =>
-  await fetcher.get<FetchRV<ArticlesObj>>(
-    `${SERVER_BASE_URL}/articles?${
-      type !== "default" ? `${type}=${encodeURIComponent(value)}&` : ""
-    }${getQuery(limit, page)}`,
-    token
-  );
+  `${SERVER_BASE_URL}/articles?${
+    type !== "default" ? `${type}=${encodeURIComponent(value)}&` : ""
+  }${getQuery(limit, page)}`;
 
-export const getArticle = async (slug: string, token?: string) =>
-  await fetcher.get<FetchRV<ArticleObj>>(
-    `${SERVER_BASE_URL}/articles/${slug}`,
-    token
-  );
+export const getArticleUrl = (slug: string) =>
+  `${SERVER_BASE_URL}/articles/${slug}`;
 
 export const deleteArticle = (slug: string, token: string) =>
   fetcher.delete(`${SERVER_BASE_URL}/articles/${slug}`, token);

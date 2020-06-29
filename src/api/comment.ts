@@ -5,11 +5,8 @@ import fetcher from "../utils/fetcher";
 import { FetchRV } from "../types";
 import { CommentsObj } from "../types/comment";
 
-export const getArticleComments = async (slug: string, token?: string) =>
-  await fetcher.get<FetchRV<CommentsObj>>(
-    `${SERVER_BASE_URL}/articles/${slug}/comments`,
-    token
-  );
+export const getArticleCommentsUrl = (slug: string) =>
+  `${SERVER_BASE_URL}/articles/${slug}/comments`;
 
 const CommentAPI = {
   create: async (slug, comment) => {

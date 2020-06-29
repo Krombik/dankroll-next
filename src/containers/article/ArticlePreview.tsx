@@ -15,7 +15,6 @@ import ContentInfo from "../../components/common/ContentInfo";
 import { useDispatch } from "react-redux";
 import { ThunkDispatcher } from "../../types";
 import { setArticleModalOpen } from "../../redux/articleModal/actions";
-import { useRouter } from "next/router";
 
 type Props = {
   article?: ArticleType;
@@ -53,10 +52,9 @@ const ArticlePreview: FC<Props> = ({ article }) => {
         ),
       };
   const dispatch = useDispatch<ThunkDispatcher>();
-  const { pathname, push } = useRouter();
   const handleModalOpen = () => {
     dispatch(setArticleModalOpen(true, article.slug));
-    push(pathname, `/article/${article.slug}`, { shallow: true });
+    window.history.pushState("", "", `/articles/${article.slug}`);
   };
   return (
     <Grid item xs={12} lg={6}>
