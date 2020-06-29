@@ -26,3 +26,14 @@ export const setAuthorized = (
       payload: currentUserName,
     });
 };
+
+export const setUnauthorized = (): ThunkResult => (dispatch) => {
+  dispatch({
+    type: ActionTypes.SET_TOKEN,
+    payload: "",
+  });
+  dispatch({
+    type: ActionTypes.SET_CURRENT_USER_NAME,
+    payload: "",
+  });
+};

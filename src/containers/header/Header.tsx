@@ -12,16 +12,18 @@ import { useSelector, useDispatch } from "react-redux";
 import { State, ThunkDispatcher } from "../../types";
 import { setDark } from "../../redux/common/actions";
 import UnauthorizedButtons from "./UnauthorizedButtons";
+import AuthorizedButtons from "./AuthorizedButtons";
 import NextLink from "next/link";
 
 const selectData = createSelector(
   (state: State) => state.common.isDark,
-  (isDark) => ({ isDark })
+  (state: State) => state.common.currentUserName,
+  (isDark, currentUserName) => ({ isDark, currentUserName })
 );
 
 const Header: FC = () => {
   const dispatch = useDispatch<ThunkDispatcher>();
-  const { isDark } = useSelector(selectData);
+  const { isDark, currentUserName } = useSelector(selectData);
   const handleTheme = () => {
     dispatch(setDark(!isDark));
   };
@@ -39,7 +41,11 @@ const Header: FC = () => {
                 </NextLink>
               </Typography>
               <div>
-                <UnauthorizedButtons />
+                {currentUserName ? (
+                  <AuthorizedButtons currentUserName={currentUserName} />
+                ) : (
+                  <UnauthorizedButtons />
+                )}
                 <Tooltip disableFocusListener title="Switch theme">
                   <span>
                     <Switch
