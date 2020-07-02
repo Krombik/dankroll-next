@@ -1,42 +1,21 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 import TooltipIconButton from "../../components/common/TooltipIconButton";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
-import Login from "./Login";
-import CustomModal from "../../components/common/CustomModal";
-import Register from "./Register";
 
-const UnauthorizedButtons: FC = () => {
-  const [open, setOpen] = useState(false);
-  const [modal, setModal] = useState(null);
-  const openLogin = () => {
-    setModal("login");
-    setOpen(true);
-  };
-  const openRegister = () => {
-    setModal("register");
-    setOpen(true);
-  };
-  const closeModal = () => {
-    setOpen(false);
-  };
-  return (
-    <>
-      <TooltipIconButton tooltip="Sign in" onClick={openLogin}>
-        <ExitToAppIcon />
-      </TooltipIconButton>
-      <TooltipIconButton tooltip="Sign up" onClick={openRegister}>
-        <PersonAddIcon />
-      </TooltipIconButton>
-      <CustomModal open={open} onClose={closeModal}>
-        {modal === "login" ? (
-          <Login openModal={openRegister} closeModal={closeModal} />
-        ) : modal === "register" ? (
-          <Register openModal={openLogin} closeModal={closeModal} />
-        ) : null}
-      </CustomModal>
-    </>
-  );
+type Props = {
+  openModal: (e: any) => void;
 };
+
+const UnauthorizedButtons: FC<Props> = ({ openModal }) => (
+  <>
+    <TooltipIconButton tooltip="Sign in" name="login" onClick={openModal}>
+      <ExitToAppIcon />
+    </TooltipIconButton>
+    <TooltipIconButton tooltip="Sign up" name="register" onClick={openModal}>
+      <PersonAddIcon />
+    </TooltipIconButton>
+  </>
+);
 
 export default UnauthorizedButtons;

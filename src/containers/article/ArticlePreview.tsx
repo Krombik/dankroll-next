@@ -10,7 +10,7 @@ import Typography from "@material-ui/core/Typography";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import Skeleton from "@material-ui/lab/Skeleton";
-import TagList from "../common/TagList";
+import TagList from "../tag/TagList";
 import ContentInfo from "../../components/common/ContentInfo";
 import { useDispatch } from "react-redux";
 import { ThunkDispatcher } from "../../types";

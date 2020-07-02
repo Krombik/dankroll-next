@@ -11,21 +11,6 @@ export const StyledArticlePreview = styled(Card)`
   padding: 8px 0;
 `;
 
-export const TagListComponent = styled.ul`
-  padding: 0 8px;
-  margin: 0 0 15px;
-  position: relative;
-  &:last-child {
-    margin: 8px 0 0;
-  }
-  & > li {
-    margin-bottom: 4px;
-    &:not(:last-child) {
-      margin-right: 4px;
-    }
-  }
-`;
-
 export const StyledIconButton = styled(IconButton)`
   font-size: inherit;
   color: inherit;

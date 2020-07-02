@@ -3,7 +3,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Switch from "@material-ui/core/Switch";
 import Grid from "@material-ui/core/Grid";
-import { FC } from "react";
+import { FC, useState, useCallback, MouseEvent } from "react";
 import Container from "@material-ui/core/Container";
 import Tooltip from "@material-ui/core/Tooltip";
 import Link from "@material-ui/core/Link";
@@ -14,6 +14,10 @@ import { setDark } from "../../redux/common/actions";
 import UnauthorizedButtons from "./UnauthorizedButtons";
 import AuthorizedButtons from "./AuthorizedButtons";
 import NextLink from "next/link";
+import Login from "./Login";
+import CustomModal from "../../components/common/CustomModal";
+import Register from "./Register";
+import Editor from "../common/Editor";
 
 const selectData = createSelector(
   (state: State) => state.common.isDark,
@@ -27,6 +31,15 @@ const Header: FC = () => {
   const handleTheme = () => {
     dispatch(setDark(!isDark));
   };
+  const [open, setOpen] = useState(false);
+  const [modal, setModal] = useState(null);
+  const openModal = useCallback((e: MouseEvent<HTMLButtonElement>) => {
+    setModal(e.currentTarget.name);
+    setOpen(true);
+  }, []);
+  const closeModal = useCallback(() => {
+    setOpen(false);
+  }, []);
   return (
     <>
       <AppBar position="static" color="default">
@@ -42,10 +55,31 @@ const Header: FC = () => {
               </Typography>
               <div>
                 {currentUserName ? (
-                  <AuthorizedButtons currentUserName={currentUserName} />
+                  <AuthorizedButtons
+                    openModal={openModal}
+                    currentUserName={currentUserName}
+                  />
                 ) : (
-                  <UnauthorizedButtons />
+                  <UnauthorizedButtons openModal={openModal} />
                 )}
+                <CustomModal open={open} onClose={closeModal}>
+                  {modal === "login" ? (
+                    <Login openModal={openModal} closeModal={closeModal} />
+                  ) : modal === "register" ? (
+                    <Register openModal={openModal} closeModal={closeModal} />
+                  ) : modal === "editor" ? (
+                    <Editor
+                      initialData={{
+                        title: "",
+                        subtitle: "",
+                        body: "",
+                        tags: [],
+                      }}
+                      dataKey="new"
+                      type="create"
+                    />
+                  ) : null}
+                </CustomModal>
                 <Tooltip disableFocusListener title="Switch theme">
                   <span>
                     <Switch

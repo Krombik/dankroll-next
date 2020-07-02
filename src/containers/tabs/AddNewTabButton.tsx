@@ -54,7 +54,7 @@ const AddNewTabButton: FC<Props> = memo((props) => {
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
     setNewTabName(e.target.value);
   };
-  const handleKeyPress = (e: KeyboardEvent) => {
+  const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === "Enter") addNewTab();
   };
   return (
@@ -71,7 +71,7 @@ const AddNewTabButton: FC<Props> = memo((props) => {
                 onFocus={handleFocus}
                 value={newTabName}
                 onInput={handleInput}
-                onKeyPress={handleKeyPress}
+                onKeyDown={handleKeyDown}
               />
             </Grid>
             <AddIcon onClick={addNewTab} />

@@ -1,4 +1,4 @@
-import { FC, useState, ChangeEvent } from "react";
+import { FC, useState, ChangeEvent, useCallback } from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
@@ -10,7 +10,7 @@ import { ThunkDispatcher } from "../../types";
 import { setAuthorized } from "../../redux/common/actions";
 
 type Props = {
-  openModal: () => void;
+  openModal: (e: any) => void;
   closeModal: () => void;
 };
 
@@ -20,19 +20,19 @@ const Register: FC<Props> = ({ openModal, closeModal }) => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const handleUsername = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleUsername = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
-  };
-  const handleEmail = (e: ChangeEvent<HTMLInputElement>) => {
+  }, []);
+  const handleEmail = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
-  };
-  const handlePassword = (e: ChangeEvent<HTMLInputElement>) => {
+  }, []);
+  const handlePassword = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
-  };
+  }, []);
   const handleRegister = async () => {
     setLoading(true);
-    const data: any = await registerUser(username, email, password);
-    if (data?.user) dispatch(setAuthorized(data.user.token));
+    const { user } = await registerUser(username, email, password);
+    if (user) dispatch(setAuthorized(user.token));
     setLoading(false);
     closeModal();
   };
@@ -46,6 +46,7 @@ const Register: FC<Props> = ({ openModal, closeModal }) => {
         variant="body2"
         color="inherit"
         component="button"
+        name="login"
         onClick={openModal}
       >
         Have an account?

@@ -1,4 +1,4 @@
-import { TagListComponent } from "../../components/article/styled";
+import { StyledTagList } from "../../components/tag/styled";
 import { FC } from "react";
 import Chip from "@material-ui/core/Chip";
 import { useDispatch } from "react-redux";
@@ -31,7 +31,7 @@ const TagList: FC<Props> = ({ tagList }) => {
     Router.push(path, path, { shallow: true });
   };
   return (
-    <TagListComponent>
+    <StyledTagList>
       {tagList.map((tag, index) => (
         <Chip
           label={"#" + tag}
@@ -44,7 +44,7 @@ const TagList: FC<Props> = ({ tagList }) => {
           }}
         />
       ))}
-    </TagListComponent>
+    </StyledTagList>
   );
 };
 

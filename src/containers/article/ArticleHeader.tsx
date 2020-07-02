@@ -8,7 +8,7 @@ import { FC } from "react";
 import Typography from "@material-ui/core/Typography";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
-import TagList from "../common/TagList";
+import TagList from "../tag/TagList";
 
 type Props = {
   title: string;

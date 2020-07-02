@@ -1,4 +1,4 @@
-import { FC, useState, ChangeEvent } from "react";
+import { FC, useState, ChangeEvent, useCallback, useMemo } from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
@@ -10,7 +10,7 @@ import { ThunkDispatcher } from "../../types";
 import { setAuthorized } from "../../redux/common/actions";
 
 type Props = {
-  openModal: () => void;
+  openModal: (e: any) => void;
   closeModal: () => void;
 };
 
@@ -19,12 +19,12 @@ const Login: FC<Props> = ({ openModal, closeModal }) => {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const handleEmail = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleEmail = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
-  };
-  const handlePassword = (e: ChangeEvent<HTMLInputElement>) => {
+  }, []);
+  const handlePassword = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
-  };
+  }, []);
   const handleLogin = async () => {
     setLoading(true);
     const { user } = await loginUser(email, password);
@@ -42,6 +42,7 @@ const Login: FC<Props> = ({ openModal, closeModal }) => {
         variant="body2"
         color="inherit"
         component="button"
+        name="register"
         onClick={openModal}
       >
         Need an account?
