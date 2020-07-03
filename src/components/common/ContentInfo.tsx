@@ -20,9 +20,9 @@ const ContentInfo: FC<Props> = ({ username, avatar, date, ...props }) => (
           shallow
           passHref
         >
-          <a>
+          <Link>
             <Avatar src={avatar}>{username[0]}</Avatar>
-          </a>
+          </Link>
         </NextLink>
       ) : (
         avatar

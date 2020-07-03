@@ -21,7 +21,7 @@ const ArticleModal: FC = () => {
     window.history.go(-1);
   };
   return (
-    <CustomModal open={isOpen} onClose={handleClose}>
+    <CustomModal open={isOpen} isArticle onClose={handleClose}>
       <Grid item container spacing={3}>
         <Article slug={slug} />
       </Grid>

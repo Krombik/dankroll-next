@@ -1,21 +1,12 @@
-import Modal, { ModalProps } from "@material-ui/core/Modal";
 import Fade from "@material-ui/core/Fade";
 import { FC } from "react";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
+import { StyledModal, StyledModalProps } from "./styled";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    modal: {
-      display: "flex",
-      flexDirection: "column",
-      maxWidth: "90vw",
-      width: "fit-content",
-      margin: "auto",
-      justifyContent: "space-between",
-      overflowY: "auto",
-    },
     paper: {
       backgroundColor: theme.palette.background.default,
       padding: theme.spacing(3),
@@ -24,34 +15,26 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const CustomModal: FC<ModalProps> = ({ open, onClose, children }) => {
+const CustomModal: FC<StyledModalProps> = ({ children, ...props }) => {
   const classes = useStyles();
   return (
-    <Modal
-      className={classes.modal}
+    <StyledModal
       disableEnforceFocus
       disableAutoFocus
-      open={open}
-      onClose={onClose}
+      {...props}
       closeAfterTransition
       BackdropProps={{
         timeout: 500,
       }}
     >
-      <Fade in={open}>
+      <Fade in={props.open}>
         <Paper className={classes.paper}>
-          <Grid
-            container
-            justify="center"
-            direction="column"
-            alignItems="center"
-            spacing={3}
-          >
+          <Grid container justify="center" alignItems="center" spacing={3}>
             {children}
           </Grid>
         </Paper>
       </Fade>
-    </Modal>
+    </StyledModal>
   );
 };
 

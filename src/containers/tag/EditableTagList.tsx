@@ -35,7 +35,7 @@ const EditableTagList: FC<Props> = ({ tagList, editTags }) => {
     ref.current.focus();
   };
   return (
-    <SortableList axis="xy" onSortEnd={onSortEnd}>
+    <SortableList axis="xy" distance={10} onSortEnd={onSortEnd}>
       <StyledTagList as="div">
         {tagList.map((tag, index) => (
           <SortableItem index={index} key={index}>
@@ -53,7 +53,6 @@ const EditableTagList: FC<Props> = ({ tagList, editTags }) => {
                   removeTag(index);
                 }}
                 variant="outlined"
-                size="small"
                 component="span"
               />
             </StyledTag>
@@ -65,7 +64,6 @@ const EditableTagList: FC<Props> = ({ tagList, editTags }) => {
             onDelete={setFocus}
             deleteIcon={<AddIcon />}
             variant="outlined"
-            size="small"
             component="span"
           />
         </StyledTag>

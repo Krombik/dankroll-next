@@ -25,30 +25,23 @@ const Editor: FC<Props> = ({ initialData, dataKey, type }) => {
   const { data, mutate } = useSWR(key, getFromStorage);
   const article = data ?? initialData;
   const interval = useRef<number>(null);
-  const editTags = useCallback(
-    (tags: string[]) => {
-      const newArticle = { ...article, tags };
-      mutate(newArticle, false);
-      setToStorage(key, newArticle);
-    },
-    [article]
-  );
-  const handleChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      mutate({ ...article, [e.target.name]: e.target.value }, false);
-    },
-    [article]
-  );
-  const handleFocus = useCallback(() => {
+  const editTags = (tags: string[]) => {
+    const newArticle = { ...article, tags };
+    mutate(newArticle, false);
+    setToStorage(key, newArticle);
+  };
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    mutate({ ...article, [e.target.name]: e.target.value }, false);
+  };
+  const handleFocus = () => {
     interval.current = setInterval(() => {
       setToStorage(key, article);
-      console.log("kekekekekeke");
     }, 1000);
-  }, [article]);
-  const handleBlur = useCallback(() => {
+  };
+  const handleBlur = () => {
     clearInterval(interval.current);
     setToStorage(key, article);
-  }, [article]);
+  };
   return (
     <>
       <Grid item xs={12}>
@@ -79,16 +72,17 @@ const Editor: FC<Props> = ({ initialData, dataKey, type }) => {
         <TextField
           label="Text"
           variant="outlined"
-          fullWidth
           multiline
           name="body"
+          fullWidth
+          rows={15}
           value={article.body}
           onChange={handleChange}
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
       </Grid>
-      <Grid item>
+      <Grid item xs={12}>
         <EditableTagList tagList={article.tags} editTags={editTags} />
       </Grid>
       <Grid item>

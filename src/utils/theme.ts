@@ -6,24 +6,20 @@ const useTheme = (isDark: boolean) =>
         fontFamily: "OpenSans",
         h5: {
           fontWeight: "bold",
-          textTransform: "capitalize",
           marginBottom: 15,
         },
         h2: {
           fontWeight: "bold",
-          textTransform: "capitalize",
           marginBottom: 15,
           position: "relative",
         },
         h1: {
           fontWeight: "bold",
-          textTransform: "capitalize",
           marginTop: 25,
           marginBottom: 25,
           position: "relative",
         },
         body1: {
-          textTransform: "capitalize",
           position: "relative",
         },
       },
