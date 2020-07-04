@@ -1,4 +1,4 @@
-import { FC, useState, ChangeEvent, useCallback, useMemo } from "react";
+import { FC, useState, ChangeEvent, useCallback } from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
@@ -8,6 +8,7 @@ import { loginUser } from "../../api/user";
 import { useDispatch } from "react-redux";
 import { ThunkDispatcher } from "../../types";
 import { setAuthorized } from "../../redux/common/actions";
+import { setCookie } from "nookies";
 
 type Props = {
   openModal: (e: any) => void;
@@ -28,14 +29,19 @@ const Login: FC<Props> = ({ openModal, closeModal }) => {
   const handleLogin = async () => {
     setLoading(true);
     const { user } = await loginUser(email, password);
-    if (user) dispatch(setAuthorized(user.token));
+    if (user) {
+      dispatch(setAuthorized(user.token, user.username));
+      setCookie(null, "token", user.token, { path: "/" });
+    }
     setLoading(false);
     closeModal();
   };
   return (
     <>
-      <Grid item>
-        <Typography variant="h4">Sign in</Typography>
+      <Grid item xs={12}>
+        <Typography align="center" variant="h4">
+          Sign in
+        </Typography>
       </Grid>
       <Link
         underline="always"
@@ -47,7 +53,7 @@ const Login: FC<Props> = ({ openModal, closeModal }) => {
       >
         Need an account?
       </Link>
-      <Grid item>
+      <Grid item xs={12}>
         <TextField
           label="Email"
           type="email"
@@ -57,7 +63,7 @@ const Login: FC<Props> = ({ openModal, closeModal }) => {
           onChange={handleEmail}
         />
       </Grid>
-      <Grid item>
+      <Grid item xs={12}>
         <TextField
           label="Password"
           type="password"

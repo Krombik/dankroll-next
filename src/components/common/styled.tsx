@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import Modal, { ModalProps } from "@material-ui/core/Modal";
 
-export type StyledBannerProps = { backgroundColor: string };
+type StyledBannerProps = { backgroundColor: string };
 export interface StyledModalProps extends ModalProps {
   isArticle?: boolean;
 }
@@ -28,8 +28,8 @@ export const StyledModal = styled(
 )`
   display: flex;
   flex-direction: column;
-  ${(props) =>
-    props.isArticle
+  ${({ isArticle }) =>
+    isArticle
       ? `max-width: 90vw;
       width: fit-content;`
       : `width: 90vw; max-width: 1200px;`}

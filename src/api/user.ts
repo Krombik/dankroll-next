@@ -24,7 +24,7 @@ export const loginUser = async (email: string, password: string) =>
     }
   );
 
-export const getCurrentUserName = async (token: string) =>
+export const getCurrentUser = async (token: string) =>
   await fetcher.get<FetchRV<AuthorizedUser>>(`${SERVER_BASE_URL}/user`, token);
 
 const UserAPI = {

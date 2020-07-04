@@ -8,6 +8,7 @@ import { registerUser } from "../../api/user";
 import { useDispatch } from "react-redux";
 import { ThunkDispatcher } from "../../types";
 import { setAuthorized } from "../../redux/common/actions";
+import { setCookie } from "nookies";
 
 type Props = {
   openModal: (e: any) => void;
@@ -32,14 +33,19 @@ const Register: FC<Props> = ({ openModal, closeModal }) => {
   const handleRegister = async () => {
     setLoading(true);
     const { user } = await registerUser(username, email, password);
-    if (user) dispatch(setAuthorized(user.token));
+    if (user) {
+      dispatch(setAuthorized(user.token, user.username));
+      setCookie(null, "token", user.token, { path: "/" });
+    }
     setLoading(false);
     closeModal();
   };
   return (
     <>
-      <Grid item>
-        <Typography variant="h4">Sign up</Typography>
+      <Grid item xs={12}>
+        <Typography align="center" variant="h4">
+          Sign up
+        </Typography>
       </Grid>
       <Link
         underline="always"
@@ -51,7 +57,7 @@ const Register: FC<Props> = ({ openModal, closeModal }) => {
       >
         Have an account?
       </Link>
-      <Grid item>
+      <Grid item xs={12}>
         <TextField
           label="Username"
           variant="outlined"
@@ -60,7 +66,7 @@ const Register: FC<Props> = ({ openModal, closeModal }) => {
           onChange={handleUsername}
         />
       </Grid>
-      <Grid item>
+      <Grid item xs={12}>
         <TextField
           label="Email"
           variant="outlined"
@@ -70,7 +76,7 @@ const Register: FC<Props> = ({ openModal, closeModal }) => {
           onChange={handleEmail}
         />
       </Grid>
-      <Grid item>
+      <Grid item xs={12}>
         <TextField
           label="Password"
           type="password"

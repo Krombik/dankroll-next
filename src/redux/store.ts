@@ -20,10 +20,6 @@ const reducer = (state: State, action: Actions) => {
       newState.articleTabs = state.articleTabs;
     if (state.common.isDark !== newState.common.isDark)
       newState.common.isDark = state.common.isDark;
-    if (state.common.token !== newState.common.token) {
-      newState.common.token = state.common.token;
-      newState.common.currentUserName = state.common.currentUserName;
-    }
     return newState;
   }
   return combinedReducer(state, action);

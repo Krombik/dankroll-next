@@ -10,10 +10,11 @@ import Grid from "@material-ui/core/Grid";
 import fetcher from "../../src/utils/fetcher";
 import { ArticleObj } from "../../src/types/article";
 import { CommentsObj } from "../../src/types/comment";
+import { parseCookies } from "nookies";
+import { setAuthorized } from "../../src/redux/common/actions";
 
 const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
   initialArticle,
-  serverSlug,
   initialComments,
 }) => {
   if (initialArticle && initialArticle.error)
@@ -31,23 +32,28 @@ const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
       <Article
         initialArticle={initialArticle}
         initialComments={initialComments}
-        slug={slug ?? serverSlug}
+        slug={slug}
       />
     </Grid>
   );
 };
 
 export const getServerSideProps = wrapper.getServerSideProps(
-  async ({ query }: ServerSideContext) => {
-    const { slug }: any = query;
+  async (ctx: ServerSideContext) => {
+    const { slug }: any = ctx.query;
     const initialArticle = await fetcher.get<FetchRV<ArticleObj>>(
       getArticleUrl(slug)
     );
     const initialComments = await fetcher.get<FetchRV<CommentsObj>>(
       getArticleCommentsUrl(slug)
     );
+    const { token } = parseCookies(ctx);
+    if (token) await ctx.store.dispatch(setAuthorized(token));
     return {
-      props: { serverSlug: slug, initialComments, initialArticle },
+      props: {
+        initialComments,
+        initialArticle,
+      },
     };
   }
 );

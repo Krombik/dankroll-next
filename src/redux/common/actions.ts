@@ -1,6 +1,6 @@
 import { ThunkResult } from "../../types";
 import { ActionTypes } from "./type";
-import { getCurrentUserName } from "../../api/user";
+import { getCurrentUser } from "../../api/user";
 
 export const setDark = (isDark: boolean): ThunkResult => (dispatch) => {
   dispatch({
@@ -19,7 +19,7 @@ export const setAuthorized = (
   });
   const currentUserName = userName
     ? userName
-    : (await getCurrentUserName(token))?.user?.username;
+    : (await getCurrentUser(token))?.user?.username;
   if (currentUserName)
     dispatch({
       type: ActionTypes.SET_CURRENT_USER_NAME,
