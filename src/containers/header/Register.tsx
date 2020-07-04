@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 import { ThunkDispatcher } from "../../types";
 import { setAuthorized } from "../../redux/common/actions";
 import { setCookie } from "nookies";
+import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 
 type Props = {
   openModal: (e: any) => void;
@@ -41,62 +42,73 @@ const Register: FC<Props> = ({ openModal, closeModal }) => {
     closeModal();
   };
   return (
-    <Grid container justify="center" alignItems="center" spacing={3}>
-      <Grid item xs={12}>
-        <Typography align="center" variant="h4">
-          Sign up
-        </Typography>
-      </Grid>
-      <Link
-        underline="always"
-        variant="body2"
-        color="inherit"
-        component="button"
-        name="login"
-        onClick={openModal}
-      >
-        Have an account?
-      </Link>
-      <Grid item xs={12}>
-        <TextField
-          label="Username"
-          variant="outlined"
-          fullWidth
-          value={username}
-          onChange={handleUsername}
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <TextField
-          label="Email"
-          variant="outlined"
-          type="email"
-          fullWidth
-          value={email}
-          onChange={handleEmail}
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <TextField
-          label="Password"
-          type="password"
-          fullWidth
-          value={password}
-          variant="outlined"
-          onChange={handlePassword}
-        />
-      </Grid>
-      <Grid item>
-        <Button
-          variant="contained"
-          color="primary"
-          disabled={loading}
-          onClick={handleRegister}
+    <ValidatorForm onSubmit={handleRegister}>
+      <Grid container justify="center" alignItems="center" spacing={3}>
+        <Grid item xs={12}>
+          <Typography align="center" variant="h4">
+            Sign up
+          </Typography>
+        </Grid>
+        <Link
+          underline="always"
+          variant="body2"
+          color="inherit"
+          component="button"
+          name="login"
+          onClick={openModal}
         >
-          Register
-        </Button>
+          Have an account?
+        </Link>
+        <Grid item xs={12}>
+          <TextValidator
+            value={username}
+            label="Username"
+            name="username"
+            variant="outlined"
+            onChange={handleUsername}
+            fullWidth
+            validators={["required"]}
+            errorMessages={["this field is required"]}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextValidator
+            value={email}
+            label="Email"
+            type="email"
+            name="email"
+            variant="outlined"
+            onChange={handleEmail}
+            fullWidth
+            validators={["required", "isEmail"]}
+            errorMessages={["this field is required", "email is not valid"]}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextValidator
+            value={password}
+            label="Password"
+            type="password"
+            name="password"
+            variant="outlined"
+            onChange={handlePassword}
+            fullWidth
+            validators={["required"]}
+            errorMessages={["this field is required"]}
+          />
+        </Grid>
+        <Grid item>
+          <Button
+            variant="contained"
+            type="submit"
+            color="primary"
+            disabled={loading}
+          >
+            Register
+          </Button>
+        </Grid>
       </Grid>
-    </Grid>
+    </ValidatorForm>
   );
 };
 

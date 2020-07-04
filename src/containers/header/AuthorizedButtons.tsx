@@ -18,7 +18,7 @@ const AuthorizedButtons: FC<Props> = ({ currentUserName, openModal }) => {
   const dispatch = useDispatch<ThunkDispatcher>();
   const handleLogout = () => {
     dispatch(setAuthorized("", ""));
-    destroyCookie(null, "token");
+    destroyCookie(null, "token", { path: "/" });
   };
   return (
     <>
