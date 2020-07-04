@@ -69,11 +69,12 @@ const Header: FC = () => {
                     <Register openModal={openModal} closeModal={closeModal} />
                   ) : modal === "editor" ? (
                     <Editor
+                      closeModal={closeModal}
                       initialData={{
                         title: "",
-                        subtitle: "",
+                        description: "",
                         body: "",
-                        tags: [],
+                        tagList: [],
                       }}
                       dataKey="new"
                       type="create"

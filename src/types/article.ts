@@ -21,3 +21,10 @@ export type ArticleType = {
   favoritesCount: number;
   favorited: boolean;
 };
+
+export type ArticleEditorType = {
+  title: string;
+  description: string;
+  body: string;
+  tagList: string[];
+};

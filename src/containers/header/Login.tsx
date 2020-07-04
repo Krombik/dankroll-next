@@ -37,7 +37,7 @@ const Login: FC<Props> = ({ openModal, closeModal }) => {
     closeModal();
   };
   return (
-    <>
+    <Grid container justify="center" alignItems="center" spacing={3}>
       <Grid item xs={12}>
         <Typography align="center" variant="h4">
           Sign in
@@ -83,7 +83,7 @@ const Login: FC<Props> = ({ openModal, closeModal }) => {
           Login
         </Button>
       </Grid>
-    </>
+    </Grid>
   );
 };
 

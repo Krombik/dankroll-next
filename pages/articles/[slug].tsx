@@ -11,7 +11,7 @@ import fetcher from "../../src/utils/fetcher";
 import { ArticleObj } from "../../src/types/article";
 import { CommentsObj } from "../../src/types/comment";
 import { parseCookies } from "nookies";
-import { setAuthorized } from "../../src/redux/common/actions";
+import { serverSetAuthorized } from "../../src/redux/common/actions";
 
 const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
   initialArticle,
@@ -41,14 +41,16 @@ const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
 export const getServerSideProps = wrapper.getServerSideProps(
   async (ctx: ServerSideContext) => {
     const { slug }: any = ctx.query;
+    const { token } = parseCookies(ctx);
+    if (token) await ctx.store.dispatch(serverSetAuthorized(token));
     const initialArticle = await fetcher.get<FetchRV<ArticleObj>>(
-      getArticleUrl(slug)
+      getArticleUrl(slug),
+      token
     );
     const initialComments = await fetcher.get<FetchRV<CommentsObj>>(
-      getArticleCommentsUrl(slug)
+      getArticleCommentsUrl(slug),
+      token
     );
-    const { token } = parseCookies(ctx);
-    if (token) await ctx.store.dispatch(setAuthorized(token));
     return {
       props: {
         initialComments,

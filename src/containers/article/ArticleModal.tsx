@@ -22,8 +22,10 @@ const ArticleModal: FC = () => {
   };
   return (
     <CustomModal open={isOpen} isArticle onClose={handleClose}>
-      <Grid item container spacing={3}>
-        <Article slug={slug} />
+      <Grid container justify="center" alignItems="center" spacing={3}>
+        <Grid item container spacing={3}>
+          <Article slug={slug} />
+        </Grid>
       </Grid>
     </CustomModal>
   );

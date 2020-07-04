@@ -3,7 +3,7 @@ import { SERVER_BASE_URL } from "../utils/constant";
 import { getQuery } from "../utils/getQuery";
 import fetcher from "../utils/fetcher";
 import { FetchRV } from "../types";
-import { ArticlesObj, ArticleObj } from "../types/article";
+import { ArticlesObj, ArticleObj, ArticleEditorType } from "../types/article";
 
 export const getArticlesUrl = (
   type: string,
@@ -37,36 +37,14 @@ export const feed = (page, limit = 10) =>
 export const unfavorite = (slug) =>
   axios.delete(`${SERVER_BASE_URL}/articles/${slug}/favorite`);
 
-export const updateArticle = async (article, token) => {
-  const { data, status } = await axios.put(
-    `${SERVER_BASE_URL}/articles/${article.slug}`,
-    JSON.stringify({ article }),
-    {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Token ${encodeURIComponent(token)}`,
-      },
-    }
-  );
-  return {
-    data,
-    status,
-  };
-};
+export const updateArticle = async (
+  article: ArticleEditorType,
+  slug: string,
+  token: string
+) => fetcher.put(`${SERVER_BASE_URL}/articles/${slug}`, { article }, token);
 
-export const createArticle = async (article, token) => {
-  const { data, status } = await axios.post(
-    `${SERVER_BASE_URL}/articles`,
-    JSON.stringify({ article }),
-    {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Token ${encodeURIComponent(token)}`,
-      },
-    }
-  );
-  return {
-    data,
-    status,
-  };
-};
+export const createArticle = async (
+  article: ArticleEditorType,
+  token: string
+) =>
+  fetcher.post<ArticleObj>(`${SERVER_BASE_URL}/articles`, { article }, token);

@@ -41,7 +41,7 @@ const Register: FC<Props> = ({ openModal, closeModal }) => {
     closeModal();
   };
   return (
-    <>
+    <Grid container justify="center" alignItems="center" spacing={3}>
       <Grid item xs={12}>
         <Typography align="center" variant="h4">
           Sign up
@@ -96,7 +96,7 @@ const Register: FC<Props> = ({ openModal, closeModal }) => {
           Register
         </Button>
       </Grid>
-    </>
+    </Grid>
   );
 };
 

@@ -17,7 +17,7 @@ import Typography from "@material-ui/core/Typography";
 import { ArticlesObj } from "../src/types/article";
 import fetcher from "../src/utils/fetcher";
 import { parseCookies } from "nookies";
-import { setAuthorized } from "../src/redux/common/actions";
+import { serverSetAuthorized } from "../src/redux/common/actions";
 
 const selectData = createSelector(
   (state: State) => state.articleTabs.tabList,
@@ -80,6 +80,8 @@ const Index: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
 export const getServerSideProps = wrapper.getServerSideProps(
   async (ctx: ServerSideContext) => {
     const { tag, author, page: queryPage }: any = ctx.query;
+    const { token } = parseCookies(ctx);
+    if (token) await ctx.store.dispatch(serverSetAuthorized(token));
     const page = queryPage && +queryPage > 0 ? +queryPage - 1 : 0;
     const initialTab = tag
       ? { type: "tag", value: tag }
@@ -87,13 +89,12 @@ export const getServerSideProps = wrapper.getServerSideProps(
       ? { type: "author", value: author }
       : { type: "default", value: "" };
     const initialArticles = await fetcher.get<FetchRV<ArticlesObj>>(
-      getArticlesUrl(initialTab.type, initialTab.value, page)
+      getArticlesUrl(initialTab.type, initialTab.value, page),
+      token
     );
     if (initialTab.type !== "default")
       ctx.store.dispatch(serverAddTab(initialTab, page));
     else ctx.store.dispatch(setPageNumber("default-", page));
-    const { token } = parseCookies(ctx);
-    if (token) await ctx.store.dispatch(setAuthorized(token));
     return {
       props: {
         initialArticles: initialArticles,

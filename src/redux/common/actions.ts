@@ -9,31 +9,28 @@ export const setDark = (isDark: boolean): ThunkResult => (dispatch) => {
   });
 };
 
-export const setAuthorized = (
-  token: string,
-  userName?: string
+export const serverSetAuthorized = (
+  token: string
 ): ThunkResult<Promise<void>> => async (dispatch) => {
   dispatch({
     type: ActionTypes.SET_TOKEN,
     payload: token,
   });
-  const currentUserName = userName
-    ? userName
-    : (await getCurrentUser(token))?.user?.username;
-  if (currentUserName)
-    dispatch({
-      type: ActionTypes.SET_CURRENT_USER_NAME,
-      payload: currentUserName,
-    });
+  dispatch({
+    type: ActionTypes.SET_CURRENT_USER_NAME,
+    payload: (await getCurrentUser(token))?.user?.username,
+  });
 };
 
-export const setUnauthorized = (): ThunkResult => (dispatch) => {
+export const setAuthorized = (token: string, userName: string): ThunkResult => (
+  dispatch
+) => {
   dispatch({
     type: ActionTypes.SET_TOKEN,
-    payload: "",
+    payload: token,
   });
   dispatch({
     type: ActionTypes.SET_CURRENT_USER_NAME,
-    payload: "",
+    payload: userName,
   });
 };

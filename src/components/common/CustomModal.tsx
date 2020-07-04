@@ -28,11 +28,7 @@ const CustomModal: FC<StyledModalProps> = ({ children, ...props }) => {
       }}
     >
       <Fade in={props.open}>
-        <Paper className={classes.paper}>
-          <Grid container justify="center" alignItems="center" spacing={3}>
-            {children}
-          </Grid>
-        </Paper>
+        <Paper className={classes.paper}>{children}</Paper>
       </Fade>
     </StyledModal>
   );

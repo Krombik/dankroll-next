@@ -6,7 +6,7 @@ import TooltipIconLink from "../../components/common/TooltipIconLink";
 import CreateIcon from "@material-ui/icons/Create";
 import { useDispatch } from "react-redux";
 import { ThunkDispatcher } from "../../types";
-import { setUnauthorized } from "../../redux/common/actions";
+import { setAuthorized } from "../../redux/common/actions";
 import { destroyCookie } from "nookies";
 
 type Props = {
@@ -17,7 +17,7 @@ type Props = {
 const AuthorizedButtons: FC<Props> = ({ currentUserName, openModal }) => {
   const dispatch = useDispatch<ThunkDispatcher>();
   const handleLogout = () => {
-    dispatch(setUnauthorized());
+    dispatch(setAuthorized("", ""));
     destroyCookie(null, "token");
   };
   return (

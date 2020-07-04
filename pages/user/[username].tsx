@@ -31,7 +31,7 @@ import { ArticlesObj } from "../../src/types/article";
 import fetcher from "../../src/utils/fetcher";
 import { UserObj } from "../../src/types/user";
 import { parseCookies } from "nookies";
-import { setAuthorized } from "../../src/redux/common/actions";
+import { serverSetAuthorized } from "../../src/redux/common/actions";
 
 const selectData = createSelector(
   (state: State) => state.articleTabs.articlePageNumbers,
@@ -148,17 +148,19 @@ const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
 export const getServerSideProps = wrapper.getServerSideProps(
   async (ctx: ServerSideContext) => {
     const { username, page: queryPage, favorited }: any = ctx.query;
+    const { token } = parseCookies(ctx);
+    if (token) await ctx.store.dispatch(serverSetAuthorized(token));
     const page = queryPage && +queryPage > 0 ? +queryPage - 1 : 0;
     const initialUser = await fetcher.get<FetchRV<UserObj>>(
-      getUserUrl(username)
+      getUserUrl(username),
+      token
     );
     const initialTab = favorited ? "favorited" : "author";
     const initialArticles = await fetcher.get<FetchRV<ArticlesObj>>(
-      getArticlesUrl(initialTab, username, page)
+      getArticlesUrl(initialTab, username, page),
+      token
     );
     ctx.store.dispatch(setPageNumber(initialTab + "-" + username, page));
-    const { token } = parseCookies(ctx);
-    if (token) await ctx.store.dispatch(setAuthorized(token));
     return {
       props: {
         initialUser,

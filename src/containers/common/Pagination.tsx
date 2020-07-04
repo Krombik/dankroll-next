@@ -35,7 +35,7 @@ const Pagination: FC<Props> = ({ page, count, tabKey, resetPage }) => {
       shape="rounded"
       onChange={updatePageNumber}
       renderItem={(item) => (
-        <Link href={path(item.page)} as={path(item.page)}>
+        <Link href={path(item.page)} as={path(item.page)} passHref>
           <PaginationItem component={"a"} {...item} />
         </Link>
       )}
