@@ -1,7 +1,6 @@
 import Link from "next/link";
 import PaginationContainer from "@material-ui/lab/Pagination";
 import PaginationItem from "@material-ui/lab/PaginationItem";
-import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 import { ThunkDispatcher } from "../../types";
 import { setPageNumber } from "../../redux/articleTabs/actions";
@@ -11,21 +10,17 @@ type Props = {
   page: number;
   count: number;
   tabKey: string;
-  resetPage: () => void;
+  query: any;
 };
 
-const Pagination: FC<Props> = ({ page, count, tabKey, resetPage }) => {
+const Pagination: FC<Props> = ({ page, count, tabKey, query }) => {
   const dispatch = useDispatch<ThunkDispatcher>();
-  const {
-    query: { page: _, ...newQuery },
-  } = useRouter();
   const path = (page: number) => ({
     pathname: "/",
-    query: { ...newQuery, ...(page > 1 ? { page } : {}) },
+    query: { ...query, ...(page > 1 ? { page } : {}) },
   });
   const updatePageNumber = (_: any, number: number) => {
-    if (tabKey) dispatch(setPageNumber(tabKey, number - 1));
-    resetPage();
+    dispatch(setPageNumber(tabKey, number - 1));
   };
   return (
     <PaginationContainer

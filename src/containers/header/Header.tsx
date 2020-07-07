@@ -29,7 +29,6 @@ const Header: FC = memo(() => {
   const handleTheme = () => {
     dispatch(setDark(!isDark));
   };
-  console.log("das");
   const openModal = (e: MouseEvent<HTMLButtonElement>) => {
     dispatch(setModal(true, e.currentTarget.name as ModalType));
   };

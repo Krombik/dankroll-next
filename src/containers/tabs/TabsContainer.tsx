@@ -36,16 +36,14 @@ const TabsContainer: FC<Props> = ({ tabList }) => {
   const dispatch = useDispatch<ThunkDispatcher>();
   const handleChange = (_: any, newValue: string) => {
     if (newValue !== "add") {
-      const { type, value } = tabKeyDecoder(newValue);
+      const newTab = tabKeyDecoder(newValue);
       const page = articlePageNumbers[newValue] + 1;
       const path =
-        type !== "default"
-          ? type !== "feed"
-            ? {
-                pathname: "/",
-                query: { [type]: value, ...(page > 1 ? { page } : {}) },
-              }
-            : `/?feed=true${page > 1 ? "&page=" + page : ""}`
+        newTab.type !== "default"
+          ? {
+              pathname: "/",
+              query: { ...newTab, ...(page > 1 ? { page } : {}) },
+            }
           : `/${page > 1 ? "?page=" + page : ""}`;
       Router.push(path, path, { shallow: true });
     }
@@ -54,25 +52,25 @@ const TabsContainer: FC<Props> = ({ tabList }) => {
     dispatch(moveTab(oldIndex, newIndex));
   };
   const tabs = [
-    <Tab value="default-" label="Last articles" key={1} />,
+    <Tab value="default" label="Last articles" key={1} />,
     ...tabList.map((tab, index) => (
       <RemovableTab
-        value={tab.key}
         tab={tab}
         key={index + 2}
+        value={tab.key}
         articlesPagesNumber={articlePageNumbers}
-        tabIndex={tabOrder.findIndex((key) => key === tab.key)}
+        tabOrder={tabOrder}
       />
     )),
     <AddNewTabButton
-      key={tabOrder.length + 2}
-      value={"add"}
+      key={tabList.length + 2}
+      value="add"
       articlesPagesNumber={articlePageNumbers}
     />,
   ];
   if (currentUserName)
     tabs.unshift(
-      <Tab value="feed-" label={`${currentUserName}'s feed`} key={0} />
+      <Tab value="feed" label={`${currentUserName}'s feed`} key={0} />
     );
   return (
     <AppBar position="static" color="default">

@@ -5,7 +5,6 @@ import { tabKeyDecoder } from "../../utils/tabKeyDecoder";
 
 type State = {
   articlesPerPageCount: number;
-  currTab: string;
   tabList: TabType[];
   tabOrder: string[];
   articlePageNumbers: { [key: string]: number };
@@ -15,8 +14,7 @@ const initialState: State = {
   articlesPerPageCount: 10,
   tabList: [],
   tabOrder: [],
-  currTab: "default-",
-  articlePageNumbers: { "default-": 0 },
+  articlePageNumbers: {},
 };
 
 export default function reducer(
@@ -37,7 +35,6 @@ export default function reducer(
           ...state.tabList,
           { ...action.payload.newTab, key: action.payload.key },
         ],
-        currTab: action.payload.key,
         articlePageNumbers: {
           ...state.articlePageNumbers,
           [action.payload.key]: action.payload.page,
@@ -63,11 +60,6 @@ export default function reducer(
           [action.payload]: undefined,
         },
       };
-    case ActionTypes.SET_TAB:
-      return {
-        ...state,
-        currTab: action.payload,
-      };
     case ActionTypes.MOVE_TAB:
       return {
         ...state,
@@ -83,15 +75,6 @@ export default function reducer(
         articlePageNumbers: {
           ...state.articlePageNumbers,
           [action.payload.key]: action.payload.page,
-        },
-      };
-    case ActionTypes.SERVER_SET_TAB:
-      return {
-        ...state,
-        currTab: action.payload.currTab,
-        articlePageNumbers: {
-          ...state.articlePageNumbers,
-          [action.payload.currTab]: action.payload.page,
         },
       };
     default:

@@ -1,5 +1,5 @@
 import { ArticlesObj } from "../../types/article";
-import { FC, useEffect } from "react";
+import { FC, useEffect, useRef } from "react";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import ArticlePreview from "./ArticlePreview";
@@ -7,18 +7,15 @@ import { getArticlesUrl } from "../../api/article";
 import { useSWRInfinite } from "swr";
 import Pagination from "../common/Pagination";
 import { useRouter } from "next/router";
-import { FetchRV, ThunkDispatcher, State } from "../../types";
-import Router from "next/router";
-import { useDispatch } from "react-redux";
-import { setTab } from "../../redux/articleTabs/actions";
-import urlToQuery from "../../utils/urlToQuery";
+import { FetchRV, State } from "../../types";
 import { createSelector } from "reselect";
 import { useSelector } from "react-redux";
 import fetcher from "../../utils/fetcher";
 
 const selectData = createSelector(
   (state: State) => state.common.token,
-  (token) => ({ token })
+  (state: State) => state.modal.open,
+  (token, open) => ({ token, open })
 );
 
 type Props = {
@@ -29,9 +26,9 @@ type Props = {
 };
 
 const ArticleList: FC<Props> = ({ initialData, type, value, initialPage }) => {
-  const { token } = useSelector(selectData);
+  const { token, open } = useSelector(selectData);
   const {
-    query: { page: queryPage },
+    query: { page: queryPage, ...query },
   } = useRouter();
   const startPage = queryPage
     ? +queryPage > 0
@@ -39,46 +36,15 @@ const ArticleList: FC<Props> = ({ initialData, type, value, initialPage }) => {
       : 0
     : initialPage;
   const { data, setSize, size, mutate } = useSWRInfinite<FetchRV<ArticlesObj>>(
-    (index, previousPageData) =>
-      previousPageData && previousPageData.articles.length !== 0
-        ? [getArticlesUrl(type, value, startPage + index, 20), token]
-        : [getArticlesUrl(type, value, startPage, 20), token],
+    (index) => [getArticlesUrl(type, value, startPage + index, 20), token],
     fetcher.get,
     { initialData }
   );
-  const dispatch = useDispatch<ThunkDispatcher>();
-  const resetPage = () => {
-    window.scrollTo({ left: 0, top: 0, behavior: "smooth" });
-    mutate([]);
-  };
+  const isInitialMount = useRef(true);
   useEffect(() => {
-    const handleRouteChange = (url: string) => {
-      const oldQuery = Router.query;
-      const { tag, author, page, feed } = urlToQuery(url);
-      if (
-        tag !== oldQuery.tag ||
-        author !== oldQuery.author ||
-        feed !== oldQuery.feed
-      )
-        dispatch(
-          setTab(
-            tag
-              ? "tag-" + tag
-              : author
-              ? "author-" + author
-              : feed
-              ? "feed-"
-              : "default-"
-          )
-        );
-      else if (page !== oldQuery.page) setSize(1);
-      else mutate();
-    };
-    Router.events.on("routeChangeStart", handleRouteChange);
-    return () => {
-      Router.events.off("routeChangeStart", handleRouteChange);
-    };
-  }, []);
+    if (isInitialMount.current) isInitialMount.current = false;
+    else if (!open) mutate();
+  }, [open]);
   const articles =
     data?.length > 0 ? data.flatMap(({ articles }) => articles) : [];
   const articlesCount = data ? data[0]?.articlesCount : 0;
@@ -119,8 +85,8 @@ const ArticleList: FC<Props> = ({ initialData, type, value, initialPage }) => {
             <Pagination
               page={size + startPage}
               count={pageCount}
+              query={query}
               tabKey={type + "-" + value}
-              resetPage={resetPage}
             />
           </Grid>
         </>

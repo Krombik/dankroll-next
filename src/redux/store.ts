@@ -15,7 +15,7 @@ const bindMiddleware = (middleware: Middleware[]) => {
 
 const reducer = (state: State, action: Actions) => {
   if (action.type === HYDRATE) {
-    const newState = { ...state, ...action.payload };
+    const newState = { ...state, ...action.payload, modal: state.modal };
     if (state.articleTabs.tabList.length > newState.articleTabs.tabList.length)
       newState.articleTabs = state.articleTabs;
     if (state.common.isDark !== newState.common.isDark)

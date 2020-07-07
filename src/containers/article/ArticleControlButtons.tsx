@@ -8,7 +8,7 @@ import { setModal } from "../../redux/modal/actions";
 import { deleteArticle } from "../../api/article";
 import { createSelector } from "reselect";
 import { useSelector } from "react-redux";
-import { useRouter } from "next/router";
+import Router from "next/router";
 
 type Props = {
   slug: string;
@@ -25,12 +25,11 @@ const ArticleControlButtons: FC<Props> = ({ slug }) => {
   const openModal = () => {
     dispatch(setModal(true, "edit", slug));
   };
-  const router = useRouter();
   const handleDelete = async () => {
     await deleteArticle(slug, token);
     dispatch(setModal(false));
-    if (window.history.length > 0) router.back();
-    else router.push("/");
+    if (window.history.length > 0) Router.back();
+    else Router.push("/");
   };
   return (
     <>

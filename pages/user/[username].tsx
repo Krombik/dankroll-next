@@ -8,11 +8,10 @@ import {
 import { getArticlesUrl } from "../../src/api/article";
 import { NextPage } from "next";
 import DefaultErrorPage from "next/error";
-import Router, { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import AppBar from "@material-ui/core/AppBar";
 import Tab from "@material-ui/core/Tab";
 import TabList from "@material-ui/lab/TabList";
-import TabContext from "@material-ui/lab/TabContext";
 import TabPanel from "@material-ui/lab/TabPanel";
 import { getUserUrl } from "../../src/api/user";
 import Grid from "@material-ui/core/Grid";
@@ -22,16 +21,15 @@ import Spinner from "../../src/components/common/Spinner";
 import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
 import ArticleList from "../../src/containers/article/ArticlesList";
-import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { createSelector } from "reselect";
 import { setPageNumber } from "../../src/redux/articleTabs/actions";
-import urlToQuery from "../../src/utils/urlToQuery";
 import { ArticlesObj } from "../../src/types/article";
 import fetcher from "../../src/utils/fetcher";
 import { UserObj } from "../../src/types/user";
 import { parseCookies } from "nookies";
 import { serverSetAuthorized } from "../../src/redux/common/actions";
+import TabsContext from "../../src/containers/tabs/TabsContext";
 
 const selectData = createSelector(
   (state: State) => state.articleTabs.articlePageNumbers,
@@ -64,19 +62,6 @@ const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
       initialData: initialUser,
     }
   );
-  const [tab, setTab] = useState(initialTab);
-  useEffect(() => {
-    const handleRouteChange = (url: string) => {
-      const oldQuery = Router.query;
-      const { favorited } = urlToQuery(url);
-      if (favorited !== oldQuery.favorited)
-        setTab(favorited ? "favorited" : "author");
-    };
-    Router.events.on("routeChangeStart", handleRouteChange);
-    return () => {
-      Router.events.off("routeChangeStart", handleRouteChange);
-    };
-  }, []);
   const user = userData?.profile;
   const isTabInitial = (type: string) =>
     initialTab !== type
@@ -85,7 +70,7 @@ const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
   const handleChange = (_: any, newValue: string) => {
     const page = articlePageNumbers[newValue] + 1;
     const query = {
-      ...(newValue === "favorited" ? { favorited: true } : {}),
+      ...(newValue === "favorited" ? { type: newValue } : {}),
       ...(page > 1 ? { page } : {}),
     };
     push(
@@ -118,7 +103,7 @@ const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
         <Spinner />
       )}
       <Grid item xs={12}>
-        <TabContext value={tab}>
+        <TabsContext defaultType="author">
           <AppBar position="static" color="default">
             <TabList onChange={handleChange}>
               <Tab value="author" label="Last articles" />
@@ -139,7 +124,7 @@ const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
               type="favorited"
             />
           </TabPanel>
-        </TabContext>
+        </TabsContext>
       </Grid>
     </Grid>
   );

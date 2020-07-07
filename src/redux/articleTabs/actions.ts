@@ -25,14 +25,16 @@ export const addTab = (newTab: TabType): ThunkResult => (
   }
 };
 
-export const serverAddTab = (newTab: TabType, page: number): ThunkResult => (
-  dispatch
-) => {
+export const serverAddTab = (
+  newTab: TabType,
+  page: number
+): ThunkResult<string> => (dispatch) => {
   const key = newTab.type + "-" + newTab.value;
   dispatch({
     type: ActionTypes.ADD_TAB,
     payload: { newTab, key, page },
   });
+  return key;
 };
 
 export const addTabsFromStorage = (clientOrder: string[]): ThunkResult => (
@@ -49,25 +51,11 @@ export const addTabsFromStorage = (clientOrder: string[]): ThunkResult => (
   });
 };
 
-export const removeTab = (tabOrderIndex: number): ThunkResult<string> => (
-  dispatch,
-  useState
-) => {
-  const { currTab, tabOrder } = useState().articleTabs;
-  const currTabOrderIndex = tabOrder.indexOf(currTab);
-  const newTabKey =
-    currTabOrderIndex === tabOrderIndex
-      ? currTabOrderIndex === tabOrder.length - 1
-        ? currTabOrderIndex === 0
-          ? "default-"
-          : tabOrder[tabOrderIndex - 1]
-        : tabOrder[tabOrderIndex + 1]
-      : currTab;
+export const removeTab = (tab: string): ThunkResult => (dispatch) => {
   dispatch({
     type: ActionTypes.REMOVE_TAB,
-    payload: tabOrder[tabOrderIndex],
+    payload: tab,
   });
-  return newTabKey;
 };
 
 export const setPageNumber = (key: string, page: number): ThunkResult => (
@@ -85,21 +73,5 @@ export const moveTab = (from: number, to: number): ThunkResult => (
   dispatch({
     type: ActionTypes.MOVE_TAB,
     payload: { from, to },
-  });
-};
-
-export const setTab = (tab: string): ThunkResult => (dispatch) => {
-  dispatch({
-    type: ActionTypes.SET_TAB,
-    payload: tab,
-  });
-};
-
-export const serverSetTab = (currTab: string, page: number): ThunkResult => (
-  dispatch
-) => {
-  dispatch({
-    type: ActionTypes.SERVER_SET_TAB,
-    payload: { currTab, page },
   });
 };

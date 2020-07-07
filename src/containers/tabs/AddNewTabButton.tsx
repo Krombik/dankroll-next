@@ -37,7 +37,7 @@ const AddNewTabButton: FC<Props> = memo((props) => {
       const path = {
         pathname: "/",
         query: {
-          [newTab.type]: newTab.value,
+          ...newTab,
           ...(page ? { page: page + 1 } : {}),
         },
       };

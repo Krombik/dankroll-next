@@ -5,10 +5,8 @@ export enum ActionTypes {
   ADD_TAB = "ADD_TAG",
   ADD_TABS = "ADD_TAGS",
   REMOVE_TAB = "REMOVE_TAG",
-  SET_TAB = "SET_TAB_BY_INDEX",
   MOVE_TAB = "MVE_TAB",
   SET_PAGE_NUMBER = "SET_PAGE_NUMBERS",
-  SERVER_SET_TAB = "SERVER_SET_TAB",
 }
 
 type SetArticlesPerPageCount = {
@@ -31,11 +29,6 @@ type RemoveTab = {
   payload: string;
 };
 
-type SetTab = {
-  type: ActionTypes.SET_TAB;
-  payload: string;
-};
-
 type MoveTab = {
   type: ActionTypes.MOVE_TAB;
   payload: { from: number; to: number };
@@ -46,17 +39,10 @@ type SetPageNumber = {
   payload: { key: string; page: number };
 };
 
-type ServerSetPage = {
-  type: ActionTypes.SERVER_SET_TAB;
-  payload: { currTab: string; page: number };
-};
-
 export type ArticleActions =
   | SetArticlesPerPageCount
   | AddTab
   | AddTabs
   | RemoveTab
-  | SetTab
   | MoveTab
-  | SetPageNumber
-  | ServerSetPage;
+  | SetPageNumber;
