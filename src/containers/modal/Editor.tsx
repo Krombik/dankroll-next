@@ -1,17 +1,17 @@
 import { FC, useRef, useState, ChangeEvent } from "react";
-import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
 import useSWR from "swr";
 import { getFromStorage, setToStorage } from "../../utils/storage";
 import { Button } from "@material-ui/core";
 import EditableTagList from "../tag/EditableTagList";
 import { ArticleEditorType, ArticleObj } from "../../types/article";
-import { createArticle } from "../../api/article";
+import { createArticle, updateArticle, getArticleUrl } from "../../api/article";
 import { createSelector } from "reselect";
-import { useSelector } from "react-redux";
-import { State } from "../../types";
+import { useSelector, useDispatch } from "react-redux";
+import { State, ThunkDispatcher } from "../../types";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import { useRouter } from "next/router";
+import { setModal } from "../../redux/modal/actions";
 
 const selectData = createSelector(
   (state: State) => state.common.token,
@@ -19,15 +19,25 @@ const selectData = createSelector(
 );
 
 type Props = {
-  initialData: ArticleEditorType;
-  dataKey: string;
-  type: "edit" | "create";
-  closeModal: () => void;
+  slug?: string;
 };
 
-const Editor: FC<Props> = ({ initialData, dataKey, type, closeModal }) => {
+const Editor: FC<Props> = ({ slug }) => {
   const { token } = useSelector(selectData);
-  const key = "editor-" + dataKey;
+  const dispatch = useDispatch<ThunkDispatcher>();
+  const initialData = slug
+    ? useSWR<ArticleObj>([getArticleUrl(slug), token], {
+        revalidateOnMount: false,
+        revalidateOnFocus: false,
+        revalidateOnReconnect: false,
+      }).data.article
+    : {
+        title: "",
+        description: "",
+        body: "",
+        tagList: [],
+      };
+  const key = "editor-" + (slug ? "e-" + slug : "new");
   const [loading, setLoading] = useState(false);
   const { data, mutate } = useSWR<ArticleEditorType>(key, getFromStorage);
   const article = data ?? initialData;
@@ -53,12 +63,29 @@ const Editor: FC<Props> = ({ initialData, dataKey, type, closeModal }) => {
   const handleArticleEdit = async () => {
     setLoading(true);
     let data: ArticleObj;
-    if (type === "create") data = await createArticle(article, token);
+    if (slug) {
+      const updatedArticle: Partial<ArticleEditorType> = {};
+      if (article.title !== initialData.title)
+        updatedArticle.title = article.title;
+      if (article.body !== initialData.body) updatedArticle.body = article.body;
+      if (article.description !== initialData.description)
+        updatedArticle.description = article.description;
+      if (
+        article.tagList.length !== initialData.tagList.length ||
+        article.tagList.some(
+          (item, index) => item !== initialData.tagList[index]
+        )
+      )
+        updatedArticle.tagList = article.tagList;
+      data = await updateArticle(updatedArticle, slug, token);
+    } else {
+      data = await createArticle(article, token);
+    }
     setLoading(false);
     if (data.article) {
+      window.history.pushState("", "", `/articles/${data.article.slug}`);
+      dispatch(setModal(true, "article", data.article.slug));
       localStorage.removeItem(key);
-      closeModal();
-      router.push("/articles/[slug]", `/articles/${data.article.slug}`);
     }
   };
   return (
@@ -118,7 +145,7 @@ const Editor: FC<Props> = ({ initialData, dataKey, type, closeModal }) => {
             disabled={loading}
             type="submit"
           >
-            {type + " article"}
+            {(slug ? "Edit" : "Create") + " article"}
           </Button>
         </Grid>
       </Grid>

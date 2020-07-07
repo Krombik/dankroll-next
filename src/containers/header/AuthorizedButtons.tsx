@@ -22,7 +22,7 @@ const AuthorizedButtons: FC<Props> = ({ currentUserName, openModal }) => {
   };
   return (
     <>
-      <TooltipIconButton tooltip="New post" name="editor" onClick={openModal}>
+      <TooltipIconButton tooltip="New post" name="new" onClick={openModal}>
         <CreateIcon />
       </TooltipIconButton>
       <TooltipIconLink

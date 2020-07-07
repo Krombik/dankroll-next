@@ -1,7 +1,6 @@
 export enum ActionTypes {
   SET_DARK = "SET_DARK",
-  SET_TOKEN = "SET_TOKEN",
-  SET_CURRENT_USER_NAME = "SET_CURRENT_USER_NAME",
+  SET_AUTHORIZED = "SET_CURRENT_USER_NAME",
 }
 
 type SetDark = {
@@ -9,14 +8,9 @@ type SetDark = {
   payload: boolean;
 };
 
-type SetToken = {
-  type: ActionTypes.SET_TOKEN;
-  payload: string;
+type SetAuthorized = {
+  type: ActionTypes.SET_AUTHORIZED;
+  payload: { token: string; currentUserName: string };
 };
 
-type SetCurrentUserName = {
-  type: ActionTypes.SET_CURRENT_USER_NAME;
-  payload: string;
-};
-
-export type CommonActions = SetDark | SetToken | SetCurrentUserName;
+export type CommonActions = SetDark | SetAuthorized;

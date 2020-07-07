@@ -1,6 +1,6 @@
 import { ArticleObj } from "../../types/article";
 import Grid from "@material-ui/core/Grid";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import useSWR from "swr";
 import { getArticleUrl } from "../../api/article";
 import ArticleHeader from "./ArticleHeader";
@@ -20,7 +20,8 @@ import fetcher from "../../utils/fetcher";
 
 const selectData = createSelector(
   (state: State) => state.common.token,
-  (token) => ({ token })
+  (state: State) => state.common.currentUserName,
+  (token, currentUserName) => ({ token, currentUserName })
 );
 
 type Props = {
@@ -30,14 +31,17 @@ type Props = {
 };
 
 const Article: FC<Props> = ({ initialArticle, initialComments, slug }) => {
-  const { token } = useSelector(selectData);
-  const { data: articleData } = useSWR<FetchRV<ArticleObj>>(
+  const { token, currentUserName } = useSelector(selectData);
+  const { data: articleData, mutate } = useSWR<FetchRV<ArticleObj>>(
     [getArticleUrl(slug), token],
     fetcher.get,
     {
       initialData: initialArticle,
     }
   );
+  useEffect(() => {
+    if (initialArticle) mutate(articleData, false);
+  }, []);
   const { data: commentsData } = useSWR<FetchRV<CommentsObj>>(
     [getArticleCommentsUrl(slug), token],
     fetcher.get,
@@ -48,54 +52,45 @@ const Article: FC<Props> = ({ initialArticle, initialComments, slug }) => {
   const article = articleData?.article;
   const comments = commentsData?.comments;
   return (
-    <>
-      {article ? (
-        <>
-          <Grid item xs={12}>
-            <Banner>
-              <ArticleHeader
-                date={
-                  article.updatedAt === article.createdAt
-                    ? new Date(article.createdAt).toDateString()
-                    : new Date(article.updatedAt)
-                        .toDateString()
-                        .concat(" (Edited)")
-                }
-                title={article.title}
-                favoritesCount={article.favoritesCount}
-                isFavorite={article.favorited}
-                tagList={article.tagList}
-                avatar={article.author.image}
-                username={article.author.username}
+    <Grid container justify="center" alignItems="center" spacing={3}>
+      <Grid item container spacing={3}>
+        {article ? (
+          <>
+            <Grid item xs={12}>
+              <Banner>
+                <ArticleHeader
+                  article={article}
+                  isUserCurrent={currentUserName === article.author.username}
+                />
+              </Banner>
+            </Grid>
+            <Grid item xs={12}>
+              <Markdown
+                source={article.body}
+                skipHtml={true}
+                renderers={{
+                  link: Link,
+                  thematicBreak: Divider,
+                }}
               />
-            </Banner>
-          </Grid>
-          <Grid item xs={12}>
-            <Markdown
-              source={article.body}
-              skipHtml={true}
-              renderers={{
-                link: Link,
-                thematicBreak: Divider,
-              }}
-            />
-          </Grid>
-        </>
-      ) : (
-        <Spinner />
-      )}
-      <GridDivider item xs={12} />
-      {comments ? (
-        <>
-          <Grid item xs={12}>
-            <Typography variant="h4">Comments: {comments.length}</Typography>
-          </Grid>
-          {comments.length > 0 && <Comments comments={comments} />}
-        </>
-      ) : (
-        <Spinner />
-      )}
-    </>
+            </Grid>
+          </>
+        ) : (
+          <Spinner />
+        )}
+        <GridDivider item xs={12} />
+        {comments ? (
+          <>
+            <Grid item xs={12}>
+              <Typography variant="h4">Comments: {comments.length}</Typography>
+            </Grid>
+            {comments.length > 0 && <Comments comments={comments} />}
+          </>
+        ) : (
+          <Spinner />
+        )}
+      </Grid>
+    </Grid>
   );
 };
 

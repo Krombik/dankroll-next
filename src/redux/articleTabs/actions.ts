@@ -20,11 +20,7 @@ export const addTab = (newTab: TabType): ThunkResult => (
   if (!useState().articleTabs.tabList.some((tab) => tab.key === key)) {
     dispatch({
       type: ActionTypes.ADD_TAB,
-      payload: { ...newTab, key },
-    });
-    dispatch({
-      type: ActionTypes.SET_PAGE_NUMBER,
-      payload: { key, page: 0 },
+      payload: { newTab, key, page: 0 },
     });
   }
 };
@@ -35,15 +31,7 @@ export const serverAddTab = (newTab: TabType, page: number): ThunkResult => (
   const key = newTab.type + "-" + newTab.value;
   dispatch({
     type: ActionTypes.ADD_TAB,
-    payload: { ...newTab, key },
-  });
-  dispatch({
-    type: ActionTypes.SET_TAB,
-    payload: key,
-  });
-  dispatch({
-    type: ActionTypes.SET_PAGE_NUMBER,
-    payload: { key, page },
+    payload: { newTab, key, page },
   });
 };
 

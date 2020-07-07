@@ -6,7 +6,6 @@ import DefaultErrorPage from "next/error";
 import Article from "../../src/containers/article/Article";
 import { useRouter } from "next/router";
 import { getArticleCommentsUrl } from "../../src/api/comment";
-import Grid from "@material-ui/core/Grid";
 import fetcher from "../../src/utils/fetcher";
 import { ArticleObj } from "../../src/types/article";
 import { CommentsObj } from "../../src/types/comment";
@@ -28,13 +27,11 @@ const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
     query: { slug },
   }: any = useRouter();
   return (
-    <Grid container spacing={3}>
-      <Article
-        initialArticle={initialArticle}
-        initialComments={initialComments}
-        slug={slug}
-      />
-    </Grid>
+    <Article
+      initialArticle={initialArticle}
+      initialComments={initialComments}
+      slug={slug}
+    />
   );
 };
 

@@ -8,7 +8,6 @@ import { useSWRInfinite } from "swr";
 import Pagination from "../common/Pagination";
 import { useRouter } from "next/router";
 import { FetchRV, ThunkDispatcher, State } from "../../types";
-import ArticleModal from "./ArticleModal";
 import Router from "next/router";
 import { useDispatch } from "react-redux";
 import { setTab } from "../../redux/articleTabs/actions";
@@ -61,6 +60,7 @@ const ArticleList: FC<Props> = ({ initialData, type, value, initialPage }) => {
           setTab(tag ? "tag-" + tag : author ? "author-" + author : "default-")
         );
       else if (page !== oldQuery.page) setSize(1);
+      else mutate();
     };
     Router.events.on("routeChangeStart", handleRouteChange);
     return () => {
@@ -113,7 +113,6 @@ const ArticleList: FC<Props> = ({ initialData, type, value, initialPage }) => {
           </Grid>
         </>
       )}
-      <ArticleModal />
     </Grid>
   );
 };

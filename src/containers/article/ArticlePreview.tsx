@@ -14,7 +14,7 @@ import TagList from "../tag/TagList";
 import ContentInfo from "../../components/common/ContentInfo";
 import { useDispatch } from "react-redux";
 import { ThunkDispatcher } from "../../types";
-import { setArticleModalOpen } from "../../redux/articleModal/actions";
+import { setModal } from "../../redux/modal/actions";
 
 type Props = {
   article?: ArticleType;
@@ -53,7 +53,7 @@ const ArticlePreview: FC<Props> = ({ article }) => {
       };
   const dispatch = useDispatch<ThunkDispatcher>();
   const handleModalOpen = () => {
-    dispatch(setArticleModalOpen(true, article.slug));
+    dispatch(setModal(true, "article", article.slug));
     window.history.pushState("", "", `/articles/${article.slug}`);
   };
   return (

@@ -18,9 +18,6 @@ export const getArticlesUrl = (
 export const getArticleUrl = (slug: string) =>
   `${SERVER_BASE_URL}/articles/${slug}`;
 
-export const deleteArticle = (slug: string, token: string) =>
-  fetcher.delete(`${SERVER_BASE_URL}/articles/${slug}`, token);
-
 export const setFavoriteArticle = (slug) =>
   axios.post(`${SERVER_BASE_URL}/articles/${slug}/favorite`);
 
@@ -37,14 +34,19 @@ export const feed = (page, limit = 10) =>
 export const unfavorite = (slug) =>
   axios.delete(`${SERVER_BASE_URL}/articles/${slug}/favorite`);
 
-export const updateArticle = async (
-  article: ArticleEditorType,
+export const deleteArticle = (slug: string, token: string) =>
+  fetcher.delete(`${SERVER_BASE_URL}/articles/${slug}`, token);
+
+export const updateArticle = (
+  article: Partial<ArticleEditorType>,
   slug: string,
   token: string
-) => fetcher.put(`${SERVER_BASE_URL}/articles/${slug}`, { article }, token);
-
-export const createArticle = async (
-  article: ArticleEditorType,
-  token: string
 ) =>
+  fetcher.put<ArticleObj>(
+    `${SERVER_BASE_URL}/articles/${slug}`,
+    { article },
+    token
+  );
+
+export const createArticle = (article: ArticleEditorType, token: string) =>
   fetcher.post<ArticleObj>(`${SERVER_BASE_URL}/articles`, { article }, token);

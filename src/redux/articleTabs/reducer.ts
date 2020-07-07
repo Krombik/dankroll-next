@@ -33,7 +33,15 @@ export default function reducer(
       return {
         ...state,
         tabOrder: [...state.tabOrder, action.payload.key],
-        tabList: [...state.tabList, action.payload],
+        tabList: [
+          ...state.tabList,
+          { ...action.payload.newTab, key: action.payload.key },
+        ],
+        currTab: action.payload.key,
+        articlePageNumbers: {
+          ...state.articlePageNumbers,
+          [action.payload.key]: action.payload.page,
+        },
       };
     case ActionTypes.ADD_TABS:
       return {

@@ -17,7 +17,7 @@ type SetArticlesPerPageCount = {
 
 type AddTab = {
   type: ActionTypes.ADD_TAB;
-  payload: TabType;
+  payload: { newTab: TabType; key: string; page: number };
 };
 
 type AddTabs = {

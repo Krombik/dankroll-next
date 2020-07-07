@@ -22,15 +22,10 @@ export default function reducer(
         ...state,
         isDark: action.payload,
       };
-    case ActionTypes.SET_TOKEN:
+    case ActionTypes.SET_AUTHORIZED:
       return {
         ...state,
-        token: action.payload,
-      };
-    case ActionTypes.SET_CURRENT_USER_NAME:
-      return {
-        ...state,
-        currentUserName: action.payload,
+        ...action.payload,
       };
     default:
       return state;

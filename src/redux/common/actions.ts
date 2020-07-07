@@ -13,24 +13,20 @@ export const serverSetAuthorized = (
   token: string
 ): ThunkResult<Promise<void>> => async (dispatch) => {
   dispatch({
-    type: ActionTypes.SET_TOKEN,
-    payload: token,
-  });
-  dispatch({
-    type: ActionTypes.SET_CURRENT_USER_NAME,
-    payload: (await getCurrentUser(token))?.user?.username,
+    type: ActionTypes.SET_AUTHORIZED,
+    payload: {
+      token,
+      currentUserName: (await getCurrentUser(token))?.user?.username || "",
+    },
   });
 };
 
-export const setAuthorized = (token: string, userName: string): ThunkResult => (
-  dispatch
-) => {
+export const setAuthorized = (
+  token: string,
+  currentUserName: string
+): ThunkResult => (dispatch) => {
   dispatch({
-    type: ActionTypes.SET_TOKEN,
-    payload: token,
-  });
-  dispatch({
-    type: ActionTypes.SET_CURRENT_USER_NAME,
-    payload: userName,
+    type: ActionTypes.SET_AUTHORIZED,
+    payload: { token, currentUserName },
   });
 };
