@@ -10,7 +10,6 @@ import { createSelector } from "reselect";
 import { useSelector, useDispatch } from "react-redux";
 import { State, ThunkDispatcher } from "../../types";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
-import { useRouter } from "next/router";
 import { setModal } from "../../redux/modal/actions";
 
 const selectData = createSelector(
@@ -59,7 +58,6 @@ const Editor: FC<Props> = ({ slug }) => {
     clearInterval(interval.current);
     setToStorage(key, article);
   };
-  const router = useRouter();
   const handleArticleEdit = async () => {
     setLoading(true);
     let data: ArticleObj;

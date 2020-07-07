@@ -94,3 +94,12 @@ export const setTab = (tab: string): ThunkResult => (dispatch) => {
     payload: tab,
   });
 };
+
+export const serverSetTab = (currTab: string, page: number): ThunkResult => (
+  dispatch
+) => {
+  dispatch({
+    type: ActionTypes.SERVER_SET_TAB,
+    payload: { currTab, page },
+  });
+};

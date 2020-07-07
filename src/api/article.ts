@@ -2,8 +2,7 @@ import axios from "axios";
 import { SERVER_BASE_URL } from "../utils/constant";
 import { getQuery } from "../utils/getQuery";
 import fetcher from "../utils/fetcher";
-import { FetchRV } from "../types";
-import { ArticlesObj, ArticleObj, ArticleEditorType } from "../types/article";
+import { ArticleObj, ArticleEditorType } from "../types/article";
 
 export const getArticlesUrl = (
   type: string,
@@ -11,8 +10,10 @@ export const getArticlesUrl = (
   page = 0,
   limit = 20
 ) =>
-  `${SERVER_BASE_URL}/articles?${
-    type !== "default" ? `${type}=${encodeURIComponent(value)}&` : ""
+  `${SERVER_BASE_URL}/articles${
+    type !== "feed"
+      ? `?${type !== "default" ? `${type}=${encodeURIComponent(value)}&` : ""}`
+      : "/feed?"
   }${getQuery(limit, page)}`;
 
 export const getArticleUrl = (slug: string) =>

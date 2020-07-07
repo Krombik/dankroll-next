@@ -85,6 +85,15 @@ export default function reducer(
           [action.payload.key]: action.payload.page,
         },
       };
+    case ActionTypes.SERVER_SET_TAB:
+      return {
+        ...state,
+        currTab: action.payload.currTab,
+        articlePageNumbers: {
+          ...state.articlePageNumbers,
+          [action.payload.currTab]: action.payload.page,
+        },
+      };
     default:
       return state;
   }

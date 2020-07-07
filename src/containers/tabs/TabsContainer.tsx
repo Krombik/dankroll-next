@@ -17,7 +17,12 @@ import SortableList from "../common/SortableList";
 const selectData = createSelector(
   (state: State) => state.articleTabs.tabOrder,
   (state: State) => state.articleTabs.articlePageNumbers,
-  (tabOrder, articlePageNumbers) => ({ tabOrder, articlePageNumbers })
+  (state: State) => state.common.currentUserName,
+  (tabOrder, articlePageNumbers, currentUserName) => ({
+    tabOrder,
+    articlePageNumbers,
+    currentUserName,
+  })
 );
 
 type Props = {
@@ -25,7 +30,9 @@ type Props = {
 };
 
 const TabsContainer: FC<Props> = ({ tabList }) => {
-  const { tabOrder, articlePageNumbers } = useSelector(selectData);
+  const { tabOrder, articlePageNumbers, currentUserName } = useSelector(
+    selectData
+  );
   const dispatch = useDispatch<ThunkDispatcher>();
   const handleChange = (_: any, newValue: string) => {
     if (newValue !== "add") {
@@ -33,10 +40,12 @@ const TabsContainer: FC<Props> = ({ tabList }) => {
       const page = articlePageNumbers[newValue] + 1;
       const path =
         type !== "default"
-          ? {
-              pathname: "/",
-              query: { [type]: value, ...(page > 1 ? { page } : {}) },
-            }
+          ? type !== "feed"
+            ? {
+                pathname: "/",
+                query: { [type]: value, ...(page > 1 ? { page } : {}) },
+              }
+            : `/?feed=true${page > 1 ? "&page=" + page : ""}`
           : `/${page > 1 ? "?page=" + page : ""}`;
       Router.push(path, path, { shallow: true });
     }
@@ -61,6 +70,10 @@ const TabsContainer: FC<Props> = ({ tabList }) => {
       articlesPagesNumber={articlePageNumbers}
     />,
   ];
+  if (currentUserName)
+    tabs.unshift(
+      <Tab value="feed-" label={`${currentUserName}'s feed`} key={0} />
+    );
   return (
     <AppBar position="static" color="default">
       <SortableList

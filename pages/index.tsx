@@ -9,7 +9,11 @@ import { useSelector } from "react-redux";
 import { createSelector } from "reselect";
 import { State } from "../src/types";
 import TabsContainer from "../src/containers/tabs/TabsContainer";
-import { serverAddTab, setPageNumber } from "../src/redux/articleTabs/actions";
+import {
+  serverAddTab,
+  setPageNumber,
+  serverSetTab,
+} from "../src/redux/articleTabs/actions";
 import DefaultErrorPage from "next/error";
 import Banner from "../src/containers/common/Banner";
 import Grid from "@material-ui/core/Grid";
@@ -22,7 +26,8 @@ import { serverSetAuthorized } from "../src/redux/common/actions";
 const selectData = createSelector(
   (state: State) => state.articleTabs.tabList,
   (state: State) => state.articleTabs.currTab,
-  (tabList, currTab) => ({ tabList, currTab })
+  (state: State) => state.common.currentUserName,
+  (tabList, currTab, currentUserName) => ({ tabList, currTab, currentUserName })
 );
 
 const Index: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
@@ -37,7 +42,7 @@ const Index: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
         title={initialArticles.error}
       />
     );
-  const { tabList, currTab } = useSelector(selectData);
+  const { tabList, currTab, currentUserName } = useSelector(selectData);
   const isTabInitial = (key: string) =>
     initialKey !== key
       ? { initialPage: 0 }
@@ -56,6 +61,11 @@ const Index: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
       <Grid item xs={12}>
         <TabContext value={currTab}>
           <TabsContainer tabList={tabList} />
+          {currentUserName && (
+            <TabPanel value="feed-">
+              <ArticleList {...isTabInitial("feed-")} value="" type="feed" />
+            </TabPanel>
+          )}
           <TabPanel value="default-">
             <ArticleList
               {...isTabInitial("default-")}
@@ -79,7 +89,7 @@ const Index: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
 };
 export const getServerSideProps = wrapper.getServerSideProps(
   async (ctx: ServerSideContext) => {
-    const { tag, author, page: queryPage }: any = ctx.query;
+    const { tag, author, page: queryPage, feed }: any = ctx.query;
     const { token } = parseCookies(ctx);
     if (token) await ctx.store.dispatch(serverSetAuthorized(token));
     const page = queryPage && +queryPage > 0 ? +queryPage - 1 : 0;
@@ -87,14 +97,17 @@ export const getServerSideProps = wrapper.getServerSideProps(
       ? { type: "tag", value: tag }
       : author
       ? { type: "author", value: author }
+      : feed && !!token
+      ? { type: "feed", value: "" }
       : { type: "default", value: "" };
+    console.log(feed && !!token);
     const initialArticles = await fetcher.get<FetchRV<ArticlesObj>>(
       getArticlesUrl(initialTab.type, initialTab.value, page),
       token
     );
-    if (initialTab.type !== "default")
+    if (initialTab.type !== "default" && initialTab.type !== "feed")
       ctx.store.dispatch(serverAddTab(initialTab, page));
-    else ctx.store.dispatch(setPageNumber("default-", page));
+    else ctx.store.dispatch(serverSetTab(`${initialTab.type}-`, page));
     return {
       props: {
         initialArticles: initialArticles,

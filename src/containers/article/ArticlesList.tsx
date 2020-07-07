@@ -54,10 +54,22 @@ const ArticleList: FC<Props> = ({ initialData, type, value, initialPage }) => {
   useEffect(() => {
     const handleRouteChange = (url: string) => {
       const oldQuery = Router.query;
-      const { tag, author, page } = urlToQuery(url);
-      if (tag !== oldQuery.tag || author !== oldQuery.author)
+      const { tag, author, page, feed } = urlToQuery(url);
+      if (
+        tag !== oldQuery.tag ||
+        author !== oldQuery.author ||
+        feed !== oldQuery.feed
+      )
         dispatch(
-          setTab(tag ? "tag-" + tag : author ? "author-" + author : "default-")
+          setTab(
+            tag
+              ? "tag-" + tag
+              : author
+              ? "author-" + author
+              : feed
+              ? "feed-"
+              : "default-"
+          )
         );
       else if (page !== oldQuery.page) setSize(1);
       else mutate();
