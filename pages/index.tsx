@@ -3,11 +3,8 @@ import { ServerSideContext, PropsFromServer, FetchRV } from "../src/types";
 import ArticleList from "../src/containers/article/ArticlesList";
 import { getArticlesUrl } from "../src/api/article";
 import { NextPage } from "next";
-import TabPanel from "@material-ui/lab/TabPanel";
-import { useSelector } from "react-redux";
-import { createSelector } from "reselect";
-import { State } from "../src/types";
-import TabsContainer from "../src/containers/tabs/TabsContainer";
+import AppBar from "@material-ui/core/AppBar";
+import SortableTabs from "../src/containers/tabs/SortableTabs";
 import { serverAddTab, setPageNumber } from "../src/redux/articleTabs/actions";
 import DefaultErrorPage from "next/error";
 import Banner from "../src/containers/common/Banner";
@@ -17,18 +14,11 @@ import { ArticlesObj } from "../src/types/article";
 import fetcher from "../src/utils/fetcher";
 import { parseCookies } from "nookies";
 import { serverSetAuthorized } from "../src/redux/common/actions";
-import TabsContext from "../src/containers/tabs/TabsContext";
-
-const selectData = createSelector(
-  (state: State) => state.articleTabs.tabList,
-  (state: State) => state.common.currentUserName,
-  (tabList, currentUserName) => ({ tabList, currentUserName })
-);
+import { useRef } from "react";
 
 const Index: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
   initialArticles,
-  initialKey,
-  initialPage,
+  initialTab,
 }) => {
   if (initialArticles && initialArticles.error)
     return (
@@ -37,11 +27,6 @@ const Index: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
         title={initialArticles.error}
       />
     );
-  const { tabList, currentUserName } = useSelector(selectData);
-  const isTabInitial = (key: string) =>
-    initialKey !== key
-      ? { initialPage: 0 }
-      : { initialPage, initialData: [initialArticles] };
   return (
     <Grid container spacing={3}>
       <Grid item xs={12}>
@@ -54,53 +39,37 @@ const Index: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
         </Banner>
       </Grid>
       <Grid item xs={12}>
-        <TabsContext defaultType="default">
-          <TabsContainer tabList={tabList} />
-          {currentUserName && (
-            <TabPanel value="feed">
-              <ArticleList {...isTabInitial("feed")} value="" type="feed" />
-            </TabPanel>
-          )}
-          <TabPanel value="default">
-            <ArticleList {...isTabInitial("default")} value="" type="default" />
-          </TabPanel>
-          {tabList.map((tab, index) => (
-            <TabPanel value={tab.key} key={index}>
-              <ArticleList
-                {...isTabInitial(tab.key)}
-                value={tab.value}
-                type={tab.type}
-              />
-            </TabPanel>
-          ))}
-        </TabsContext>
+        <AppBar position="static" color="default">
+          <SortableTabs />
+        </AppBar>
+        <ArticleList
+          initialData={[initialArticles]}
+          initialDataRef={useRef([initialArticles])}
+          initialTab={initialTab}
+          emptyType="default"
+        />
       </Grid>
     </Grid>
   );
 };
 export const getServerSideProps = wrapper.getServerSideProps(
   async (ctx: ServerSideContext) => {
-    const { type, value, page }: any = ctx.query;
+    const { type = "default", value = "", page }: any = ctx.query;
     const { token } = parseCookies(ctx);
     if (token) await ctx.store.dispatch(serverSetAuthorized(token));
     const initialPage = page && +page > 0 ? +page - 1 : 0;
-    const initialTab = { type: type || "default", value: value || "" };
+    const initialTab = { type, value };
     const initialArticles = await fetcher.get<FetchRV<ArticlesObj>>(
-      getArticlesUrl(initialTab.type, initialTab.value, initialPage),
+      getArticlesUrl(type, value, initialPage),
       token
     );
-    let initialKey: string;
-    if (initialTab.type !== "default" && initialTab.type !== "feed") {
-      initialKey = ctx.store.dispatch(serverAddTab(initialTab, initialPage));
-    } else {
-      ctx.store.dispatch(setPageNumber(initialTab.type, initialPage));
-      initialKey = initialTab.type;
-    }
+    if (type !== "default" && type !== "feed")
+      ctx.store.dispatch(serverAddTab(initialTab, initialPage));
+    else ctx.store.dispatch(setPageNumber(type, initialPage));
     return {
       props: {
         initialArticles,
-        initialKey,
-        initialPage,
+        initialTab,
       },
     };
   }

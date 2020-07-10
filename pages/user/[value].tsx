@@ -11,8 +11,6 @@ import DefaultErrorPage from "next/error";
 import { useRouter } from "next/router";
 import AppBar from "@material-ui/core/AppBar";
 import Tab from "@material-ui/core/Tab";
-import TabList from "@material-ui/lab/TabList";
-import TabPanel from "@material-ui/lab/TabPanel";
 import { getUserUrl } from "../../src/api/user";
 import Grid from "@material-ui/core/Grid";
 import useSWR from "swr";
@@ -29,18 +27,17 @@ import fetcher from "../../src/utils/fetcher";
 import { UserObj } from "../../src/types/user";
 import { parseCookies } from "nookies";
 import { serverSetAuthorized } from "../../src/redux/common/actions";
-import TabsContext from "../../src/containers/tabs/TabsContext";
+import { useRef } from "react";
+import Tabs from "../../src/containers/tabs/Tabs";
 
 const selectData = createSelector(
-  (state: State) => state.articleTabs.articlePageNumbers,
   (state: State) => state.common.token,
-  (articlePageNumbers, token) => ({ articlePageNumbers, token })
+  (token) => ({ token })
 );
 
 const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
   initialUser,
   initialArticles,
-  initialPage,
   initialTab,
 }) => {
   if (initialUser && initialUser.error)
@@ -51,34 +48,19 @@ const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
       />
     );
   const {
-    query: { username },
-    push,
+    query: { value },
   }: any = useRouter();
-  const { articlePageNumbers, token } = useSelector(selectData);
-  const { data: userData } = useSWR<FetchRV<UserObj>>(
-    [getUserUrl(username), token],
+  const { token } = useSelector(selectData);
+  const userRef = useRef(initialUser);
+  const { data: userData = initialUser } = useSWR<FetchRV<UserObj>>(
+    [getUserUrl(value), token],
     fetcher.get,
     {
-      initialData: initialUser,
+      initialData: userRef.current,
     }
   );
   const user = userData?.profile;
-  const isTabInitial = (type: string) =>
-    initialTab !== type
-      ? { initialPage: 0 }
-      : { initialPage, initialData: [initialArticles] };
-  const handleChange = (_: any, newValue: string) => {
-    const page = articlePageNumbers[newValue] + 1;
-    const query = {
-      ...(newValue === "favorited" ? { type: newValue } : {}),
-      ...(page > 1 ? { page } : {}),
-    };
-    push(
-      { query, pathname: "/user/[username]" },
-      { query, pathname: `/user/${username}` },
-      { shallow: true }
-    );
-  };
+  if (userRef.current) userRef.current = undefined;
   return (
     <Grid container spacing={3}>
       {user ? (
@@ -103,28 +85,18 @@ const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
         <Spinner />
       )}
       <Grid item xs={12}>
-        <TabsContext defaultType="author">
-          <AppBar position="static" color="default">
-            <TabList onChange={handleChange}>
-              <Tab value="author" label="Last articles" />
-              <Tab value="favorited" label="Favorite articles" />
-            </TabList>
-          </AppBar>
-          <TabPanel value="author">
-            <ArticleList
-              {...isTabInitial("author")}
-              value={username}
-              type="author"
-            />
-          </TabPanel>
-          <TabPanel value="favorited">
-            <ArticleList
-              {...isTabInitial("favorited")}
-              value={username}
-              type="favorited"
-            />
-          </TabPanel>
-        </TabsContext>
+        <AppBar position="static" color="default">
+          <Tabs emptyType="author" url="/user/[value]" to={`/user/${value}`}>
+            <Tab value={`author-${value}`} label="Last articles" />
+            <Tab value={`favorited-${value}`} label="Favorite articles" />
+          </Tabs>
+        </AppBar>
+        <ArticleList
+          initialData={[initialArticles]}
+          initialDataRef={useRef([initialArticles])}
+          initialTab={initialTab}
+          emptyType="author"
+        />
       </Grid>
     </Grid>
   );
@@ -132,25 +104,27 @@ const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
 
 export const getServerSideProps = wrapper.getServerSideProps(
   async (ctx: ServerSideContext) => {
-    const { username, page: queryPage, favorited }: any = ctx.query;
+    const { value, page: queryPage, type }: any = ctx.query;
     const { token } = parseCookies(ctx);
     if (token) await ctx.store.dispatch(serverSetAuthorized(token));
     const page = queryPage && +queryPage > 0 ? +queryPage - 1 : 0;
     const initialUser = await fetcher.get<FetchRV<UserObj>>(
-      getUserUrl(username),
+      getUserUrl(value),
       token
     );
-    const initialTab = favorited ? "favorited" : "author";
+    const initialTab = {
+      type: type === "favorited" ? type : "author",
+      value,
+    };
     const initialArticles = await fetcher.get<FetchRV<ArticlesObj>>(
-      getArticlesUrl(initialTab, username, page),
+      getArticlesUrl(initialTab.type, value, page),
       token
     );
-    ctx.store.dispatch(setPageNumber(initialTab + "-" + username, page));
+    ctx.store.dispatch(setPageNumber(initialTab.type + "-" + value, page));
     return {
       props: {
         initialUser,
         initialArticles,
-        initialPage: page,
         initialTab,
       },
     };

@@ -1,4 +1,3 @@
-import axios from "axios";
 import { SERVER_BASE_URL } from "../utils/constant";
 import { getQuery } from "../utils/getQuery";
 import fetcher from "../utils/fetcher";
@@ -19,21 +18,11 @@ export const getArticlesUrl = (
 export const getArticleUrl = (slug: string) =>
   `${SERVER_BASE_URL}/articles/${slug}`;
 
-export const setFavoriteArticle = (slug) =>
-  axios.post(`${SERVER_BASE_URL}/articles/${slug}/favorite`);
-
-export const getArticlesFavoritedBy = (author, page) =>
-  axios.get(
-    `${SERVER_BASE_URL}/articles?favorited=${encodeURIComponent(
-      author
-    )}&${getQuery(10, page)}`
-  );
-
-export const feed = (page, limit = 10) =>
-  axios.get(`${SERVER_BASE_URL}/articles/feed?${getQuery(limit, page)}`);
-
-export const unfavorite = (slug) =>
-  axios.delete(`${SERVER_BASE_URL}/articles/${slug}/favorite`);
+export const likeArticle = (like: boolean, slug: string, token: string) => {
+  const url = `${SERVER_BASE_URL}/articles/${slug}/favorite`;
+  if (like) return fetcher.post<ArticleObj>(url, null, token);
+  return fetcher.delete<ArticleObj>(url, token);
+};
 
 export const deleteArticle = (slug: string, token: string) =>
   fetcher.delete(`${SERVER_BASE_URL}/articles/${slug}`, token);

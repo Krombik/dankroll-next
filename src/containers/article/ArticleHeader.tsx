@@ -14,10 +14,10 @@ import { ArticleType } from "../../types/article";
 
 type Props = {
   article: ArticleType;
-  isUserCurrent: boolean;
+  controlButtons: JSX.Element;
 };
 
-const ArticleHeader: FC<Props> = ({ article, isUserCurrent }) => {
+const ArticleHeader: FC<Props> = ({ article, controlButtons }) => {
   const date = useMemo(
     () =>
       article.updatedAt === article.createdAt
@@ -30,21 +30,7 @@ const ArticleHeader: FC<Props> = ({ article, isUserCurrent }) => {
       <Typography variant="h2" color="textPrimary">
         <Grid container>
           {article.title}
-          <StyledIconButton>
-            <Badge
-              badgeContent={article.favoritesCount}
-              color="primary"
-              overlap="circle"
-              showZero
-            >
-              {article.favorited ? (
-                <FavoriteIcon fontSize="inherit" color="inherit" />
-              ) : (
-                <FavoriteBorderIcon fontSize="inherit" color="inherit" />
-              )}
-            </Badge>
-          </StyledIconButton>
-          {isUserCurrent && <ArticleControlButtons slug={article.slug} />}
+          {controlButtons}
         </Grid>
       </Typography>
       {article.tagList.length > 0 && <TagList tagList={article.tagList} />}

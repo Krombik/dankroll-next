@@ -1,8 +1,8 @@
 import { ArticleObj } from "../../types/article";
 import Grid from "@material-ui/core/Grid";
-import { FC, useEffect } from "react";
+import { FC, useEffect, MutableRefObject } from "react";
 import useSWR from "swr";
-import { getArticleUrl } from "../../api/article";
+import { getArticleUrl, likeArticle } from "../../api/article";
 import ArticleHeader from "./ArticleHeader";
 import Comments from "../common/Comments";
 import { CommentsObj } from "../../types/comment";
@@ -17,6 +17,13 @@ import Banner from "../common/Banner";
 import { createSelector } from "reselect";
 import { useSelector } from "react-redux";
 import fetcher from "../../utils/fetcher";
+import ArticleControlButtons from "./ArticleControlButtons";
+import Badge from "@material-ui/core/Badge";
+import Tooltip from "@material-ui/core/Tooltip";
+import {
+  StyledFavoriteTwoToneIcon,
+  StyledIconButton,
+} from "../../components/article/styled";
 
 const selectData = createSelector(
   (state: State) => state.common.token,
@@ -26,29 +33,38 @@ const selectData = createSelector(
 
 type Props = {
   initialArticle?: FetchRV<ArticleObj>;
+  initialArticleRef?: MutableRefObject<FetchRV<ArticleObj>>;
   initialComments?: FetchRV<CommentsObj>;
+  initialCommentsRef?: MutableRefObject<FetchRV<CommentsObj>>;
   slug: string;
 };
 
-const Article: FC<Props> = ({ initialArticle, initialComments, slug }) => {
+const Article: FC<Props> = ({
+  initialArticle,
+  initialArticleRef,
+  initialComments,
+  initialCommentsRef,
+  slug,
+}) => {
   const { token, currentUserName } = useSelector(selectData);
-  const { data: articleData, mutate } = useSWR<FetchRV<ArticleObj>>(
-    [getArticleUrl(slug), token],
-    fetcher.get,
-    {
-      initialData: initialArticle,
-    }
-  );
-  useEffect(() => {
-    if (initialArticle) mutate(articleData, false);
-  }, []);
-  const { data: commentsData } = useSWR<FetchRV<CommentsObj>>(
+  const { data: articleData = initialArticle, mutate } = useSWR<
+    FetchRV<ArticleObj>
+  >([getArticleUrl(slug), token], fetcher.get, {
+    initialData: initialArticleRef?.current,
+  });
+  if (initialArticleRef?.current) initialArticleRef.current = undefined;
+  const { data: commentsData = initialComments } = useSWR<FetchRV<CommentsObj>>(
     [getArticleCommentsUrl(slug), token],
     fetcher.get,
     {
-      initialData: initialComments,
+      initialData: initialCommentsRef?.current,
     }
   );
+  if (initialCommentsRef?.current) initialCommentsRef.current = undefined;
+  const handleLike = async () => {
+    const data = await likeArticle(!article.favorited, slug, token);
+    if (data.article) mutate(data, false);
+  };
   const article = articleData?.article;
   const comments = commentsData?.comments;
   return (
@@ -60,7 +76,32 @@ const Article: FC<Props> = ({ initialArticle, initialComments, slug }) => {
               <Banner>
                 <ArticleHeader
                   article={article}
-                  isUserCurrent={currentUserName === article.author.username}
+                  controlButtons={
+                    <>
+                      <Tooltip title={article.favorited ? "Dislike" : "Like"}>
+                        <StyledIconButton onClick={handleLike}>
+                          <Badge
+                            badgeContent={article.favoritesCount}
+                            color="primary"
+                            overlap="circle"
+                            showZero
+                          >
+                            <StyledFavoriteTwoToneIcon
+                              fontSize="inherit"
+                              color="inherit"
+                              liked={article.favorited}
+                            />
+                          </Badge>
+                        </StyledIconButton>
+                      </Tooltip>
+                      {currentUserName === article.author.username && (
+                        <ArticleControlButtons
+                          slug={article.slug}
+                          token={token}
+                        />
+                      )}
+                    </>
+                  }
                 />
               </Banner>
             </Grid>

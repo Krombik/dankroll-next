@@ -1,26 +1,20 @@
-import { FC, useState, useCallback } from "react";
+import { FC } from "react";
 import { StyledIconButton } from "../../components/article/styled";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { useDispatch } from "react-redux";
-import { ThunkDispatcher, State } from "../../types";
+import { ThunkDispatcher } from "../../types";
 import { setModal } from "../../redux/modal/actions";
 import { deleteArticle } from "../../api/article";
-import { createSelector } from "reselect";
-import { useSelector } from "react-redux";
 import Router from "next/router";
+import Tooltip from "@material-ui/core/Tooltip";
 
 type Props = {
   slug: string;
+  token: string;
 };
 
-const selectData = createSelector(
-  (state: State) => state.common.token,
-  (token) => ({ token })
-);
-
-const ArticleControlButtons: FC<Props> = ({ slug }) => {
-  const { token } = useSelector(selectData);
+const ArticleControlButtons: FC<Props> = ({ slug, token }) => {
   const dispatch = useDispatch<ThunkDispatcher>();
   const openModal = () => {
     dispatch(setModal(true, "edit", slug));
@@ -33,12 +27,16 @@ const ArticleControlButtons: FC<Props> = ({ slug }) => {
   };
   return (
     <>
-      <StyledIconButton onClick={openModal}>
-        <EditIcon fontSize="inherit" color="inherit" />
-      </StyledIconButton>
-      <StyledIconButton onClick={handleDelete}>
-        <DeleteIcon fontSize="inherit" color="inherit" />
-      </StyledIconButton>
+      <Tooltip title={"Edit"}>
+        <StyledIconButton onClick={openModal}>
+          <EditIcon fontSize="inherit" color="inherit" />
+        </StyledIconButton>
+      </Tooltip>
+      <Tooltip title={"Delete"}>
+        <StyledIconButton onClick={handleDelete}>
+          <DeleteIcon fontSize="inherit" color="inherit" />
+        </StyledIconButton>
+      </Tooltip>
     </>
   );
 };
