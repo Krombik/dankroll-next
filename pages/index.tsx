@@ -27,6 +27,7 @@ const Index: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
         title={initialArticles.error}
       />
     );
+  const initialDataRef = useRef(initialArticles);
   return (
     <Grid container spacing={3}>
       <Grid item xs={12}>
@@ -43,8 +44,8 @@ const Index: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
           <SortableTabs />
         </AppBar>
         <ArticleList
-          initialData={[initialArticles]}
-          initialDataRef={useRef([initialArticles])}
+          initialData={initialArticles}
+          initialDataRef={initialDataRef}
           initialTab={initialTab}
           emptyType="default"
         />

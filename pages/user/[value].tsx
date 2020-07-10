@@ -52,6 +52,7 @@ const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
   }: any = useRouter();
   const { token } = useSelector(selectData);
   const userRef = useRef(initialUser);
+  const initialDataRef = useRef(initialArticles);
   const { data: userData = initialUser } = useSWR<FetchRV<UserObj>>(
     [getUserUrl(value), token],
     fetcher.get,
@@ -92,8 +93,8 @@ const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
           </Tabs>
         </AppBar>
         <ArticleList
-          initialData={[initialArticles]}
-          initialDataRef={useRef([initialArticles])}
+          initialData={initialArticles}
+          initialDataRef={initialDataRef}
           initialTab={initialTab}
           emptyType="author"
         />

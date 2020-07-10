@@ -7,15 +7,17 @@ import { getArticlesUrl, likeArticle } from "../../api/article";
 import { useSWRInfinite } from "swr";
 import Pagination from "../common/Pagination";
 import { useRouter } from "next/router";
-import { FetchRV, State } from "../../types";
+import { FetchRV, State, ThunkDispatcher } from "../../types";
 import { createSelector } from "reselect";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import fetcher from "../../utils/fetcher";
 import usePrevious from "../../utils/usePrevious";
 import useOnUpdateEffect from "../../utils/useOnUpdateEffect";
 import ArticlePreviewSkeleton from "../../components/article/ArticlePreviewSkeleton";
 import cloneDeep from "lodash.clonedeep";
 import { TabType } from "../../types/tab";
+import { setModal } from "../../redux/modal/actions";
+import Router from "next/router";
 
 const selectData = createSelector(
   (state: State) => state.common.token,
@@ -24,8 +26,8 @@ const selectData = createSelector(
 );
 
 type Props = {
-  initialData: FetchRV<ArticlesObj>[];
-  initialDataRef: MutableRefObject<FetchRV<ArticlesObj>[]>;
+  initialData: FetchRV<ArticlesObj>;
+  initialDataRef: MutableRefObject<FetchRV<ArticlesObj>>;
   initialTab: TabType;
   emptyType: string;
 };
@@ -44,7 +46,7 @@ const ArticleList: FC<Props> = ({
   const isInitial = initialTab.type === type && initialTab.value === value;
   const startPage = page && +page > 0 ? +page - 1 : 0;
   const {
-    data = isInitial ? initialData : null,
+    data = isInitial && initialData ? [initialData] : null,
     setSize,
     size = 1,
     mutate,
@@ -52,7 +54,10 @@ const ArticleList: FC<Props> = ({
     (index) => [getArticlesUrl(type, value, startPage + index, 20), token],
     fetcher.get,
     {
-      initialData: isInitial ? initialDataRef.current : undefined,
+      initialData:
+        isInitial && initialDataRef.current
+          ? [initialDataRef.current]
+          : undefined,
     }
   );
   if (isInitial && initialDataRef.current) initialDataRef.current = undefined;
@@ -80,6 +85,25 @@ const ArticleList: FC<Props> = ({
       mutate(newData, false);
     }
   };
+  const dispatch = useDispatch<ThunkDispatcher>();
+  useEffect(() => {
+    const handleRouteChange = async () => {
+      const { pathname } = window.location;
+      if (pathname.includes("/articles/")) {
+        await Router.replace(
+          { pathname: Router.pathname, query: Router.query },
+          Router.asPath,
+          { shallow: true }
+        );
+        window.history.replaceState("", "", pathname);
+        dispatch(setModal(true));
+      }
+    };
+    window.addEventListener("popstate", handleRouteChange);
+    return () => {
+      window.removeEventListener("popstate", handleRouteChange);
+    };
+  }, []);
   const isLoadMoreUnavailable = articles?.length >= articlesCount;
   const isLoading = data?.length === 0 || data?.length !== size;
   const pageCount = Math.ceil(articlesCount / 20);

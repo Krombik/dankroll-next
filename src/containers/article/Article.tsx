@@ -11,11 +11,11 @@ import Markdown from "react-markdown";
 import { Link, Divider } from "@material-ui/core";
 import { getArticleCommentsUrl } from "../../api/comment";
 import Typography from "@material-ui/core/Typography";
-import { FetchRV, State } from "../../types";
+import { FetchRV, State, ThunkDispatcher } from "../../types";
 import Spinner from "../../components/common/Spinner";
 import Banner from "../common/Banner";
 import { createSelector } from "reselect";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import fetcher from "../../utils/fetcher";
 import ArticleControlButtons from "./ArticleControlButtons";
 import Badge from "@material-ui/core/Badge";
@@ -24,6 +24,7 @@ import {
   StyledFavoriteTwoToneIcon,
   StyledIconButton,
 } from "../../components/article/styled";
+import { setModal } from "../../redux/modal/actions";
 
 const selectData = createSelector(
   (state: State) => state.common.token,
@@ -67,6 +68,17 @@ const Article: FC<Props> = ({
   };
   const article = articleData?.article;
   const comments = commentsData?.comments;
+  const dispatch = useDispatch<ThunkDispatcher>();
+  useEffect(() => {
+    const handleRouteChange = () => {
+      if (!window.location.pathname.includes("/articles/"))
+        dispatch(setModal(false));
+    };
+    window.addEventListener("popstate", handleRouteChange);
+    return () => {
+      window.removeEventListener("popstate", handleRouteChange);
+    };
+  }, []);
   return (
     <Grid container justify="center" alignItems="center" spacing={3}>
       <Grid item container spacing={3}>
