@@ -1,4 +1,4 @@
-import { FC, MouseEvent, SyntheticEvent, memo, useEffect } from "react";
+import { FC, MouseEvent, SyntheticEvent, memo } from "react";
 import { createSelector } from "reselect";
 import { useSelector, useDispatch } from "react-redux";
 import { State, ThunkDispatcher } from "../../types";
@@ -9,7 +9,6 @@ import Editor from "./Editor";
 import { setModal } from "../../redux/modal/actions";
 import { ModalType } from "../../redux/modal/type";
 import Article from "../article/Article";
-import Router, { useRouter } from "next/router";
 
 const selectData = createSelector(
   (state: State) => state.modal.open,

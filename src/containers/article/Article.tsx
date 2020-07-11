@@ -19,12 +19,10 @@ import { useSelector, useDispatch } from "react-redux";
 import fetcher from "../../utils/fetcher";
 import ArticleControlButtons from "./ArticleControlButtons";
 import Badge from "@material-ui/core/Badge";
-import Tooltip from "@material-ui/core/Tooltip";
-import {
-  StyledFavoriteTwoToneIcon,
-  StyledIconButton,
-} from "../../components/article/styled";
+import { StyledSwitchableIcon } from "../../components/article/styled";
 import { setModal } from "../../redux/modal/actions";
+import BannerButton from "../../components/common/BannerButton";
+import FavoriteTwoToneIcon from "@material-ui/icons/FavoriteTwoTone";
 
 const selectData = createSelector(
   (state: State) => state.common.token,
@@ -90,22 +88,25 @@ const Article: FC<Props> = ({
                   article={article}
                   controlButtons={
                     <>
-                      <Tooltip title={article.favorited ? "Dislike" : "Like"}>
-                        <StyledIconButton onClick={handleLike}>
-                          <Badge
-                            badgeContent={article.favoritesCount}
-                            color="primary"
-                            overlap="circle"
-                            showZero
-                          >
-                            <StyledFavoriteTwoToneIcon
-                              fontSize="inherit"
-                              color="inherit"
-                              liked={article.favorited}
-                            />
-                          </Badge>
-                        </StyledIconButton>
-                      </Tooltip>
+                      <BannerButton
+                        tooltip={article.favorited ? "Dislike" : "Like"}
+                        disabled={!currentUserName}
+                        onClick={handleLike}
+                      >
+                        <Badge
+                          badgeContent={article.favoritesCount}
+                          color="primary"
+                          overlap="circle"
+                          showZero
+                        >
+                          <StyledSwitchableIcon
+                            fontSize="inherit"
+                            color="inherit"
+                            active={article.favorited}
+                            Icon={FavoriteTwoToneIcon}
+                          />
+                        </Badge>
+                      </BannerButton>
                       {currentUserName === article.author.username && (
                         <ArticleControlButtons
                           slug={article.slug}

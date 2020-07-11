@@ -21,3 +21,11 @@ export type AuthorizedUser = {
     username: string;
   };
 };
+
+export type UpdateUser = {
+  email: string;
+  username: string;
+  password: string;
+  image: string;
+  bio: string;
+};

@@ -29,10 +29,13 @@ import { parseCookies } from "nookies";
 import { serverSetAuthorized } from "../../src/redux/common/actions";
 import { useRef } from "react";
 import Tabs from "../../src/containers/tabs/Tabs";
+import BannerButton from "../../src/components/common/BannerButton";
+import UserSubscribeButton from "../../src/containers/user/UserSubscribeButton";
 
 const selectData = createSelector(
   (state: State) => state.common.token,
-  (token) => ({ token })
+  (state: State) => state.common.currentUserName,
+  (token, currentUserName) => ({ token, currentUserName })
 );
 
 const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
@@ -50,18 +53,18 @@ const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
   const {
     query: { value },
   }: any = useRouter();
-  const { token } = useSelector(selectData);
-  const userRef = useRef(initialUser);
+  const { token, currentUserName } = useSelector(selectData);
+  const initialUserRef = useRef(initialUser);
   const initialDataRef = useRef(initialArticles);
-  const { data: userData = initialUser } = useSWR<FetchRV<UserObj>>(
+  const { data: userData = initialUser, mutate } = useSWR<FetchRV<UserObj>>(
     [getUserUrl(value), token],
     fetcher.get,
     {
-      initialData: userRef.current,
+      initialData: initialUserRef.current,
     }
   );
   const user = userData?.profile;
-  if (userRef.current) userRef.current = undefined;
+  if (initialUserRef.current) initialUserRef.current = undefined;
   return (
     <Grid container spacing={3}>
       {user ? (
@@ -75,6 +78,14 @@ const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
             <Grid item container justify="center">
               <Typography variant="h2" color="textPrimary">
                 {user.username}
+                {user.username !== currentUserName ? (
+                  <UserSubscribeButton
+                    token={token}
+                    username={user.username}
+                    follow={user.following}
+                    mutate={mutate}
+                  />
+                ) : null}
               </Typography>
             </Grid>
             <Grid item container justify="center">

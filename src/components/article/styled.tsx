@@ -2,8 +2,8 @@ import styled from "styled-components";
 import Card from "@material-ui/core/Card";
 import IconButton from "@material-ui/core/IconButton";
 import ContentInfo from "../common/ContentInfo";
-import FavoriteTwoToneIcon from "@material-ui/icons/FavoriteTwoTone";
-import { SvgIconProps } from "@material-ui/core";
+import { SvgIconProps, SvgIconTypeMap } from "@material-ui/core";
+import { OverridableComponent } from "@material-ui/core/OverridableComponent";
 
 export const StyledArticlePreview = styled(Card)`
   height: 100%;
@@ -27,17 +27,16 @@ export const StyledCardHeader = styled(ContentInfo)`
   position: relative;
 `;
 
-interface StyledFavoriteTwoToneIconProps extends SvgIconProps {
-  liked: boolean;
+interface StyledSwitchableIconProps extends SvgIconProps {
+  active: boolean;
+  Icon: OverridableComponent<SvgIconTypeMap>;
 }
 
-export const StyledFavoriteTwoToneIcon = styled(
-  ({ liked, ...props }: StyledFavoriteTwoToneIconProps) => (
-    <FavoriteTwoToneIcon {...props} />
-  )
+export const StyledSwitchableIcon = styled(
+  ({ active, Icon, ...props }: StyledSwitchableIconProps) => <Icon {...props} />
 )`
   path:first-child {
     transition: 0.3s;
-    opacity: ${({ liked }) => (liked ? 1 : 0)};
+    opacity: ${({ active }) => (active ? 0.5 : 0)};
   }
 `;

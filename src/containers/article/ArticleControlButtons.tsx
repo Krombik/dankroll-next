@@ -1,5 +1,4 @@
 import { FC } from "react";
-import { StyledIconButton } from "../../components/article/styled";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { useDispatch } from "react-redux";
@@ -7,7 +6,7 @@ import { ThunkDispatcher } from "../../types";
 import { setModal } from "../../redux/modal/actions";
 import { deleteArticle } from "../../api/article";
 import Router from "next/router";
-import Tooltip from "@material-ui/core/Tooltip";
+import BannerButton from "../../components/common/BannerButton";
 
 type Props = {
   slug: string;
@@ -19,24 +18,24 @@ const ArticleControlButtons: FC<Props> = ({ slug, token }) => {
   const openModal = () => {
     dispatch(setModal(true, "edit", slug));
   };
+  let loading = false;
   const handleDelete = async () => {
-    await deleteArticle(slug, token);
-    dispatch(setModal(false));
-    if (window.history.length > 0) Router.back();
-    else Router.push("/");
+    if (!loading) {
+      loading = true;
+      await deleteArticle(slug, token);
+      dispatch(setModal(false));
+      if (window.history.length > 0) Router.back();
+      else Router.replace("/");
+    }
   };
   return (
     <>
-      <Tooltip title={"Edit"}>
-        <StyledIconButton onClick={openModal}>
-          <EditIcon fontSize="inherit" color="inherit" />
-        </StyledIconButton>
-      </Tooltip>
-      <Tooltip title={"Delete"}>
-        <StyledIconButton onClick={handleDelete}>
-          <DeleteIcon fontSize="inherit" color="inherit" />
-        </StyledIconButton>
-      </Tooltip>
+      <BannerButton tooltip="Edit" onClick={openModal}>
+        <EditIcon fontSize="inherit" color="inherit" />
+      </BannerButton>
+      <BannerButton tooltip="Delete" onClick={handleDelete}>
+        <DeleteIcon fontSize="inherit" color="inherit" />
+      </BannerButton>
     </>
   );
 };
