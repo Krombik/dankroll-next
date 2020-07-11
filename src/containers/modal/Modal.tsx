@@ -9,6 +9,8 @@ import Editor from "./Editor";
 import { setModal } from "../../redux/modal/actions";
 import { ModalType } from "../../redux/modal/type";
 import Article from "../article/Article";
+import Router from "next/router";
+import Settings from "./Settings";
 
 const selectData = createSelector(
   (state: State) => state.modal.open,
@@ -23,7 +25,14 @@ const Modal: FC = memo(() => {
   const isArticle = modal === "article";
   const closeModal = () => {
     if (isArticle) window.history.back();
-    else dispatch(setModal(false));
+    else if (
+      modal === "edit" &&
+      window.location.pathname.includes("/articles/") &&
+      !Router.query.slug
+    ) {
+      window.history.back();
+      dispatch(setModal(false));
+    } else dispatch(setModal(false));
   };
   const openModal = (e: SyntheticEvent<HTMLButtonElement, MouseEvent>) => {
     dispatch(setModal(true, e.currentTarget.name as ModalType));
@@ -40,6 +49,8 @@ const Modal: FC = memo(() => {
         <Editor />
       ) : modal === "edit" ? (
         <Editor slug={slug} />
+      ) : modal === "settings" ? (
+        <Settings />
       ) : null}
     </CustomModal>
   );

@@ -31,6 +31,7 @@ import { useRef } from "react";
 import Tabs from "../../src/containers/tabs/Tabs";
 import BannerButton from "../../src/components/common/BannerButton";
 import UserSubscribeButton from "../../src/containers/user/UserSubscribeButton";
+import UserSettingsButton from "../../src/containers/user/UserSettingsButton";
 
 const selectData = createSelector(
   (state: State) => state.common.token,
@@ -85,7 +86,9 @@ const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
                     follow={user.following}
                     mutate={mutate}
                   />
-                ) : null}
+                ) : (
+                  <UserSettingsButton />
+                )}
               </Typography>
             </Grid>
             <Grid item container justify="center">

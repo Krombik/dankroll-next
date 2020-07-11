@@ -32,7 +32,7 @@ const ArticlePreview: FC<Props> = ({ article, onLike, index, onModal }) => (
     title={article.title}
     description={article.description}
     onModal={onModal}
-    href={"articles/" + article.slug}
+    href={"/articles/" + article.slug}
   >
     {article?.tagList.length > 0 && <TagList tagList={article.tagList} />}
   </ArticlePreviewComponent>

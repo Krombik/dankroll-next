@@ -1,8 +1,7 @@
-import axios from "axios";
 import { SERVER_BASE_URL } from "../utils/constant";
 import fetcher from "../utils/fetcher";
 import { FetchRV } from "../types";
-import { AuthorizedUser, UpdateUser, UserObj } from "../types/user";
+import { AuthorizedUserObj, UpdateUser, UserObj } from "../types/user";
 
 export const getUserUrl = (username: string) =>
   `${SERVER_BASE_URL}/profiles/${username}`;
@@ -12,20 +11,20 @@ export const registerUser = (
   email: string,
   password: string
 ) =>
-  fetcher.post<FetchRV<AuthorizedUser>>(`${SERVER_BASE_URL}/users`, {
+  fetcher.post<FetchRV<AuthorizedUserObj>>(`${SERVER_BASE_URL}/users`, {
     user: { username, email, password },
   });
 
 export const loginUser = (email: string, password: string) =>
-  fetcher.post<FetchRV<AuthorizedUser>>(`${SERVER_BASE_URL}/users/login`, {
+  fetcher.post<FetchRV<AuthorizedUserObj>>(`${SERVER_BASE_URL}/users/login`, {
     user: { email, password },
   });
 
 export const getCurrentUser = (token: string) =>
-  fetcher.get<FetchRV<AuthorizedUser>>(`${SERVER_BASE_URL}/user`, token);
+  fetcher.get<FetchRV<AuthorizedUserObj>>(`${SERVER_BASE_URL}/user`, token);
 
 export const updateCurrentUser = (user: Partial<UpdateUser>, token: string) =>
-  fetcher.put<FetchRV<AuthorizedUser>>(
+  fetcher.put<FetchRV<AuthorizedUserObj>>(
     `${SERVER_BASE_URL}/user`,
     { user },
     token
@@ -40,106 +39,3 @@ export const followUser = (
   if (follow) return fetcher.post<FetchRV<UserObj>>(url, null, token);
   return fetcher.delete<FetchRV<UserObj>>(url, token);
 };
-
-const UserAPI = {
-  current: async () => {
-    const user: any = window.localStorage.getItem("user");
-    const token = user?.token;
-    try {
-      const response = await axios.get(`/user`, {
-        headers: {
-          Authorization: `Token ${encodeURIComponent(token)}`,
-        },
-      });
-      return response;
-    } catch (error) {
-      return error.response;
-    }
-  },
-  login: async (email, password) => {
-    try {
-      const response = await axios.post(
-        `${SERVER_BASE_URL}/users/login`,
-        JSON.stringify({ user: { email, password } }),
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      return response;
-    } catch (error) {
-      return error.response;
-    }
-  },
-  register: async (username, email, password) => {
-    try {
-      const response = await axios.post(
-        `${SERVER_BASE_URL}/users`,
-        JSON.stringify({ user: { username, email, password } }),
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      return response;
-    } catch (error) {
-      return error.response;
-    }
-  },
-  save: async (user) => {
-    try {
-      const response = await axios.put(
-        `${SERVER_BASE_URL}/user`,
-        JSON.stringify({ user }),
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      return response;
-    } catch (error) {
-      return error.response;
-    }
-  },
-  follow: async (username) => {
-    const user: any = JSON.parse(window.localStorage.getItem("user"));
-    const token = user?.token;
-    try {
-      const response = await axios.post(
-        `${SERVER_BASE_URL}/profiles/${username}/follow`,
-        {},
-        {
-          headers: {
-            Authorization: `Token ${encodeURIComponent(token)}`,
-          },
-        }
-      );
-      return response;
-    } catch (error) {
-      return error.response;
-    }
-  },
-  unfollow: async (username) => {
-    const user: any = JSON.parse(window.localStorage.getItem("user"));
-    const token = user?.token;
-    try {
-      const response = await axios.delete(
-        `${SERVER_BASE_URL}/profiles/${username}/follow`,
-        {
-          headers: {
-            Authorization: `Token ${encodeURIComponent(token)}`,
-          },
-        }
-      );
-      return response;
-    } catch (error) {
-      return error.response;
-    }
-  },
-  get: async (username) => axios.get(`${SERVER_BASE_URL}/profiles/${username}`),
-};
-
-export default UserAPI;
