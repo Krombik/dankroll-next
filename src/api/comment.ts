@@ -1,36 +1,29 @@
-import axios from "axios";
-
 import { SERVER_BASE_URL } from "../utils/constant";
 import fetcher from "../utils/fetcher";
 import { FetchRV } from "../types";
-import { CommentsObj } from "../types/comment";
+import { CommentObj } from "../types/comment";
+import { CreateCommentType } from "../types/comment";
 
 export const getArticleCommentsUrl = (slug: string) =>
   `${SERVER_BASE_URL}/articles/${slug}/comments`;
 
-const CommentAPI = {
-  create: async (slug, comment) => {
-    try {
-      const response = await axios.post(
-        `${SERVER_BASE_URL}/articles/${slug}/comments`,
-        JSON.stringify({ comment })
-      );
-      return response;
-    } catch (error) {
-      return error.response;
-    }
-  },
-  delete: async (slug, commentId) => {
-    try {
-      const response = await axios.delete(
-        `${SERVER_BASE_URL}/articles/${slug}/comments/${commentId}`
-      );
-      return response;
-    } catch (error) {
-      return error.response;
-    }
-  },
+export const createArticleComment = (
+  slug: string,
+  comment: CreateCommentType,
+  token: string
+) =>
+  fetcher.post<FetchRV<CommentObj>>(
+    `${SERVER_BASE_URL}/articles/${slug}/comments`,
+    { comment },
+    token
+  );
 
-  forArticle: (slug) =>
-    axios.get(`${SERVER_BASE_URL}/articles/${slug}/comments`),
-};
+export const deleteArticleComment = (
+  slug: string,
+  commentId: number,
+  token: string
+) =>
+  fetcher.delete(
+    `${SERVER_BASE_URL}/articles/${slug}/comments/${commentId}`,
+    token
+  );

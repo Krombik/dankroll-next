@@ -4,7 +4,8 @@ import { FC, useEffect, MutableRefObject } from "react";
 import useSWR from "swr";
 import { getArticleUrl, likeArticle } from "../../api/article";
 import ArticleHeader from "./ArticleHeader";
-import Comments from "../common/Comments";
+import Comments from "../comment/Comments";
+import PostComment from "../comment/PostComment";
 import { CommentsObj } from "../../types/comment";
 import GridDivider from "../../components/common/GridDivider";
 import Markdown from "react-markdown";
@@ -52,7 +53,10 @@ const Article: FC<Props> = ({
     initialData: initialArticleRef?.current,
   });
   if (initialArticleRef?.current) initialArticleRef.current = undefined;
-  const { data: commentsData = initialComments } = useSWR<FetchRV<CommentsObj>>(
+  const {
+    data: commentsData = initialComments,
+    mutate: commentsMutate,
+  } = useSWR<FetchRV<CommentsObj>>(
     [getArticleCommentsUrl(slug), token],
     fetcher.get,
     {
@@ -138,6 +142,16 @@ const Article: FC<Props> = ({
             <Grid item xs={12}>
               <Typography variant="h4">Comments: {comments.length}</Typography>
             </Grid>
+            {token && (
+              <Grid item xs={12}>
+                <PostComment
+                  slug={slug}
+                  token={token}
+                  mutate={commentsMutate}
+                  comments={comments}
+                />
+              </Grid>
+            )}
             {comments.length > 0 && <Comments comments={comments} />}
           </>
         ) : (

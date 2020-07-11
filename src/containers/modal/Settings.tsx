@@ -40,17 +40,12 @@ const Settings: FC = () => {
   if (!prevUser.current && data.user.username)
     prevUser.current = { ...data.user };
   const dispatch = useDispatch<ThunkDispatcher>();
-  const handleChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      mutate(
-        {
-          user: { ...data.user, [e.currentTarget.name]: e.currentTarget.value },
-        },
-        false
-      );
-    },
-    [data]
-  );
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    mutate(
+      { user: { ...data.user, [e.currentTarget.name]: e.currentTarget.value } },
+      false
+    );
+  };
   const handlePassword = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setPassword(e.currentTarget.value);
   }, []);

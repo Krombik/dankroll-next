@@ -4,6 +4,10 @@ export interface CommentsObj {
   comments: CommentType[];
 }
 
+export interface CommentObj {
+  comment: CommentType;
+}
+
 export type CommentType = {
   createdAt: string;
   id: string;
@@ -11,4 +15,8 @@ export type CommentType = {
   slug: string;
   author: UserType;
   updatedAt: string;
+};
+
+export type CreateCommentType = {
+  body: string;
 };

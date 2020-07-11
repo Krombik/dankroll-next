@@ -11,7 +11,7 @@ const UserSettingsButton: FC = () => {
     dispatch(setModal(true, "settings"));
   };
   return (
-    <BannerButton tooltip="Settings" onClick={openModal}>
+    <BannerButton tooltip="Profile settings" onClick={openModal}>
       <SettingsIcon fontSize="inherit" color="inherit" />
     </BannerButton>
   );
