@@ -24,6 +24,7 @@ import { StyledSwitchableIcon } from "../../components/article/styled";
 import { setModal } from "../../redux/modal/actions";
 import BannerButton from "../../components/common/BannerButton";
 import FavoriteTwoToneIcon from "@material-ui/icons/FavoriteTwoTone";
+import CommentSection from "../comment/CommentSection";
 
 const selectData = createSelector(
   (state: State) => state.common.token,
@@ -53,23 +54,11 @@ const Article: FC<Props> = ({
     initialData: initialArticleRef?.current,
   });
   if (initialArticleRef?.current) initialArticleRef.current = undefined;
-  const {
-    data: commentsData = initialComments,
-    mutate: commentsMutate,
-  } = useSWR<FetchRV<CommentsObj>>(
-    [getArticleCommentsUrl(slug), token],
-    fetcher.get,
-    {
-      initialData: initialCommentsRef?.current,
-    }
-  );
-  if (initialCommentsRef?.current) initialCommentsRef.current = undefined;
   const handleLike = async () => {
     const data = await likeArticle(!article.favorited, slug, token);
     if (data.article) mutate(data, false);
   };
   const article = articleData?.article;
-  const comments = commentsData?.comments;
   const dispatch = useDispatch<ThunkDispatcher>();
   useEffect(() => {
     const handleRouteChange = () => {
@@ -137,26 +126,13 @@ const Article: FC<Props> = ({
           <Spinner />
         )}
         <GridDivider item xs={12} />
-        {comments ? (
-          <>
-            <Grid item xs={12}>
-              <Typography variant="h4">Comments: {comments.length}</Typography>
-            </Grid>
-            {token && (
-              <Grid item xs={12}>
-                <PostComment
-                  slug={slug}
-                  token={token}
-                  mutate={commentsMutate}
-                  comments={comments}
-                />
-              </Grid>
-            )}
-            {comments.length > 0 && <Comments comments={comments} />}
-          </>
-        ) : (
-          <Spinner />
-        )}
+        <CommentSection
+          initialComments={initialComments}
+          initialCommentsRef={initialCommentsRef}
+          slug={slug}
+          token={token}
+          currentUserName={currentUserName}
+        />
       </Grid>
     </Grid>
   );

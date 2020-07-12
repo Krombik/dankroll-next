@@ -10,7 +10,7 @@ export interface CommentObj {
 
 export type CommentType = {
   createdAt: string;
-  id: string;
+  id: number;
   body: string;
   slug: string;
   author: UserType;
