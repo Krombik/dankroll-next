@@ -11,7 +11,6 @@ import { ArticleObj } from "../../src/types/article";
 import { CommentsObj } from "../../src/types/comment";
 import { parseCookies } from "nookies";
 import { serverSetAuthorized } from "../../src/redux/common/actions";
-import { useRef } from "react";
 
 const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
   initialArticle,
@@ -27,14 +26,10 @@ const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
   const {
     query: { slug },
   }: any = useRouter();
-  const initialArticleRef = useRef(initialArticle);
-  const initialCommentsRef = useRef(initialComments);
   return (
     <Article
       initialArticle={initialArticle}
-      initialArticleRef={initialArticleRef}
       initialComments={initialComments}
-      initialCommentsRef={initialCommentsRef}
       slug={slug}
     />
   );

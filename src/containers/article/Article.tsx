@@ -25,6 +25,7 @@ import { setModal } from "../../redux/modal/actions";
 import BannerButton from "../../components/common/BannerButton";
 import FavoriteTwoToneIcon from "@material-ui/icons/FavoriteTwoTone";
 import CommentSection from "../comment/CommentSection";
+import { useInitialSWR } from "../../utils/useInitialSWR";
 
 const selectData = createSelector(
   (state: State) => state.common.token,
@@ -34,26 +35,15 @@ const selectData = createSelector(
 
 type Props = {
   initialArticle?: FetchRV<ArticleObj>;
-  initialArticleRef?: MutableRefObject<FetchRV<ArticleObj>>;
   initialComments?: FetchRV<CommentsObj>;
-  initialCommentsRef?: MutableRefObject<FetchRV<CommentsObj>>;
   slug: string;
 };
 
-const Article: FC<Props> = ({
-  initialArticle,
-  initialArticleRef,
-  initialComments,
-  initialCommentsRef,
-  slug,
-}) => {
+const Article: FC<Props> = ({ initialArticle, initialComments, slug }) => {
   const { token, currentUserName } = useSelector(selectData);
-  const { data: articleData = initialArticle, mutate } = useSWR<
+  const { data: articleData = initialArticle, mutate } = useInitialSWR<
     FetchRV<ArticleObj>
-  >([getArticleUrl(slug), token], fetcher.get, {
-    initialData: initialArticleRef?.current,
-  });
-  if (initialArticleRef?.current) initialArticleRef.current = undefined;
+  >([getArticleUrl(slug), token], fetcher.get, initialArticle);
   const handleLike = async () => {
     const data = await likeArticle(!article.favorited, slug, token);
     if (data.article) mutate(data, false);
@@ -128,7 +118,6 @@ const Article: FC<Props> = ({
         <GridDivider item xs={12} />
         <CommentSection
           initialComments={initialComments}
-          initialCommentsRef={initialCommentsRef}
           slug={slug}
           token={token}
           currentUserName={currentUserName}

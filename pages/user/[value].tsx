@@ -13,7 +13,6 @@ import AppBar from "@material-ui/core/AppBar";
 import Tab from "@material-ui/core/Tab";
 import { getUserUrl } from "../../src/api/user";
 import Grid from "@material-ui/core/Grid";
-import useSWR from "swr";
 import Banner from "../../src/containers/common/Banner";
 import Spinner from "../../src/components/common/Spinner";
 import Avatar from "@material-ui/core/Avatar";
@@ -27,11 +26,10 @@ import fetcher from "../../src/utils/fetcher";
 import { UserObj } from "../../src/types/user";
 import { parseCookies } from "nookies";
 import { serverSetAuthorized } from "../../src/redux/common/actions";
-import { useRef } from "react";
 import Tabs from "../../src/containers/tabs/Tabs";
-import BannerButton from "../../src/components/common/BannerButton";
 import UserSubscribeButton from "../../src/containers/user/UserSubscribeButton";
 import UserSettingsButton from "../../src/containers/user/UserSettingsButton";
+import { useInitialSWR } from "../../src/utils/useInitialSWR";
 
 const selectData = createSelector(
   (state: State) => state.common.token,
@@ -55,17 +53,10 @@ const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
     query: { value },
   }: any = useRouter();
   const { token, currentUserName } = useSelector(selectData);
-  const initialUserRef = useRef(initialUser);
-  const initialDataRef = useRef(initialArticles);
-  const { data: userData = initialUser, mutate } = useSWR<FetchRV<UserObj>>(
-    [getUserUrl(value), token],
-    fetcher.get,
-    {
-      initialData: initialUserRef.current,
-    }
-  );
+  const { data: userData = initialUser, mutate } = useInitialSWR<
+    FetchRV<UserObj>
+  >([getUserUrl(value), token], fetcher.get, initialUser);
   const user = userData?.profile;
-  if (initialUserRef.current) initialUserRef.current = undefined;
   return (
     <Grid container spacing={3}>
       {user ? (
@@ -108,7 +99,6 @@ const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
         </AppBar>
         <ArticleList
           initialData={initialArticles}
-          initialDataRef={initialDataRef}
           initialTab={initialTab}
           emptyType="author"
         />

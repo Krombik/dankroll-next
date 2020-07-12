@@ -14,7 +14,6 @@ import { ArticlesObj } from "../src/types/article";
 import fetcher from "../src/utils/fetcher";
 import { parseCookies } from "nookies";
 import { serverSetAuthorized } from "../src/redux/common/actions";
-import { useRef } from "react";
 
 const Index: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
   initialArticles,
@@ -27,7 +26,6 @@ const Index: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
         title={initialArticles.error}
       />
     );
-  const initialDataRef = useRef(initialArticles);
   return (
     <Grid container spacing={3}>
       <Grid item xs={12}>
@@ -45,7 +43,6 @@ const Index: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
         </AppBar>
         <ArticleList
           initialData={initialArticles}
-          initialDataRef={initialDataRef}
           initialTab={initialTab}
           emptyType="default"
         />

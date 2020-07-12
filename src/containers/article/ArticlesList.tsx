@@ -1,16 +1,9 @@
 import { ArticlesObj } from "../../types/article";
-import {
-  FC,
-  useEffect,
-  MutableRefObject,
-  MouseEvent,
-  useCallback,
-} from "react";
+import { FC, useEffect, MouseEvent, useCallback } from "react";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import ArticlePreview from "./ArticlePreview";
 import { getArticlesUrl, likeArticle } from "../../api/article";
-import { useSWRInfinite } from "swr";
 import Pagination from "../common/Pagination";
 import Router, { useRouter } from "next/router";
 import { FetchRV, State, ThunkDispatcher } from "../../types";
@@ -23,6 +16,7 @@ import ArticlePreviewSkeleton from "../../components/article/ArticlePreviewSkele
 import cloneDeep from "lodash.clonedeep";
 import { TabType } from "../../types/tab";
 import { setModal } from "../../redux/modal/actions";
+import { useInitialSWRInfinity } from "../../utils/useInitialSWR";
 
 const selectData = createSelector(
   (state: State) => state.common.token,
@@ -32,17 +26,11 @@ const selectData = createSelector(
 
 type Props = {
   initialData: FetchRV<ArticlesObj>;
-  initialDataRef: MutableRefObject<FetchRV<ArticlesObj>>;
   initialTab: TabType;
   emptyType: string;
 };
 
-const ArticleList: FC<Props> = ({
-  initialData,
-  initialDataRef,
-  initialTab,
-  emptyType,
-}) => {
+const ArticleList: FC<Props> = ({ initialData, initialTab, emptyType }) => {
   const { token, open } = useSelector(selectData);
   const {
     query: { page, ...query },
@@ -55,17 +43,11 @@ const ArticleList: FC<Props> = ({
     setSize,
     size = 1,
     mutate,
-  } = useSWRInfinite<FetchRV<ArticlesObj>>(
+  } = useInitialSWRInfinity<FetchRV<ArticlesObj>>(
     (index) => [getArticlesUrl(type, value, startPage + index, 20), token],
     fetcher.get,
-    {
-      initialData:
-        isInitial && initialDataRef.current
-          ? [initialDataRef.current]
-          : undefined,
-    }
+    initialData
   );
-  if (isInitial && initialDataRef.current) initialDataRef.current = undefined;
   const prevQuery = usePrevious(query);
   useEffect(() => {
     if (

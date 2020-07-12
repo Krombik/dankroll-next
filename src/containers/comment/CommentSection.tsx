@@ -9,12 +9,12 @@ import Typography from "@material-ui/core/Typography";
 import { FetchRV } from "../../types";
 import Spinner from "../../components/common/Spinner";
 import fetcher from "../../utils/fetcher";
+import { useInitialSWR } from "../../utils/useInitialSWR";
 
 type Props = {
   token: string;
   currentUserName: string;
   initialComments?: FetchRV<CommentsObj>;
-  initialCommentsRef?: MutableRefObject<FetchRV<CommentsObj>>;
   slug: string;
 };
 
@@ -22,17 +22,11 @@ const CommentSection: FC<Props> = ({
   token,
   currentUserName,
   initialComments,
-  initialCommentsRef,
   slug,
 }) => {
-  const { data = initialComments, mutate } = useSWR<FetchRV<CommentsObj>>(
-    [getArticleCommentsUrl(slug), token],
-    fetcher.get,
-    {
-      initialData: initialCommentsRef?.current,
-    }
-  );
-  if (initialCommentsRef?.current) initialCommentsRef.current = undefined;
+  const { data = initialComments, mutate } = useInitialSWR<
+    FetchRV<CommentsObj>
+  >([getArticleCommentsUrl(slug), token], fetcher.get, initialComments);
   const comments = data?.comments;
   if (!comments) return <Spinner />;
   return (
