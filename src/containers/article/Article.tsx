@@ -1,17 +1,12 @@
 import { ArticleObj } from "../../types/article";
 import Grid from "@material-ui/core/Grid";
-import { FC, useEffect, MutableRefObject } from "react";
-import useSWR from "swr";
-import { getArticleUrl, likeArticle } from "../../api/article";
+import { FC, useEffect } from "react";
+import { getArticleUrl } from "../../api/article";
 import ArticleHeader from "./ArticleHeader";
-import Comments from "../comment/Comments";
-import PostComment from "../comment/PostComment";
 import { CommentsObj } from "../../types/comment";
 import GridDivider from "../../components/common/GridDivider";
 import Markdown from "react-markdown";
 import { Link, Divider } from "@material-ui/core";
-import { getArticleCommentsUrl } from "../../api/comment";
-import Typography from "@material-ui/core/Typography";
 import { FetchRV, State, ThunkDispatcher } from "../../types";
 import Spinner from "../../components/common/Spinner";
 import Banner from "../common/Banner";
@@ -19,13 +14,10 @@ import { createSelector } from "reselect";
 import { useSelector, useDispatch } from "react-redux";
 import fetcher from "../../utils/fetcher";
 import ArticleControlButtons from "./ArticleControlButtons";
-import Badge from "@material-ui/core/Badge";
-import { StyledSwitchableIcon } from "../../components/article/styled";
 import { setModal } from "../../redux/modal/actions";
-import BannerButton from "../../components/common/BannerButton";
-import FavoriteTwoToneIcon from "@material-ui/icons/FavoriteTwoTone";
 import CommentSection from "../comment/CommentSection";
 import { useInitialSWR } from "../../utils/useInitialSWR";
+import ArticleLikeButton from "./ArticleLikeButton";
 
 const selectData = createSelector(
   (state: State) => state.common.token,
@@ -44,10 +36,6 @@ const Article: FC<Props> = ({ initialArticle, initialComments, slug }) => {
   const { data: articleData = initialArticle, mutate } = useInitialSWR<
     FetchRV<ArticleObj>
   >([getArticleUrl(slug), token], fetcher.get, initialArticle);
-  const handleLike = async () => {
-    const data = await likeArticle(!article.favorited, slug, token);
-    if (data.article) mutate(data, false);
-  };
   const article = articleData?.article;
   const dispatch = useDispatch<ThunkDispatcher>();
   useEffect(() => {
@@ -71,25 +59,13 @@ const Article: FC<Props> = ({ initialArticle, initialComments, slug }) => {
                   article={article}
                   controlButtons={
                     <>
-                      <BannerButton
-                        tooltip={article.favorited ? "Dislike" : "Like"}
-                        disabled={!currentUserName}
-                        onClick={handleLike}
-                      >
-                        <Badge
-                          badgeContent={article.favoritesCount}
-                          color="primary"
-                          overlap="circle"
-                          showZero
-                        >
-                          <StyledSwitchableIcon
-                            fontSize="inherit"
-                            color="inherit"
-                            active={article.favorited}
-                            Icon={FavoriteTwoToneIcon}
-                          />
-                        </Badge>
-                      </BannerButton>
+                      <ArticleLikeButton
+                        like={article.favorited}
+                        likesCount={article.favoritesCount}
+                        slug={article.slug}
+                        token={token}
+                        mutate={mutate}
+                      />
                       {currentUserName === article.author.username && (
                         <ArticleControlButtons
                           slug={article.slug}
