@@ -1,5 +1,5 @@
 import { ArticlesObj } from "../../types/article";
-import { FC, MouseEvent, useCallback, useMemo } from "react";
+import { FC, MouseEvent, useCallback } from "react";
 import { likeArticle } from "../../api/article";
 import { FetchRV, ThunkDispatcher } from "../../types";
 import { useDispatch } from "react-redux";
@@ -16,21 +16,16 @@ type Props = {
 };
 
 const ArticlePreviewSection: FC<Props> = ({ data, token, mutate }) => {
-  const articles = useMemo(
-    () => (data?.length > 0 ? data.flatMap(({ articles }) => articles) : []),
-    [data]
-  );
-  const handleLike = useCallback(
-    async (liked: boolean, slug: string, index: number) => {
-      const { article } = await likeArticle(!liked, slug, token);
-      if (article) {
-        const newData = cloneDeep(data);
-        newData[Math.floor(index / 20)].articles[index % 20] = article;
-        mutate(newData, false);
-      }
-    },
-    [data]
-  );
+  const articles =
+    data.length > 0 ? data.flatMap(({ articles }) => articles) : [];
+  const handleLike = async (liked: boolean, slug: string, index: number) => {
+    const { article } = await likeArticle(!liked, slug, token);
+    if (article) {
+      const newData = cloneDeep(data);
+      newData[Math.floor(index / 20)].articles[index % 20] = article;
+      mutate(newData, false);
+    }
+  };
   const dispatch = useDispatch<ThunkDispatcher>();
   const handleModal = useCallback((e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
