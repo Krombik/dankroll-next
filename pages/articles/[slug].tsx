@@ -11,6 +11,10 @@ import { ArticleObj } from "../../src/types/article";
 import { CommentsObj } from "../../src/types/comment";
 import { parseCookies } from "nookies";
 import { serverSetAuthorized } from "../../src/redux/common/actions";
+import {
+  setArticlesCountPerPage,
+  serverSetArticlesCountPerPage,
+} from "../../src/redux/articleTabs/actions";
 
 const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
   initialArticle,
@@ -38,8 +42,9 @@ const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
 export const getServerSideProps = wrapper.getServerSideProps(
   async (ctx: ServerSideContext) => {
     const { slug }: any = ctx.query;
-    const { token } = parseCookies(ctx);
+    const { token, itemscount = 20 } = parseCookies(ctx);
     if (token) await ctx.store.dispatch(serverSetAuthorized(token));
+    ctx.store.dispatch(serverSetArticlesCountPerPage(+itemscount));
     const initialArticle = await fetcher.get<FetchRV<ArticleObj>>(
       getArticleUrl(slug),
       token

@@ -11,12 +11,13 @@ type Props = {
   count: number;
   tabKey: string;
   query: any;
+  pathname: string;
 };
 
-const Pagination: FC<Props> = ({ page, count, tabKey, query }) => {
+const Pagination: FC<Props> = ({ page, count, tabKey, query, pathname }) => {
   const dispatch = useDispatch<ThunkDispatcher>();
   const path = (page: number) => ({
-    pathname: "/",
+    pathname,
     query: { ...query, ...(page > 1 ? { page } : {}) },
   });
   const updatePageNumber = (_: any, number: number) => {

@@ -20,7 +20,8 @@ import ArticlePreviewSkeletonSection from "./ArticlePreviewSkeletonSection";
 const selectData = createSelector(
   (state: State) => state.common.token,
   (state: State) => state.modal.open,
-  (token, open) => ({ token, open })
+  (state: State) => state.articleTabs.articlesPerPageCount,
+  (token, open, articlesPerPageCount) => ({ token, open, articlesPerPageCount })
 );
 
 type Props = {
@@ -31,9 +32,10 @@ type Props = {
 
 const ArticleList: FC<Props> = memo(
   ({ initialData, initialTab, emptyType }) => {
-    const { token, open } = useSelector(selectData);
+    const { token, open, articlesPerPageCount } = useSelector(selectData);
     const {
       query: { page, ...query },
+      pathname,
     } = useRouter();
     const { type = emptyType, value = "" }: any = query;
     const isInitial = initialTab.type === type && initialTab.value === value;
@@ -44,7 +46,10 @@ const ArticleList: FC<Props> = memo(
       size,
       mutate,
     } = useInitialSWRInfinity<FetchRV<ArticlesObj>>(
-      (index) => [getArticlesUrl(type, value, startPage + index, 20), token],
+      (index) => [
+        getArticlesUrl(type, value, startPage + index, articlesPerPageCount),
+        token,
+      ],
       fetcher.get,
       initialData
     );
@@ -70,6 +75,7 @@ const ArticleList: FC<Props> = memo(
     const dispatch = useDispatch<ThunkDispatcher>();
     useEffect(() => {
       const handleRouteChange = async () => {
+        console.log(Router);
         const { pathname } = window.location;
         if (pathname.includes("/articles/")) {
           await Router.replace(
@@ -87,16 +93,17 @@ const ArticleList: FC<Props> = memo(
       };
     }, []);
     const articlesCount = data ? data[0]?.articlesCount : 0;
-    const isLoadMoreUnavailable = data?.length * 20 >= articlesCount;
+    const isLoadMoreUnavailable =
+      data?.length * articlesPerPageCount >= articlesCount;
     const isLoading = data?.length === 0 || data?.length !== size;
-    const pageCount = Math.ceil(articlesCount / 20);
+    const pageCount = Math.ceil(articlesCount / articlesPerPageCount);
     return (
       <Grid container spacing={3}>
         {data && (
           <ArticlePreviewSection data={data} token={token} mutate={mutate} />
         )}
         {isLoading ? (
-          <ArticlePreviewSkeletonSection count={20} />
+          <ArticlePreviewSkeletonSection count={articlesPerPageCount} />
         ) : !articlesCount ? (
           "No articles available yet"
         ) : null}
@@ -119,9 +126,10 @@ const ArticleList: FC<Props> = memo(
             <Grid container item justify="center">
               <Pagination
                 page={size + startPage}
+                pathname={pathname}
                 count={pageCount}
                 query={query}
-                tabKey={type + "-" + value}
+                tabKey={type + (value ? "-" + value : "")}
               />
             </Grid>
           </>

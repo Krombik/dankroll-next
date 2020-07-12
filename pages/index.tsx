@@ -5,7 +5,12 @@ import { getArticlesUrl } from "../src/api/article";
 import { NextPage } from "next";
 import AppBar from "@material-ui/core/AppBar";
 import SortableTabs from "../src/containers/tabs/SortableTabs";
-import { serverAddTab, setPageNumber } from "../src/redux/articleTabs/actions";
+import {
+  serverAddTab,
+  setPageNumber,
+  setArticlesCountPerPage,
+  serverSetArticlesCountPerPage,
+} from "../src/redux/articleTabs/actions";
 import DefaultErrorPage from "next/error";
 import Banner from "../src/containers/common/Banner";
 import Grid from "@material-ui/core/Grid";
@@ -53,17 +58,18 @@ const Index: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
 export const getServerSideProps = wrapper.getServerSideProps(
   async (ctx: ServerSideContext) => {
     const { type = "default", value = "", page }: any = ctx.query;
-    const { token } = parseCookies(ctx);
+    const { token, itemscount = 20 } = parseCookies(ctx);
     if (token) await ctx.store.dispatch(serverSetAuthorized(token));
     const initialPage = page && +page > 0 ? +page - 1 : 0;
     const initialTab = { type, value };
     const initialArticles = await fetcher.get<FetchRV<ArticlesObj>>(
-      getArticlesUrl(type, value, initialPage),
+      getArticlesUrl(type, value, initialPage, +itemscount),
       token
     );
     if (type !== "default" && type !== "feed")
       ctx.store.dispatch(serverAddTab(initialTab, initialPage));
     else ctx.store.dispatch(setPageNumber(type, initialPage));
+    ctx.store.dispatch(serverSetArticlesCountPerPage(+itemscount));
     return {
       props: {
         initialArticles,

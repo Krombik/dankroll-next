@@ -3,13 +3,28 @@ import { ActionTypes } from "./type";
 import { TabType } from "../../types/tab";
 
 export const setArticlesCountPerPage = (count: number): ThunkResult => (
+  dispatch,
+  useState
+) => {
+  const { articlePageNumbers } = useState().articleTabs;
+  const newPageNumbers = {};
+  for (const key in articlePageNumbers) newPageNumbers[key] = 1;
+  dispatch({
+    type: ActionTypes.SET_ARTICLES_PER_PAGE_COUNT,
+    payload: {
+      articlePageNumbers: newPageNumbers,
+      articlesPerPageCount: count,
+    },
+  });
+};
+
+export const serverSetArticlesCountPerPage = (count: number): ThunkResult => (
   dispatch
 ) => {
-  if (count <= 100 && count > 0)
-    dispatch({
-      type: ActionTypes.SET_ARTICLES_PER_PAGE_COUNT,
-      payload: count,
-    });
+  dispatch({
+    type: ActionTypes.SERVER_SET_ARTICLES_PER_PAGE_COUNT,
+    payload: count,
+  });
 };
 
 export const addTab = (newTab: TabType): ThunkResult => (

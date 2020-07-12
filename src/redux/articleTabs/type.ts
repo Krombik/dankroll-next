@@ -2,6 +2,7 @@ import { TabType } from "../../types/tab";
 
 export enum ActionTypes {
   SET_ARTICLES_PER_PAGE_COUNT = "SET_ARTICLES_COUNT_PER_PAGE",
+  SERVER_SET_ARTICLES_PER_PAGE_COUNT = "SERVER_SET_ARTICLES_PER_PAGE_COUNT",
   ADD_TAB = "ADD_TAG",
   ADD_TABS = "ADD_TAGS",
   REMOVE_TAB = "REMOVE_TAG",
@@ -11,6 +12,14 @@ export enum ActionTypes {
 
 type SetArticlesPerPageCount = {
   type: ActionTypes.SET_ARTICLES_PER_PAGE_COUNT;
+  payload: {
+    articlePageNumbers: { [key: string]: number };
+    articlesPerPageCount: number;
+  };
+};
+
+type ServerSetArticlesPerPageCount = {
+  type: ActionTypes.SERVER_SET_ARTICLES_PER_PAGE_COUNT;
   payload: number;
 };
 
@@ -41,6 +50,7 @@ type SetPageNumber = {
 
 export type ArticleActions =
   | SetArticlesPerPageCount
+  | ServerSetArticlesPerPageCount
   | AddTab
   | AddTabs
   | RemoveTab

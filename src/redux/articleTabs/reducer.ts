@@ -11,7 +11,7 @@ type State = {
 };
 
 const initialState: State = {
-  articlesPerPageCount: 10,
+  articlesPerPageCount: 20,
   tabList: [],
   tabOrder: [],
   articlePageNumbers: {},
@@ -23,6 +23,11 @@ export default function reducer(
 ): State {
   switch (action.type) {
     case ActionTypes.SET_ARTICLES_PER_PAGE_COUNT:
+      return {
+        ...state,
+        ...action.payload,
+      };
+    case ActionTypes.SERVER_SET_ARTICLES_PER_PAGE_COUNT:
       return {
         ...state,
         articlesPerPageCount: action.payload,

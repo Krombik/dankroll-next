@@ -9,7 +9,11 @@ import Tab from "@material-ui/core/Tab";
 import { getUserUrl } from "../../src/api/user";
 import Grid from "@material-ui/core/Grid";
 import ArticleList from "../../src/containers/article/ArticlesList";
-import { setPageNumber } from "../../src/redux/articleTabs/actions";
+import {
+  setPageNumber,
+  setArticlesCountPerPage,
+  serverSetArticlesCountPerPage,
+} from "../../src/redux/articleTabs/actions";
 import { ArticlesObj } from "../../src/types/article";
 import fetcher from "../../src/utils/fetcher";
 import { UserObj } from "../../src/types/user";
@@ -56,7 +60,7 @@ const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
 export const getServerSideProps = wrapper.getServerSideProps(
   async (ctx: ServerSideContext) => {
     const { value, page: queryPage, type }: any = ctx.query;
-    const { token } = parseCookies(ctx);
+    const { token, itemscount = 20 } = parseCookies(ctx);
     if (token) await ctx.store.dispatch(serverSetAuthorized(token));
     const page = queryPage && +queryPage > 0 ? +queryPage - 1 : 0;
     const initialUser = await fetcher.get<FetchRV<UserObj>>(
@@ -68,10 +72,11 @@ export const getServerSideProps = wrapper.getServerSideProps(
       value,
     };
     const initialArticles = await fetcher.get<FetchRV<ArticlesObj>>(
-      getArticlesUrl(initialTab.type, value, page),
+      getArticlesUrl(initialTab.type, value, page, +itemscount),
       token
     );
     ctx.store.dispatch(setPageNumber(initialTab.type + "-" + value, page));
+    ctx.store.dispatch(serverSetArticlesCountPerPage(+itemscount));
     return {
       props: {
         initialUser,

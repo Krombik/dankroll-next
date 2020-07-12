@@ -3,7 +3,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Switch from "@material-ui/core/Switch";
 import Grid from "@material-ui/core/Grid";
-import { FC, MouseEvent, memo } from "react";
+import { FC, MouseEvent, memo, useCallback } from "react";
 import Container from "@material-ui/core/Container";
 import Tooltip from "@material-ui/core/Tooltip";
 import Link from "@material-ui/core/Link";
@@ -16,22 +16,19 @@ import AuthorizedButtons from "./AuthorizedButtons";
 import NextLink from "next/link";
 import { setModal } from "../../redux/modal/actions";
 import { ModalType } from "../../redux/modal/type";
+import SettingsDial from "./SettingsDial";
 
 const selectData = createSelector(
-  (state: State) => state.common.isDark,
   (state: State) => state.common.currentUserName,
-  (isDark, currentUserName) => ({ isDark, currentUserName })
+  (currentUserName) => ({ currentUserName })
 );
 
 const Header: FC = memo(() => {
   const dispatch = useDispatch<ThunkDispatcher>();
-  const { isDark, currentUserName } = useSelector(selectData);
-  const handleTheme = () => {
-    dispatch(setDark(!isDark));
-  };
-  const openModal = (e: MouseEvent<HTMLButtonElement>) => {
+  const { currentUserName } = useSelector(selectData);
+  const openModal = useCallback((e: MouseEvent<HTMLButtonElement>) => {
     dispatch(setModal(true, e.currentTarget.name as ModalType));
-  };
+  }, []);
   return (
     <AppBar position="static" color="default">
       <Container maxWidth="lg">
@@ -53,15 +50,7 @@ const Header: FC = memo(() => {
               ) : (
                 <UnauthorizedButtons openModal={openModal} />
               )}
-              <Tooltip disableFocusListener title="Switch theme">
-                <span>
-                  <Switch
-                    checked={isDark}
-                    onChange={handleTheme}
-                    color="default"
-                  />
-                </span>
-              </Tooltip>
+              <SettingsDial />
             </div>
           </Grid>
         </Toolbar>
