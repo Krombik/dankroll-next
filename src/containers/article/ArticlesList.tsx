@@ -82,19 +82,17 @@ const ArticleList: FC<Props> = ({
   const articles =
     data?.length > 0 ? data.flatMap(({ articles }) => articles) : [];
   const articlesCount = data ? data[0]?.articlesCount : 0;
-  const handleLike = token
-    ? useCallback(
-        async (liked: boolean, slug: string, index: number) => {
-          const { article } = await likeArticle(!liked, slug, token);
-          if (article) {
-            const newData = cloneDeep(data);
-            newData[Math.floor(index / 20)].articles[index % 20] = article;
-            mutate(newData, false);
-          }
-        },
-        [data]
-      )
-    : null;
+  const handleLike = useCallback(
+    async (liked: boolean, slug: string, index: number) => {
+      const { article } = await likeArticle(!liked, slug, token);
+      if (article) {
+        const newData = cloneDeep(data);
+        newData[Math.floor(index / 20)].articles[index % 20] = article;
+        mutate(newData, false);
+      }
+    },
+    [data]
+  );
   const dispatch = useDispatch<ThunkDispatcher>();
   const handleModal = useCallback((e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
@@ -129,7 +127,7 @@ const ArticleList: FC<Props> = ({
         <ArticlePreview
           key={index}
           article={article}
-          onLike={handleLike}
+          onLike={token ? handleLike : null}
           onModal={handleModal}
           index={index}
         />

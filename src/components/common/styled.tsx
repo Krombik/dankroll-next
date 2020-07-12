@@ -3,7 +3,8 @@ import Modal, { ModalProps } from "@material-ui/core/Modal";
 
 type StyledBannerProps = { backgroundColor: string };
 export interface StyledModalProps extends ModalProps {
-  isArticle?: boolean;
+  article?: boolean;
+  authorization?: boolean;
 }
 
 export const StyledBanner = styled.div<StyledBannerProps>`
@@ -24,15 +25,15 @@ export const StyledBanner = styled.div<StyledBannerProps>`
 `;
 
 export const StyledModal = styled(
-  ({ isArticle, ...props }: StyledModalProps) => <Modal {...props} />
+  ({ article, authorization, ...props }: StyledModalProps) => (
+    <Modal {...props} />
+  )
 )`
   display: flex;
   flex-direction: column;
-  ${({ isArticle }) =>
-    isArticle
-      ? `max-width: 90vw;
-      width: fit-content;`
-      : `width: 90vw; max-width: 1200px;`}
+  width: 90vw;
+  max-width: ${({ article, authorization }) =>
+    authorization ? "600px" : !article ? "1200px" : "auto"};
   margin: auto;
   justify-content: space-between;
   overflow-y: auto;

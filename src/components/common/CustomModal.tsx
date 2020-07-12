@@ -8,14 +8,15 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     paper: {
       backgroundColor: theme.palette.background.default,
-      padding: theme.spacing(3),
+      padding: ({ article }: StyledModalProps) =>
+        article ? theme.spacing(0, 3, 3) : theme.spacing(3),
       overflowX: "hidden",
     },
   })
 );
 
 const CustomModal: FC<StyledModalProps> = ({ children, ...props }) => {
-  const classes = useStyles();
+  const classes = useStyles({ article: props.article });
   return (
     <StyledModal
       disableEnforceFocus

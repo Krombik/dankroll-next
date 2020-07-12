@@ -38,7 +38,12 @@ const Modal: FC = memo(() => {
     dispatch(setModal(true, e.currentTarget.name as ModalType));
   };
   return (
-    <CustomModal open={open} isArticle={isArticle} onClose={closeModal}>
+    <CustomModal
+      open={open}
+      article={isArticle}
+      authorization={modal === "login" || modal === "register"}
+      onClose={closeModal}
+    >
       {isArticle ? (
         <Article slug={slug} />
       ) : modal === "login" ? (
