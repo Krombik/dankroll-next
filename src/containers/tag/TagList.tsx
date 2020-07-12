@@ -7,6 +7,7 @@ import { addTab } from "../../redux/articleTabs/actions";
 import Router from "next/router";
 import { createSelector } from "reselect";
 import { useSelector } from "react-redux";
+import { setModal } from "../../redux/modal/actions";
 
 type Props = {
   tagList: string[];
@@ -20,15 +21,16 @@ const selectData = createSelector(
 const TagList: FC<Props> = ({ tagList }) => {
   const dispatch = useDispatch<ThunkDispatcher>();
   const { articlePageNumbers } = useSelector(selectData);
-  const handleAddTag = (tag: string) => {
+  const handleAddTag = async (value: string) => {
     window.scrollTo({ left: 0, top: 0, behavior: "smooth" });
-    dispatch(addTab({ value: tag, type: "tag" }));
-    const page = articlePageNumbers[`tag-${tag}`];
+    dispatch(addTab({ value, type: "tag" }));
+    const page = articlePageNumbers[`tag-${value}`];
     const path = {
       pathname: "/",
-      query: { tag, ...(page ? { page: page + 1 } : {}) },
+      query: { type: "tag", value, ...(page ? { page: page + 1 } : {}) },
     };
-    Router.push(path, path, { shallow: true });
+    await Router.push(path, path, { shallow: true });
+    dispatch(setModal(false));
   };
   return (
     <StyledTagList>
