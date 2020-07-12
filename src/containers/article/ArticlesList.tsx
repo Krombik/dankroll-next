@@ -1,9 +1,8 @@
 import { ArticlesObj } from "../../types/article";
-import { FC, useEffect, MouseEvent, useCallback } from "react";
+import { FC, useEffect } from "react";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import ArticlePreview from "./ArticlePreview";
-import { getArticlesUrl, likeArticle } from "../../api/article";
+import { getArticlesUrl } from "../../api/article";
 import Pagination from "../common/Pagination";
 import Router, { useRouter } from "next/router";
 import { FetchRV, State, ThunkDispatcher } from "../../types";
@@ -13,10 +12,10 @@ import fetcher from "../../utils/fetcher";
 import usePrevious from "../../utils/usePrevious";
 import useOnUpdateEffect from "../../utils/useOnUpdateEffect";
 import ArticlePreviewSkeleton from "../../components/article/ArticlePreviewSkeleton";
-import cloneDeep from "lodash.clonedeep";
 import { TabType } from "../../types/tab";
 import { setModal } from "../../redux/modal/actions";
 import { useInitialSWRInfinity } from "../../utils/useInitialSWR";
+import ArticlePreviewSection from "./ArticlePreviewSection";
 
 const selectData = createSelector(
   (state: State) => state.common.token,
@@ -61,27 +60,8 @@ const ArticleList: FC<Props> = ({ initialData, initialTab, emptyType }) => {
   useOnUpdateEffect(() => {
     if (!open) mutate();
   }, [open]);
-  const articles =
-    data?.length > 0 ? data.flatMap(({ articles }) => articles) : [];
   const articlesCount = data ? data[0]?.articlesCount : 0;
-  const handleLike = useCallback(
-    async (liked: boolean, slug: string, index: number) => {
-      const { article } = await likeArticle(!liked, slug, token);
-      if (article) {
-        const newData = cloneDeep(data);
-        newData[Math.floor(index / 20)].articles[index % 20] = article;
-        mutate(newData, false);
-      }
-    },
-    [data]
-  );
   const dispatch = useDispatch<ThunkDispatcher>();
-  const handleModal = useCallback((e: MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    const path = e.currentTarget.pathname;
-    dispatch(setModal(true, "article", path.replace("/articles/", "")));
-    window.history.pushState("", "", path);
-  }, []);
   useEffect(() => {
     const handleRouteChange = async () => {
       const { pathname } = window.location;
@@ -100,20 +80,12 @@ const ArticleList: FC<Props> = ({ initialData, initialTab, emptyType }) => {
       window.removeEventListener("popstate", handleRouteChange);
     };
   }, []);
-  const isLoadMoreUnavailable = articles?.length >= articlesCount;
+  const isLoadMoreUnavailable = data?.length * 20 >= articlesCount;
   const isLoading = data?.length === 0 || data?.length !== size;
   const pageCount = Math.ceil(articlesCount / 20);
   return (
     <Grid container spacing={3}>
-      {articles.map((article, index) => (
-        <ArticlePreview
-          key={index}
-          article={article}
-          onLike={token ? handleLike : null}
-          onModal={handleModal}
-          index={index}
-        />
-      ))}
+      <ArticlePreviewSection data={data} token={token} mutate={mutate} />
       {isLoading
         ? Array.from(new Array(10)).map((_, index) => (
             <ArticlePreviewSkeleton key={index} />

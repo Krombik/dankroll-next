@@ -4,10 +4,10 @@ import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import Skeleton from "@material-ui/lab/Skeleton";
 import FavoriteTwoToneIcon from "@material-ui/icons/FavoriteTwoTone";
-import ArticlePreviewComponent from "./ArticlePreviewComponent";
+import ArticlePreview from "./ArticlePreview";
 
 const ArticlePreviewSkeleton: FC = () => (
-  <ArticlePreviewComponent
+  <ArticlePreview
     avatar={
       <Skeleton animation={false} variant="circle">
         <Avatar />

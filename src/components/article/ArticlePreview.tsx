@@ -18,7 +18,7 @@ type Props = {
   onModal?: (e: any) => void;
 };
 
-const ArticlePreviewComponent: FC<Props> = ({
+const ArticlePreview: FC<Props> = ({
   avatar,
   username,
   date,
@@ -60,4 +60,4 @@ const ArticlePreviewComponent: FC<Props> = ({
   </Grid>
 );
 
-export default ArticlePreviewComponent;
+export default ArticlePreview;
