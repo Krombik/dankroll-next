@@ -55,9 +55,6 @@ const ArticleList: FC<Props> = memo(
     useEffect(() => {
       if (size === 1 && data?.length > 1) setSize(data.length);
     }, [type, value]);
-    const ref = useRef(0);
-    ref.current++;
-    console.log(ref.current);
     useEffect(() => {
       if (
         size > 1 &&

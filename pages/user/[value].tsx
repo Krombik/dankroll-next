@@ -1,10 +1,5 @@
 import { wrapper } from "../../src/redux/store";
-import {
-  ServerSideContext,
-  PropsFromServer,
-  State,
-  FetchRV,
-} from "../../src/types";
+import { ServerSideContext, PropsFromServer, FetchRV } from "../../src/types";
 import { getArticlesUrl } from "../../src/api/article";
 import { NextPage } from "next";
 import DefaultErrorPage from "next/error";
@@ -13,13 +8,7 @@ import AppBar from "@material-ui/core/AppBar";
 import Tab from "@material-ui/core/Tab";
 import { getUserUrl } from "../../src/api/user";
 import Grid from "@material-ui/core/Grid";
-import Banner from "../../src/containers/common/Banner";
-import Spinner from "../../src/components/common/Spinner";
-import Avatar from "@material-ui/core/Avatar";
-import Typography from "@material-ui/core/Typography";
 import ArticleList from "../../src/containers/article/ArticlesList";
-import { useSelector } from "react-redux";
-import { createSelector } from "reselect";
 import { setPageNumber } from "../../src/redux/articleTabs/actions";
 import { ArticlesObj } from "../../src/types/article";
 import fetcher from "../../src/utils/fetcher";
@@ -27,15 +16,7 @@ import { UserObj } from "../../src/types/user";
 import { parseCookies } from "nookies";
 import { serverSetAuthorized } from "../../src/redux/common/actions";
 import Tabs from "../../src/containers/tabs/Tabs";
-import UserSubscribeButton from "../../src/containers/user/UserSubscribeButton";
-import UserSettingsButton from "../../src/containers/user/UserSettingsButton";
-import { useInitialSWR } from "../../src/utils/useInitialSWR";
-
-const selectData = createSelector(
-  (state: State) => state.common.token,
-  (state: State) => state.common.currentUserName,
-  (token, currentUserName) => ({ token, currentUserName })
-);
+import UserSection from "../../src/containers/user/UserSection";
 
 const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
   initialUser,
@@ -52,44 +33,9 @@ const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
   const {
     query: { value },
   }: any = useRouter();
-  const { token, currentUserName } = useSelector(selectData);
-  const { data: userData = initialUser, mutate } = useInitialSWR<
-    FetchRV<UserObj>
-  >([getUserUrl(value), token], fetcher.get, initialUser);
-  const user = userData?.profile;
   return (
     <Grid container spacing={3}>
-      {user ? (
-        <Grid item xs={12}>
-          <Banner>
-            <Grid item container justify="center">
-              <Avatar src={user.image} sizes="large">
-                {user.username[0]}
-              </Avatar>
-            </Grid>
-            <Grid item container justify="center">
-              <Typography variant="h2" color="textPrimary">
-                {user.username}
-                {user.username !== currentUserName ? (
-                  <UserSubscribeButton
-                    token={token}
-                    username={user.username}
-                    follow={user.following}
-                    mutate={mutate}
-                  />
-                ) : (
-                  <UserSettingsButton />
-                )}
-              </Typography>
-            </Grid>
-            <Grid item container justify="center">
-              <Typography color="textPrimary">{user.bio}</Typography>
-            </Grid>
-          </Banner>
-        </Grid>
-      ) : (
-        <Spinner />
-      )}
+      <UserSection initialUser={initialUser} username={value} />
       <Grid item xs={12}>
         <AppBar position="static" color="default">
           <Tabs emptyType="author" url="/user/[value]" to={`/user/${value}`}>

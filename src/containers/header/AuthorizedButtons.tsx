@@ -27,7 +27,7 @@ const AuthorizedButtons: FC<Props> = ({ currentUserName, openModal }) => {
       </TooltipIconButton>
       <TooltipIconLink
         tooltip={currentUserName}
-        href="/user/[username]"
+        href="/user/[value]"
         as={`/user/${currentUserName}`}
       >
         <AccountCircleIcon />
