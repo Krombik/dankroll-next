@@ -1,18 +1,19 @@
 import Grid from "@material-ui/core/Grid";
 import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { createSelector } from "reselect";
-import { FC } from "react";
-import { useInitialSWR } from "../../utils/useInitialSWR";
+import { FC, useEffect } from "react";
+import { useRequest } from "../../utils/useRequest";
 import { UserObj } from "../../types/user";
 import fetcher from "../../utils/fetcher";
-import { State, FetchRV } from "../../types";
+import { State, FetchRV, ThunkDispatcher } from "../../types";
 import Spinner from "../../components/common/Spinner";
 import Banner from "../common/Banner";
 import UserSubscribeButton from "./UserSubscribeButton";
 import UserSettingsButton from "./UserSettingsButton";
 import { getUserUrl } from "../../api/user";
+import { setError } from "../../redux/common/actions";
 
 const selectData = createSelector(
   (state: State) => state.common.token,
@@ -27,13 +28,17 @@ type Props = {
 
 const UserSection: FC<Props> = ({ initialUser, username }) => {
   const { token, currentUserName } = useSelector(selectData);
-  const { data = initialUser, mutate } = useInitialSWR<FetchRV<UserObj>>(
+  const { data = initialUser, mutate } = useRequest<UserObj>(
     [getUserUrl(username), token],
-    fetcher.get,
     initialUser
   );
-  const user = data?.profile;
-  if (!user) return <Spinner />;
+  const dispatch = useDispatch<ThunkDispatcher>();
+  useEffect(() => {
+    if (data?.status) dispatch(setError(true, data.status));
+  });
+  if (!data) return <Spinner />;
+  const user = data.profile;
+  if (data.status && !user) return null;
   return (
     <Grid item xs={12}>
       <Banner>

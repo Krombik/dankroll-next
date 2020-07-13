@@ -1,15 +1,15 @@
 import Grid from "@material-ui/core/Grid";
-import { FC, MutableRefObject } from "react";
-import useSWR from "swr";
+import { FC, useEffect } from "react";
 import Comments from "../comment/Comments";
 import PostComment from "../comment/PostComment";
 import { CommentsObj } from "../../types/comment";
 import { getArticleCommentsUrl } from "../../api/comment";
 import Typography from "@material-ui/core/Typography";
-import { FetchRV } from "../../types";
+import { FetchRV, ThunkDispatcher } from "../../types";
 import Spinner from "../../components/common/Spinner";
-import fetcher from "../../utils/fetcher";
-import { useInitialSWR } from "../../utils/useInitialSWR";
+import { useRequest } from "../../utils/useRequest";
+import { useDispatch } from "react-redux";
+import { setError } from "../../redux/common/actions";
 
 type Props = {
   token: string;
@@ -24,11 +24,17 @@ const CommentSection: FC<Props> = ({
   initialComments,
   slug,
 }) => {
-  const { data = initialComments, mutate } = useInitialSWR<
-    FetchRV<CommentsObj>
-  >([getArticleCommentsUrl(slug), token], fetcher.get, initialComments);
-  const comments = data?.comments;
-  if (!comments) return <Spinner />;
+  const { data = initialComments, mutate } = useRequest<CommentsObj>(
+    [getArticleCommentsUrl(slug), token],
+    initialComments
+  );
+  const dispatch = useDispatch<ThunkDispatcher>();
+  useEffect(() => {
+    if (data?.status) dispatch(setError(true, data.status));
+  });
+  if (!data) return <Spinner />;
+  const { comments } = data;
+  if (data.status && !comments) return null;
   return (
     <>
       <Grid item xs={12}>

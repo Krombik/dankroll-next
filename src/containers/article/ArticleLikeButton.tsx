@@ -1,11 +1,13 @@
 import { ArticleObj } from "../../types/article";
 import { FC } from "react";
 import { likeArticle } from "../../api/article";
-import { FetchRV } from "../../types";
+import { FetchRV, ThunkDispatcher } from "../../types";
 import Badge from "@material-ui/core/Badge";
 import { StyledSwitchableIcon } from "../../components/article/styled";
 import BannerButton from "../../components/common/BannerButton";
 import FavoriteTwoToneIcon from "@material-ui/icons/FavoriteTwoTone";
+import { useDispatch } from "react-redux";
+import { setError } from "../../redux/common/actions";
 
 type Props = {
   like: boolean;
@@ -22,9 +24,14 @@ const ArticleLikeButton: FC<Props> = ({
   token,
   slug,
 }) => {
+  const dispatch = useDispatch<ThunkDispatcher>();
   const handleLike = async () => {
     const data = await likeArticle(!like, slug, token);
-    if (data.article) mutate(data, false);
+    if (data.article) {
+      mutate(data, false);
+    } else {
+      dispatch(setError(true, data.status, data.errors));
+    }
   };
   return (
     <BannerButton

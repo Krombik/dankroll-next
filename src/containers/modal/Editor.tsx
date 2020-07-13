@@ -8,9 +8,10 @@ import { ArticleEditorType, ArticleObj } from "../../types/article";
 import { createArticle, updateArticle, getArticleUrl } from "../../api/article";
 import { createSelector } from "reselect";
 import { useSelector, useDispatch } from "react-redux";
-import { State, ThunkDispatcher } from "../../types";
+import { State, ThunkDispatcher, FetchRV } from "../../types";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import { setModal } from "../../redux/modal/actions";
+import { setError } from "../../redux/common/actions";
 
 const selectData = createSelector(
   (state: State) => state.common.token,
@@ -60,7 +61,7 @@ const Editor: FC<Props> = ({ slug }) => {
   };
   const handleArticleEdit = async () => {
     setLoading(true);
-    let data: ArticleObj;
+    let data: FetchRV<ArticleObj>;
     if (slug) {
       const updatedArticle: Partial<ArticleEditorType> = {};
       if (article.title !== initialData.title)
@@ -79,11 +80,13 @@ const Editor: FC<Props> = ({ slug }) => {
     } else {
       data = await createArticle(article, token);
     }
-    setLoading(false);
     if (data.article) {
+      setLoading(false);
       window.history.pushState("", "", `/articles/${data.article.slug}`);
       dispatch(setModal(true, "article", data.article.slug));
       localStorage.removeItem(key);
+    } else {
+      dispatch(setError(true, data.status, data.errors));
     }
   };
   return (

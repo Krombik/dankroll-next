@@ -1,5 +1,5 @@
 import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles";
-const useTheme = (isDark: boolean) =>
+const makeTheme = (isDark: boolean) =>
   responsiveFontSizes(
     createMuiTheme({
       typography: {
@@ -70,4 +70,4 @@ const useTheme = (isDark: boolean) =>
       },
     })
   );
-export default useTheme;
+export default makeTheme;

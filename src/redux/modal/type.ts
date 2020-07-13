@@ -11,9 +11,15 @@ export type ModalType =
   | "settings"
   | "";
 
+export type SetModalPayload = {
+  open: boolean;
+  modal?: ModalType;
+  slug?: string;
+};
+
 type SetModal = {
   type: ActionTypes.SET_MODAL;
-  payload: { open: boolean; modal?: ModalType; slug?: string };
+  payload: SetModalPayload;
 };
 
 export type ModalActions = SetModal;

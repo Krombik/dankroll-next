@@ -2,8 +2,10 @@ import Grid from "@material-ui/core/Grid";
 import { FC, useCallback } from "react";
 import { CommentType, CommentsObj } from "../../types/comment";
 import Comment from "../../components/common/Comment";
-import { FetchRV } from "../../types";
+import { FetchRV, ThunkDispatcher } from "../../types";
 import { deleteArticleComment } from "../../api/comment";
+import { useDispatch } from "react-redux";
+import { setError } from "../../redux/common/actions";
 
 type Props = {
   comments: CommentType[];
@@ -21,10 +23,15 @@ const Comments: FC<Props> = ({
   mutate,
 }) => {
   let loading = false;
+  const dispatch = useDispatch<ThunkDispatcher>();
   const deleteComment = async (id: number) => {
     if (!loading) {
-      await deleteArticleComment(slug, id, token);
-      mutate({ comments: comments.filter((item) => item.id !== id) }, false);
+      const data = await deleteArticleComment(slug, id, token);
+      if (data.status) {
+        dispatch(setError(true, data.status, data.errors));
+      } else {
+        mutate({ comments: comments.filter((item) => item.id !== id) }, false);
+      }
     }
   };
   return (

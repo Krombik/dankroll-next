@@ -1,17 +1,18 @@
 import { ArticleObj } from "../../types/article";
 import Grid from "@material-ui/core/Grid";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { getArticleUrl } from "../../api/article";
 import ArticleHeader from "./ArticleHeader";
 import Markdown from "react-markdown";
 import { Link, Divider } from "@material-ui/core";
-import { FetchRV } from "../../types";
+import { FetchRV, ThunkDispatcher } from "../../types";
 import Spinner from "../../components/common/Spinner";
 import Banner from "../common/Banner";
-import fetcher from "../../utils/fetcher";
 import ArticleControlButtons from "./ArticleControlButtons";
-import { useInitialSWR } from "../../utils/useInitialSWR";
+import { useRequest } from "../../utils/useRequest";
 import ArticleLikeButton from "./ArticleLikeButton";
+import { useDispatch } from "react-redux";
+import { setError } from "../../redux/common/actions";
 
 type Props = {
   initialArticle?: FetchRV<ArticleObj>;
@@ -26,13 +27,17 @@ const ArticleSection: FC<Props> = ({
   token,
   currentUserName,
 }) => {
-  const { data = initialArticle, mutate } = useInitialSWR<FetchRV<ArticleObj>>(
+  const { data = initialArticle, mutate } = useRequest<ArticleObj>(
     [getArticleUrl(slug), token],
-    fetcher.get,
     initialArticle
   );
-  const article = data?.article;
-  if (!article) return <Spinner />;
+  const dispatch = useDispatch<ThunkDispatcher>();
+  useEffect(() => {
+    if (data?.status) dispatch(setError(true, data.status));
+  });
+  if (!data) return <Spinner />;
+  const { article } = data;
+  if (data.status && !article) return null;
   return (
     <>
       <Grid item xs={12}>

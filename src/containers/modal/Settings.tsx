@@ -3,7 +3,7 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import { updateCurrentUser, getCurrentUser } from "../../api/user";
-import { setAuthorized } from "../../redux/common/actions";
+import { setAuthorized, setError } from "../../redux/common/actions";
 import { setCookie } from "nookies";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import { setModal } from "../../redux/modal/actions";
@@ -61,15 +61,17 @@ const Settings: FC = () => {
       updateUser.image = data.user.image;
     if (password.length > 0) updateUser.password = password;
     if (Object.keys(updateUser).length > 0) {
-      const { user } = await updateCurrentUser(updateUser, token);
-      if (user) {
+      const data = await updateCurrentUser(updateUser, token);
+      if (data.user) {
         prevUser.current = null;
-        await Router.replace("/user/[value]", `/user/${user.username}`, {
+        await Router.replace("/user/[value]", `/user/${data.user.username}`, {
           shallow: true,
         });
-        dispatch(setAuthorized(user.token, user.username));
-        setCookie(null, "token", user.token, { path: "/" });
+        dispatch(setAuthorized(data.user.token, data.user.username));
+        setCookie(null, "token", data.user.token, { path: "/" });
         dispatch(setModal(false));
+      } else {
+        dispatch(setError(true, data.status, data.errors));
       }
     }
     setLoading(false);

@@ -8,7 +8,7 @@ export const setArticlesCountPerPage = (count: number): ThunkResult => (
 ) => {
   const { articlePageNumbers } = useState().articleTabs;
   const newPageNumbers = {};
-  for (const key in articlePageNumbers) newPageNumbers[key] = 1;
+  for (const key in articlePageNumbers) newPageNumbers[key] = 0;
   dispatch({
     type: ActionTypes.SET_ARTICLES_PER_PAGE_COUNT,
     payload: {

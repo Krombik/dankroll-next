@@ -1,5 +1,5 @@
 import { wrapper } from "../../src/redux/store";
-import { ServerSideContext, PropsFromServer, FetchRV } from "../../src/types";
+import { ServerSideContext, PropsFromServer } from "../../src/types";
 import { getArticlesUrl } from "../../src/api/article";
 import { NextPage } from "next";
 import DefaultErrorPage from "next/error";
@@ -11,7 +11,6 @@ import Grid from "@material-ui/core/Grid";
 import ArticleList from "../../src/containers/article/ArticlesList";
 import {
   setPageNumber,
-  setArticlesCountPerPage,
   serverSetArticlesCountPerPage,
 } from "../../src/redux/articleTabs/actions";
 import { ArticlesObj } from "../../src/types/article";
@@ -27,13 +26,8 @@ const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
   initialArticles,
   initialTab,
 }) => {
-  if (initialUser && initialUser.error)
-    return (
-      <DefaultErrorPage
-        statusCode={+initialUser.status}
-        title={initialUser.error}
-      />
-    );
+  if (initialUser.status >= 400)
+    return <DefaultErrorPage statusCode={initialUser.status} />;
   const {
     query: { value },
   }: any = useRouter();
@@ -63,15 +57,12 @@ export const getServerSideProps = wrapper.getServerSideProps(
     const { token, itemscount = 20 } = parseCookies(ctx);
     if (token) await ctx.store.dispatch(serverSetAuthorized(token));
     const page = queryPage && +queryPage > 0 ? +queryPage - 1 : 0;
-    const initialUser = await fetcher.get<FetchRV<UserObj>>(
-      getUserUrl(value),
-      token
-    );
+    const initialUser = await fetcher.get<UserObj>(getUserUrl(value), token);
     const initialTab = {
       type: type === "favorited" ? type : "author",
       value,
     };
-    const initialArticles = await fetcher.get<FetchRV<ArticlesObj>>(
+    const initialArticles = await fetcher.get<ArticlesObj>(
       getArticlesUrl(initialTab.type, value, page, +itemscount),
       token
     );

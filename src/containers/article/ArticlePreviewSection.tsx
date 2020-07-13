@@ -1,5 +1,5 @@
 import { ArticlesObj } from "../../types/article";
-import { FC, MouseEvent, useCallback } from "react";
+import { FC, MouseEvent, useCallback, useEffect } from "react";
 import { likeArticle } from "../../api/article";
 import { FetchRV, ThunkDispatcher } from "../../types";
 import { useDispatch } from "react-redux";
@@ -8,6 +8,7 @@ import { setModal } from "../../redux/modal/actions";
 import ArticlePreview from "../../components/article/ArticlePreview";
 import ArticlePreviewLikeButton from "./ArticlePreviewLikeButton";
 import TagList from "../tag/TagList";
+import { setError } from "../../redux/common/actions";
 
 type Props = {
   data: FetchRV<ArticlesObj>[];
@@ -16,17 +17,24 @@ type Props = {
 };
 
 const ArticlePreviewSection: FC<Props> = ({ data, token, mutate }) => {
-  const articles =
-    data.length > 0 ? data.flatMap(({ articles }) => articles) : [];
+  const articles = data
+    .filter((item) => !item.status)
+    .flatMap(({ articles }) => articles);
+  const dispatch = useDispatch<ThunkDispatcher>();
+  useEffect(() => {
+    if (data[data.length - 1].status)
+      dispatch(setError(true, data[data.length - 1].status));
+  });
   const handleLike = async (liked: boolean, slug: string, index: number) => {
-    const { article } = await likeArticle(!liked, slug, token);
-    if (article) {
+    const res = await likeArticle(!liked, slug, token);
+    if (res.article) {
       const newData = cloneDeep(data);
-      newData[Math.floor(index / 20)].articles[index % 20] = article;
+      newData[Math.floor(index / 20)].articles[index % 20] = res.article;
       mutate(newData, false);
+    } else {
+      dispatch(setError(true, res.status, res.errors));
     }
   };
-  const dispatch = useDispatch<ThunkDispatcher>();
   const handleModal = useCallback((e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     const path = e.currentTarget.pathname;

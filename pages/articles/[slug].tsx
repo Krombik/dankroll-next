@@ -11,22 +11,14 @@ import { ArticleObj } from "../../src/types/article";
 import { CommentsObj } from "../../src/types/comment";
 import { parseCookies } from "nookies";
 import { serverSetAuthorized } from "../../src/redux/common/actions";
-import {
-  setArticlesCountPerPage,
-  serverSetArticlesCountPerPage,
-} from "../../src/redux/articleTabs/actions";
+import { serverSetArticlesCountPerPage } from "../../src/redux/articleTabs/actions";
 
 const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
   initialArticle,
   initialComments,
 }) => {
-  if (initialArticle && initialArticle.error)
-    return (
-      <DefaultErrorPage
-        statusCode={+initialArticle.status}
-        title={initialArticle.error}
-      />
-    );
+  if (initialArticle.status >= 400)
+    return <DefaultErrorPage statusCode={initialArticle.status} />;
   const {
     query: { slug },
   }: any = useRouter();

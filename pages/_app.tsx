@@ -3,7 +3,7 @@ import Layout from "../src/components/common/Layout";
 import { StylesProvider, ThemeProvider } from "@material-ui/core/styles";
 import { useEffect, FC, useMemo } from "react";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import useTheme from "../src/utils/theme";
+import makeTheme from "../src/utils/makeTheme";
 import { AppProps } from "next/app";
 import { useSelector, useDispatch } from "react-redux";
 import { createSelector } from "reselect";
@@ -36,7 +36,7 @@ const WrappedApp: FC<AppProps> = ({ Component, pageProps }) => {
   useEffect(() => {
     setToStorage("isDark", isDark);
   }, [isDark]);
-  const theme = useMemo(() => useTheme(isDark), [isDark]);
+  const theme = useMemo(() => makeTheme(isDark), [isDark]);
   return (
     <StylesProvider injectFirst>
       <ThemeProvider theme={theme}>

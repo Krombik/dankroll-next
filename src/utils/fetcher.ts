@@ -1,10 +1,11 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
+import { FetchRV } from "../types";
 
 const fetcher = {
-  async get<T>(url: string, token?: string): Promise<T> {
+  async get<T>(url: string, token?: string): Promise<FetchRV<T>> {
     try {
       return (
-        await axios.get<T>(
+        await axios.get(
           url,
           token
             ? {
@@ -16,13 +17,14 @@ const fetcher = {
         )
       ).data;
     } catch (error) {
-      return error.response.data;
+      const { data, status } = (error as AxiosError).response;
+      return { ...data, status };
     }
   },
-  async delete<T>(url: string, token?: string): Promise<T> {
+  async delete<T>(url: string, token?: string): Promise<FetchRV<T>> {
     try {
       return (
-        await axios.delete<T>(
+        await axios.delete(
           url,
           token
             ? {
@@ -34,42 +36,50 @@ const fetcher = {
         )
       ).data;
     } catch (error) {
-      return error.response.data;
+      const { data, status } = (error as AxiosError).response;
+      return { ...data, status };
     }
   },
-  async post<T>(url: string, data: any, token?: string): Promise<T> {
+  async post<T>(
+    url: string,
+    content: any,
+    token?: string
+  ): Promise<FetchRV<T>> {
     try {
       const config =
-        !!data || !!token
+        !!content || !!token
           ? {
               headers: {
-                ...(data ? { "Content-Type": "application/json" } : {}),
+                ...(content ? { "Content-Type": "application/json" } : {}),
                 ...(token ? { Authorization: `Token ${token}` } : {}),
               },
             }
           : {};
       return (
-        await axios.post<T>(url, data ? JSON.stringify(data) : {}, config)
+        await axios.post(url, content ? JSON.stringify(content) : {}, config)
       ).data;
     } catch (error) {
-      return error.response.data;
+      const { data, status } = (error as AxiosError).response;
+      return { ...data, status };
     }
   },
-  async put<T>(url: string, data: any, token?: string): Promise<T> {
+  async put<T>(url: string, content: any, token?: string): Promise<FetchRV<T>> {
     try {
       const config =
-        !!data || !!token
+        !!content || !!token
           ? {
               headers: {
-                ...(data ? { "Content-Type": "application/json" } : {}),
+                ...(content ? { "Content-Type": "application/json" } : {}),
                 ...(token ? { Authorization: `Token ${token}` } : {}),
               },
             }
           : {};
-      return (await axios.put<T>(url, data ? JSON.stringify(data) : {}, config))
-        .data;
+      return (
+        await axios.put(url, content ? JSON.stringify(content) : {}, config)
+      ).data;
     } catch (error) {
-      return error.response.data;
+      const { data, status } = (error as AxiosError).response;
+      return { ...data, status };
     }
   },
 };

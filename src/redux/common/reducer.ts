@@ -4,12 +4,18 @@ type State = {
   isDark: boolean;
   token: string;
   currentUserName: string;
+  error: boolean;
+  errorText: string;
+  errorStatus: number;
 };
 
 const initialState: State = {
   isDark: true,
   token: "",
   currentUserName: "",
+  error: false,
+  errorText: "",
+  errorStatus: 0,
 };
 
 export default function reducer(
@@ -23,6 +29,11 @@ export default function reducer(
         isDark: action.payload,
       };
     case ActionTypes.SET_AUTHORIZED:
+      return {
+        ...state,
+        ...action.payload,
+      };
+    case ActionTypes.SET_ERROR:
       return {
         ...state,
         ...action.payload,

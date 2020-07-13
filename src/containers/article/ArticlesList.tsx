@@ -1,5 +1,5 @@
 import { ArticlesObj } from "../../types/article";
-import { FC, useEffect, useCallback, useRef, memo } from "react";
+import { FC, useEffect, memo } from "react";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import { getArticlesUrl } from "../../api/article";
@@ -8,14 +8,14 @@ import Router, { useRouter } from "next/router";
 import { FetchRV, State, ThunkDispatcher } from "../../types";
 import { createSelector } from "reselect";
 import { useSelector, useDispatch } from "react-redux";
-import fetcher from "../../utils/fetcher";
 import usePrevious from "../../utils/usePrevious";
 import useOnUpdateEffect from "../../utils/useOnUpdateEffect";
 import { TabType } from "../../types/tab";
 import { setModal } from "../../redux/modal/actions";
-import { useInitialSWRInfinity } from "../../utils/useInitialSWR";
+import { useRequestInfinity } from "../../utils/useRequest";
 import ArticlePreviewSection from "./ArticlePreviewSection";
 import ArticlePreviewSkeletonSection from "./ArticlePreviewSkeletonSection";
+import Typography from "@material-ui/core/Typography";
 
 const selectData = createSelector(
   (state: State) => state.common.token,
@@ -45,12 +45,11 @@ const ArticleList: FC<Props> = memo(
       setSize,
       size,
       mutate,
-    } = useInitialSWRInfinity<FetchRV<ArticlesObj>>(
+    } = useRequestInfinity<ArticlesObj>(
       (index) => [
         getArticlesUrl(type, value, startPage + index, articlesPerPageCount),
         token,
       ],
-      fetcher.get,
       initialData
     );
     const loadMore = () => {
@@ -75,7 +74,6 @@ const ArticleList: FC<Props> = memo(
     const dispatch = useDispatch<ThunkDispatcher>();
     useEffect(() => {
       const handleRouteChange = async () => {
-        console.log(Router);
         const { pathname } = window.location;
         if (pathname.includes("/articles/")) {
           await Router.replace(
@@ -105,7 +103,9 @@ const ArticleList: FC<Props> = memo(
         {isLoading ? (
           <ArticlePreviewSkeletonSection count={articlesPerPageCount} />
         ) : !articlesCount ? (
-          "No articles available yet"
+          <Grid item xs={12}>
+            <Typography align="center">No articles available</Typography>
+          </Grid>
         ) : null}
         {pageCount > 1 && (
           <>

@@ -1,5 +1,5 @@
 import { wrapper } from "../src/redux/store";
-import { ServerSideContext, PropsFromServer, FetchRV } from "../src/types";
+import { ServerSideContext, PropsFromServer } from "../src/types";
 import ArticleList from "../src/containers/article/ArticlesList";
 import { getArticlesUrl } from "../src/api/article";
 import { NextPage } from "next";
@@ -8,7 +8,6 @@ import SortableTabs from "../src/containers/tabs/SortableTabs";
 import {
   serverAddTab,
   setPageNumber,
-  setArticlesCountPerPage,
   serverSetArticlesCountPerPage,
 } from "../src/redux/articleTabs/actions";
 import DefaultErrorPage from "next/error";
@@ -24,13 +23,8 @@ const Index: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
   initialArticles,
   initialTab,
 }) => {
-  if (initialArticles && initialArticles.error)
-    return (
-      <DefaultErrorPage
-        statusCode={+initialArticles.status}
-        title={initialArticles.error}
-      />
-    );
+  if (initialArticles.status >= 400)
+    return <DefaultErrorPage statusCode={initialArticles.status} />;
   return (
     <Grid container spacing={3}>
       <Grid item xs={12}>
@@ -62,7 +56,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
     if (token) await ctx.store.dispatch(serverSetAuthorized(token));
     const initialPage = page && +page > 0 ? +page - 1 : 0;
     const initialTab = { type, value };
-    const initialArticles = await fetcher.get<FetchRV<ArticlesObj>>(
+    const initialArticles = await fetcher.get<ArticlesObj>(
       getArticlesUrl(type, value, initialPage, +itemscount),
       token
     );

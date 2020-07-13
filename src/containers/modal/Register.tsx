@@ -6,7 +6,7 @@ import Link from "@material-ui/core/Link";
 import { registerUser } from "../../api/user";
 import { useDispatch } from "react-redux";
 import { ThunkDispatcher } from "../../types";
-import { setAuthorized } from "../../redux/common/actions";
+import { setAuthorized, setError } from "../../redux/common/actions";
 import { setCookie } from "nookies";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import { setModal } from "../../redux/modal/actions";
@@ -32,13 +32,15 @@ const Register: FC<Props> = ({ openModal }) => {
   }, []);
   const handleRegister = async () => {
     setLoading(true);
-    const { user } = await registerUser(username, email, password);
-    if (user) {
-      dispatch(setAuthorized(user.token, user.username));
-      setCookie(null, "token", user.token, { path: "/" });
+    const data = await registerUser(username, email, password);
+    if (data.user) {
+      dispatch(setAuthorized(data.user.token, data.user.username));
+      setCookie(null, "token", data.user.token, { path: "/" });
+      dispatch(setModal(false));
+    } else {
+      dispatch(setError(true, data.status, data.errors));
     }
     setLoading(false);
-    dispatch(setModal(false));
   };
   return (
     <ValidatorForm onSubmit={handleRegister}>

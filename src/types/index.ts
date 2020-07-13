@@ -9,6 +9,7 @@ import {
   GetServerSidePropsContext,
   GetStaticPropsContext,
 } from "next";
+import { AxiosResponse } from "axios";
 
 type UnPromisify<T> = T extends PromiseLike<infer U> ? U : T;
 
@@ -29,7 +30,8 @@ type ThunkStore = {
 export type ServerSideContext = GetServerSidePropsContext & ThunkStore;
 export type StaticPropsContext = GetStaticPropsContext & ThunkStore;
 
-type Fetcher404Error = { status: string; error: string };
-type FetcherFailError = { errors: { [key: string]: string } };
+export type ErrorsType = { [key: string]: string[] };
 
-export type FetchRV<T> = Partial<T & Fetcher404Error & FetcherFailError>;
+type FetcherFailError = { errors: ErrorsType } & Pick<AxiosResponse, "status">;
+
+export type FetchRV<T> = Partial<T & FetcherFailError>;
