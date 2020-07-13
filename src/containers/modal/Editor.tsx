@@ -90,7 +90,7 @@ const Editor: FC<Props> = ({ slug }) => {
     }
   };
   return (
-    <ValidatorForm onSubmit={handleArticleEdit}>
+    <ValidatorForm onSubmit={handleArticleEdit} autoComplete="off">
       <Grid container justify="center" alignItems="center" spacing={3}>
         <Grid item xs={12}>
           <TextValidator

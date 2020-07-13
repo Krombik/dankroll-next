@@ -1,7 +1,6 @@
 import { FC, memo, useCallback } from "react";
 import Snackbar from "@material-ui/core/Snackbar";
 import Alert from "@material-ui/lab/Alert";
-import AlertTitle from "@material-ui/lab/AlertTitle";
 import { State, ThunkDispatcher } from "../../types";
 import { createSelector } from "reselect";
 import { useSelector, useDispatch } from "react-redux";

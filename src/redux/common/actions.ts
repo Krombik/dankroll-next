@@ -1,5 +1,5 @@
 import { ThunkResult, ErrorsType } from "../../types";
-import { ActionTypes, SetErrorPayload } from "./type";
+import { ActionTypes } from "./type";
 import { getCurrentUser } from "../../api/user";
 
 export const setDark = (isDark: boolean): ThunkResult => (dispatch) => {

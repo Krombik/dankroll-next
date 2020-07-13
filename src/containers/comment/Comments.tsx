@@ -1,5 +1,5 @@
 import Grid from "@material-ui/core/Grid";
-import { FC, useCallback } from "react";
+import { FC } from "react";
 import { CommentType, CommentsObj } from "../../types/comment";
 import Comment from "../../components/common/Comment";
 import { FetchRV, ThunkDispatcher } from "../../types";

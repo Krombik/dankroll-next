@@ -43,7 +43,7 @@ const Register: FC<Props> = ({ openModal }) => {
     setLoading(false);
   };
   return (
-    <ValidatorForm onSubmit={handleRegister}>
+    <ValidatorForm onSubmit={handleRegister} autoComplete="off">
       <Grid container justify="center" alignItems="center" spacing={3}>
         <Grid item xs={12}>
           <Typography align="center" variant="h4">

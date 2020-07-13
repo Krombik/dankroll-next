@@ -98,7 +98,12 @@ const ArticleList: FC<Props> = memo(
     return (
       <Grid container spacing={3}>
         {data && (
-          <ArticlePreviewSection data={data} token={token} mutate={mutate} />
+          <ArticlePreviewSection
+            data={data}
+            token={token}
+            mutate={mutate}
+            articlesPerPageCount={articlesPerPageCount}
+          />
         )}
         {isLoading ? (
           <ArticlePreviewSkeletonSection count={articlesPerPageCount} />

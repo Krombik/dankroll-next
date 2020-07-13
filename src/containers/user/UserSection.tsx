@@ -6,7 +6,6 @@ import { createSelector } from "reselect";
 import { FC, useEffect } from "react";
 import { useRequest } from "../../utils/useRequest";
 import { UserObj } from "../../types/user";
-import fetcher from "../../utils/fetcher";
 import { State, FetchRV, ThunkDispatcher } from "../../types";
 import Spinner from "../../components/common/Spinner";
 import Banner from "../common/Banner";

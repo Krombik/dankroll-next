@@ -4,12 +4,6 @@ export enum ActionTypes {
   SET_ERROR = "SET_ERROR",
 }
 
-export type SetErrorPayload = {
-  error: boolean;
-  errorText?: string;
-  errorStatus?: number;
-};
-
 type SetDark = {
   type: ActionTypes.SET_DARK;
   payload: boolean;
@@ -22,7 +16,11 @@ type SetAuthorized = {
 
 type SetError = {
   type: ActionTypes.SET_ERROR;
-  payload: SetErrorPayload;
+  payload: {
+    error: boolean;
+    errorText?: string;
+    errorStatus?: number;
+  };
 };
 
 export type CommonActions = SetDark | SetAuthorized | SetError;
