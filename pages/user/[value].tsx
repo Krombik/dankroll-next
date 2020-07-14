@@ -26,7 +26,7 @@ const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
   initialArticles,
   initialTab,
 }) => {
-  if (initialUser.status >= 400)
+  if (initialUser.status && !initialUser.profile)
     return <DefaultErrorPage statusCode={initialUser.status} />;
   const {
     query: { value },

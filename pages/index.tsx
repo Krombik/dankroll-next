@@ -23,7 +23,7 @@ const Index: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
   initialArticles,
   initialTab,
 }) => {
-  if (initialArticles.status >= 400)
+  if (initialArticles.status && !initialArticles.articles)
     return <DefaultErrorPage statusCode={initialArticles.status} />;
   return (
     <Grid container spacing={3}>

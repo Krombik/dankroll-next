@@ -17,7 +17,7 @@ const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
   initialArticle,
   initialComments,
 }) => {
-  if (initialArticle.status >= 400)
+  if (initialArticle.status && !initialArticle.article)
     return <DefaultErrorPage statusCode={initialArticle.status} />;
   const {
     query: { slug },
