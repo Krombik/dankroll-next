@@ -4,7 +4,7 @@ import TuneIcon from "@material-ui/icons/Tune";
 import { StyledSettingsDial } from "../../components/header/styled";
 import IconButton from "@material-ui/core/IconButton";
 import SwitchTheme from "./SwitchTheme";
-import ArticlePerPageCountSelect from "./ArticlePerPageCountSelect";
+import OffsetSelect from "./OffsetSelect";
 
 const SettingsDial: FC = () => {
   const [open, setOpen] = useState(false);
@@ -29,7 +29,7 @@ const SettingsDial: FC = () => {
     >
       <SpeedDialAction icon={<SwitchTheme />} tooltipTitle="Switch theme" />
       <SpeedDialAction
-        icon={<ArticlePerPageCountSelect />}
+        icon={<OffsetSelect />}
         tooltipTitle="Articles per page"
       />
     </StyledSettingsDial>

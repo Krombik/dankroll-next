@@ -1,20 +1,18 @@
-import { ActionTypes, ArticleActions } from "./type";
+import { ActionTypes, ArticleActions, TabPagesType } from "./type";
 import { TabType } from "../../types/tab";
 import { moveFromTo } from "../../utils/moveFromTo";
 import { tabKeyDecoder } from "../../utils/tabKeyDecoder";
 
 type State = {
-  articlesPerPageCount: number;
-  tabList: TabType[];
-  tabOrder: string[];
-  articlePageNumbers: { [key: string]: number };
+  offset: number;
+  tabList: string[];
+  tabPages: TabPagesType;
 };
 
 const initialState: State = {
-  articlesPerPageCount: 20,
+  offset: 20,
   tabList: [],
-  tabOrder: [],
-  articlePageNumbers: {},
+  tabPages: {},
 };
 
 export default function reducer(
@@ -22,65 +20,57 @@ export default function reducer(
   action: ArticleActions
 ): State {
   switch (action.type) {
-    case ActionTypes.SET_ARTICLES_PER_PAGE_COUNT:
+    case ActionTypes.SET_OFFSET:
       return {
         ...state,
         ...action.payload,
       };
-    case ActionTypes.SERVER_SET_ARTICLES_PER_PAGE_COUNT:
+    case ActionTypes.SERVER_SET_OFFSET:
       return {
         ...state,
-        articlesPerPageCount: action.payload,
+        offset: action.payload,
       };
     case ActionTypes.ADD_TAB:
       return {
         ...state,
-        tabOrder: [...state.tabOrder, action.payload.key],
-        tabList: [
-          ...state.tabList,
-          { ...action.payload.newTab, key: action.payload.key },
-        ],
-        articlePageNumbers: {
-          ...state.articlePageNumbers,
+        tabList: [...state.tabList, action.payload],
+        tabPages: { ...state.tabPages, [action.payload]: 0 },
+      };
+    case ActionTypes.SERVER_ADD_TAB:
+      return {
+        ...state,
+        tabList: [...state.tabList, action.payload.key],
+        tabPages: {
+          ...state.tabPages,
           [action.payload.key]: action.payload.page,
         },
       };
     case ActionTypes.ADD_TABS:
       return {
         ...state,
-        tabOrder: action.payload,
-        tabList: action.payload.map((key) => ({ ...tabKeyDecoder(key), key })),
-        articlePageNumbers: {
-          ...Object.fromEntries(action.payload.map((key) => [key, 0])),
-          ...state.articlePageNumbers,
-        },
+        tabList: action.payload,
+        tabPages: Object.fromEntries(action.payload.map((item) => [item, 0])),
       };
     case ActionTypes.REMOVE_TAB:
       return {
         ...state,
-        tabList: state.tabList.filter((item) => item.key !== action.payload),
-        tabOrder: state.tabOrder.filter((item) => item !== action.payload),
-        articlePageNumbers: {
-          ...state.articlePageNumbers,
-          [action.payload]: undefined,
-        },
+        tabList: state.tabList.filter((item) => item !== action.payload),
+        tabPages: (({ [action.payload]: _, ...rest }) => rest)(state.tabPages),
       };
     case ActionTypes.MOVE_TAB:
       return {
         ...state,
-        tabOrder: moveFromTo(
-          state.tabOrder,
-          action.payload.from,
-          action.payload.to
-        ),
+        tabList: action.payload,
       };
     case ActionTypes.SET_PAGE_NUMBER:
       return {
         ...state,
-        articlePageNumbers: {
-          ...state.articlePageNumbers,
-          [action.payload.key]: action.payload.page,
-        },
+        tabPages: { ...state.tabPages, ...action.payload },
+      };
+    case ActionTypes.SERVER_SET_PAGE_NUMBERS:
+      return {
+        ...state,
+        tabPages: { ...state.tabPages, ...action.payload },
       };
     default:
       return state;

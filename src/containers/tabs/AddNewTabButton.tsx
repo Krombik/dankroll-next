@@ -4,45 +4,30 @@ import { addTab } from "../../redux/articleTabs/actions";
 import AddIcon from "@material-ui/icons/Add";
 import Grid from "@material-ui/core/Grid";
 import Input from "@material-ui/core/Input";
+import InputAdornment from "@material-ui/core/InputAdornment";
 import { useState, useRef, FC, memo, ChangeEvent, KeyboardEvent } from "react";
 import { StyledAddNewTabButton } from "../../components/tabs/styled";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import Router from "next/router";
+import { TabProps, ButtonProps } from "@material-ui/core";
+import TooltipIconButton from "../../components/common/TooltipIconButton";
+import { ComponentNameToClassKey } from "@material-ui/core/styles/overrides";
+import { CommonProps } from "@material-ui/core/OverridableComponent";
 
-type Props = {
-  value: string;
-  articlesPagesNumber: { [key: string]: number };
-};
-
-const AddNewTabButton: FC<Props> = memo((props) => {
-  const { articlesPagesNumber, ...trueProps } = props;
+const AddNewTabButton: FC<TabProps & { component: string }> = memo((props) => {
   const ref = useRef<HTMLInputElement>(null);
   const [isSearchOpen, setSearchOpen] = useState(false);
   const [newTabName, setNewTabName] = useState("");
   const dispatch = useDispatch<ThunkDispatcher>();
   const addNewTab = () => {
     if (isSearchOpen && newTabName.trim() !== "") {
-      const newTab =
-        newTabName[0] === "#"
-          ? {
-              type: "tag",
-              value: newTabName.slice(1),
-            }
-          : {
-              type: "author",
-              value: newTabName,
-            };
-      dispatch(addTab(newTab));
-      const page = articlesPagesNumber[newTab.type + "-" + newTab.value];
       const path = {
         pathname: "/",
-        query: {
-          ...newTab,
-          ...(page ? { page: page + 1 } : {}),
-        },
+        query: dispatch(addTab("tag-" + newTabName)),
       };
       Router.push(path, path, { shallow: true });
       setSearchOpen(false);
+      setNewTabName("");
     } else ref.current.focus();
   };
   const handleClickAway = () => {
@@ -60,10 +45,10 @@ const AddNewTabButton: FC<Props> = memo((props) => {
   return (
     <StyledAddNewTabButton
       disableRipple={true}
-      {...trueProps}
+      {...props}
       label={
         <ClickAwayListener onClickAway={handleClickAway}>
-          <Grid container spacing={1} alignItems="center" wrap="nowrap">
+          <Grid container alignItems="center" wrap="nowrap">
             <Grid item style={isSearchOpen ? { width: "100%" } : {}}>
               <Input
                 disableUnderline
@@ -72,9 +57,12 @@ const AddNewTabButton: FC<Props> = memo((props) => {
                 value={newTabName}
                 onInput={handleInput}
                 onKeyDown={handleKeyDown}
+                startAdornment="#"
               />
             </Grid>
-            <AddIcon onClick={addNewTab} />
+            <TooltipIconButton onClick={addNewTab} tooltip="Add new tab">
+              <AddIcon />
+            </TooltipIconButton>
           </Grid>
         </ClickAwayListener>
       }

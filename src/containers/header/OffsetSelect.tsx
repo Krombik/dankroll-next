@@ -5,23 +5,23 @@ import { State, ThunkDispatcher } from "../../types";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import { setArticlesCountPerPage } from "../../redux/articleTabs/actions";
+import { setOffset } from "../../redux/articleTabs/actions";
 import Router from "next/router";
 import { setCookie } from "nookies";
 
 const selectData = createSelector(
-  (state: State) => state.articleTabs.articlesPerPageCount,
-  (articlesPerPageCount) => ({ articlesPerPageCount })
+  (state: State) => state.articleTabs.offset,
+  (offset) => ({ offset })
 );
 
-const ArticlePerPageCountSelect: FC = () => {
+const OffsetSelect: FC = () => {
   const dispatch = useDispatch<ThunkDispatcher>();
-  const { articlesPerPageCount } = useSelector(selectData);
+  const { offset } = useSelector(selectData);
   const handleCount = (e: ChangeEvent<HTMLInputElement>) => {
     const count = +e.target.value;
-    if (articlesPerPageCount !== count) {
-      dispatch(setArticlesCountPerPage(count));
-      setCookie(null, "itemscount", String(count), { path: "/" });
+    if (offset !== count) {
+      dispatch(setOffset(count));
+      setCookie(null, "offset", String(count), { path: "/" });
       const { page, ...query } = Router.query;
       if (page)
         Router.replace(
@@ -36,7 +36,7 @@ const ArticlePerPageCountSelect: FC = () => {
       <Select
         labelId="demo-simple-select-outlined-label"
         id="demo-simple-select-outlined"
-        value={articlesPerPageCount}
+        value={offset}
         onChange={handleCount}
         label="Age"
       >
@@ -49,4 +49,4 @@ const ArticlePerPageCountSelect: FC = () => {
   );
 };
 
-export default ArticlePerPageCountSelect;
+export default OffsetSelect;

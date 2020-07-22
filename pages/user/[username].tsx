@@ -11,7 +11,8 @@ import Grid from "@material-ui/core/Grid";
 import ArticleList from "../../src/containers/article/ArticlesList";
 import {
   setPageNumber,
-  serverSetArticlesCountPerPage,
+  serverSetOffset,
+  serverSetPageNumbers,
 } from "../../src/redux/articleTabs/actions";
 import { ArticlesObj } from "../../src/types/article";
 import fetcher from "../../src/utils/fetcher";
@@ -20,6 +21,7 @@ import { parseCookies } from "nookies";
 import { serverSetAuthorized } from "../../src/redux/common/actions";
 import Tabs from "../../src/containers/tabs/Tabs";
 import UserSection from "../../src/containers/user/UserSection";
+import { TabPagesType } from "../../src/redux/articleTabs/type";
 
 const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
   initialUser,
@@ -29,21 +31,22 @@ const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
   if (initialUser.status && !initialUser.profile)
     return <DefaultErrorPage statusCode={initialUser.status} />;
   const {
-    query: { value },
+    query: { username },
   }: any = useRouter();
   return (
     <Grid container spacing={3}>
-      <UserSection initialUser={initialUser} username={value} />
+      <UserSection initialUser={initialUser} username={username} />
       <Grid item xs={12}>
         <AppBar position="static" color="default">
-          <Tabs emptyType="author" url="/user/[value]" to={`/user/${value}`}>
-            <Tab value={`author-${value}`} label="Last articles" />
-            <Tab value={`favorited-${value}`} label="Favorite articles" />
+          <Tabs emptyType="author">
+            <Tab value="author" label="Last articles" />
+            <Tab value="favorited" label="Favorite articles" />
           </Tabs>
         </AppBar>
         <ArticleList
           initialData={initialArticles}
           initialTab={initialTab}
+          valueKey="username"
           emptyType="author"
         />
       </Grid>
@@ -53,21 +56,26 @@ const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
 
 export const getServerSideProps = wrapper.getServerSideProps(
   async (ctx: ServerSideContext) => {
-    const { value, page: queryPage, type }: any = ctx.query;
-    const { token, itemscount = 20 } = parseCookies(ctx);
+    const { username, page, type }: any = ctx.query;
+    const { token, offset = 20 } = parseCookies(ctx);
     if (token) await ctx.store.dispatch(serverSetAuthorized(token));
-    const page = queryPage && +queryPage > 0 ? +queryPage - 1 : 0;
-    const initialUser = await fetcher.get<UserObj>(getUserUrl(value), token);
+    const initialPage = page && +page > 0 ? +page - 1 : 0;
+    const initialUser = await fetcher.get<UserObj>(getUserUrl(username), token);
     const initialTab = {
       type: type === "favorited" ? type : "author",
-      value,
+      value: username,
     };
     const initialArticles = await fetcher.get<ArticlesObj>(
-      getArticlesUrl(initialTab.type, value, page, +itemscount),
+      getArticlesUrl(initialTab.type, username, initialPage, +offset),
       token
     );
-    ctx.store.dispatch(setPageNumber(initialTab.type + "-" + value, page));
-    ctx.store.dispatch(serverSetArticlesCountPerPage(+itemscount));
+    const initialTabs: TabPagesType = {
+      ["author-" + username]: 0,
+      ["favorited-" + username]: 0,
+    };
+    initialTabs[initialTab.type + "-" + username] = initialPage;
+    ctx.store.dispatch(serverSetPageNumbers(initialTabs));
+    ctx.store.dispatch(serverSetOffset(+offset));
     return {
       props: {
         initialUser,

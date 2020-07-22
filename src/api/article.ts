@@ -6,8 +6,8 @@ import { ArticleObj, ArticleEditorType } from "../types/article";
 export const getArticlesUrl = (
   type: string,
   value: string,
-  page = 0,
-  limit = 20
+  page: number,
+  limit: number
 ) =>
   `${SERVER_BASE_URL}/articles${
     type !== "feed"

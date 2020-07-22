@@ -1,5 +1,5 @@
 import { memo, FC, SyntheticEvent } from "react";
-import Tab from "@material-ui/core/Tab";
+import Tab, { TabProps } from "@material-ui/core/Tab";
 import { ThunkDispatcher } from "../../types";
 import { useDispatch } from "react-redux";
 import { removeTab } from "../../redux/articleTabs/actions";
@@ -9,54 +9,49 @@ import Router from "next/router";
 import { tabKeyDecoder } from "../../utils/tabKeyDecoder";
 import Grid from "@material-ui/core/Grid";
 import SortableItem from "../common/SortableItem";
+import { IconButton } from "@material-ui/core";
+import TooltipIconButton from "../../components/common/TooltipIconButton";
+import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
+import { StyledDragIndicator } from "../../components/common/styled";
 
-type Props = {
-  tab: TabType;
-  tabOrder: string[];
-  value: string;
-  articlesPagesNumber: { [key: string]: number };
-};
+interface Props extends TabProps {
+  index: number;
+  onRemove: (e: any) => void;
+}
 
-const RemovableTab: FC<Props> = memo(
-  ({ tab, tabOrder, articlesPagesNumber, ...props }) => {
-    const dispatch = useDispatch<ThunkDispatcher>();
-    const index = tabOrder.findIndex((key) => key === tab.key);
-    const handleRemove = async (e: SyntheticEvent) => {
-      e.stopPropagation();
-      const { type, value } = Router.query;
-      if (tab.value === value && tab.type === type) {
-        const nextTabKey =
-          tabOrder[index + 1] || tabOrder[index - 1] || "default";
-        const page = articlesPagesNumber[nextTabKey];
-        const path =
-          nextTabKey !== "default"
-            ? {
-                pathname: "/",
-                query: {
-                  ...tabKeyDecoder(nextTabKey),
-                  ...(page ? { page: page + 1 } : {}),
-                },
-              }
-            : `/${page > 1 ? "?page=" + page : ""}`;
-        await Router.push(path, path, { shallow: true });
-      }
-      dispatch(removeTab(tab.key));
-    };
-    return (
-      <SortableItem index={index}>
-        <Tab
-          label={
-            <Grid container justify="center" alignContent="center">
-              <Grid item>{(tab.type === "tag" ? "#" : "") + tab.value}</Grid>
-              <CloseIcon onClick={handleRemove} />
+const RemovableTab: FC<Props> = ({ index, onRemove, ...props }) => {
+  console.log("kek");
+  return (
+    <SortableItem index={index}>
+      <Tab
+        label={
+          <Grid container wrap="nowrap" alignItems="center">
+            <Grid item container justify="flex-end">
+              {"#" + props.value.slice(4)}
             </Grid>
-          }
-          style={{ order: index }}
-          {...props}
-        />
-      </SortableItem>
-    );
-  }
-);
+            <Grid
+              item
+              container
+              justify="flex-end"
+              alignItems="center"
+              spacing={3}
+            >
+              <StyledDragIndicator fontSize="inherit" />
+              <TooltipIconButton
+                tooltip="Close tab"
+                value={props.value}
+                onClick={onRemove}
+              >
+                <CloseIcon />
+              </TooltipIconButton>
+            </Grid>
+          </Grid>
+        }
+        component="div"
+        {...props}
+      />
+    </SortableItem>
+  );
+};
 
 export default RemovableTab;

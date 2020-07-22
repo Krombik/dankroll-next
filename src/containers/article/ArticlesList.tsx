@@ -10,7 +10,7 @@ import { createSelector } from "reselect";
 import { useSelector, useDispatch } from "react-redux";
 import usePrevious from "../../utils/usePrevious";
 import useOnUpdateEffect from "../../utils/useOnUpdateEffect";
-import { TabType } from "../../types/tab";
+import { TabQuery } from "../../types/tab";
 import { setModal } from "../../redux/modal/actions";
 import { useRequestInfinity } from "../../utils/useRequest";
 import ArticlePreviewSection from "./ArticlePreviewSection";
@@ -20,24 +20,24 @@ import Typography from "@material-ui/core/Typography";
 const selectData = createSelector(
   (state: State) => state.common.token,
   (state: State) => state.modal.open,
-  (state: State) => state.articleTabs.articlesPerPageCount,
+  (state: State) => state.articleTabs.offset,
   (token, open, articlesPerPageCount) => ({ token, open, articlesPerPageCount })
 );
 
 type Props = {
   initialData: FetchRV<ArticlesObj>;
-  initialTab: TabType;
+  initialTab: TabQuery;
   emptyType: string;
+  valueKey: string;
 };
 
 const ArticleList: FC<Props> = memo(
-  ({ initialData, initialTab, emptyType }) => {
+  ({ initialData, initialTab, emptyType, valueKey }) => {
     const { token, open, articlesPerPageCount } = useSelector(selectData);
     const {
       query: { page, ...query },
-      pathname,
     } = useRouter();
-    const { type = emptyType, value = "" }: any = query;
+    const { type = emptyType, [valueKey]: value }: any = query;
     const isInitial = initialTab.type === type && initialTab.value === value;
     const startPage = page && +page > 0 ? +page - 1 : 0;
     const {
@@ -131,7 +131,6 @@ const ArticleList: FC<Props> = memo(
             <Grid container item justify="center">
               <Pagination
                 page={size + startPage}
-                pathname={pathname}
                 count={pageCount}
                 query={query}
                 tabKey={type + (value ? "-" + value : "")}

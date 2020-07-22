@@ -15,7 +15,7 @@ const TooltipIconLink: FC<Props & IconButtonProps> = ({
   href,
   ...props
 }) => (
-  <Link as={as} href={href} passHref>
+  <Link as={as} href={href}>
     <Tooltip title={tooltip}>
       <IconButton {...{ component: "a" }} color="inherit" {...props} />
     </Tooltip>

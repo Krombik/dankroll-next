@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import Modal, { ModalProps } from "@material-ui/core/Modal";
+import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
 
 type StyledBannerProps = { backgroundColor: string };
 export interface StyledModalProps extends ModalProps {
@@ -37,4 +38,8 @@ export const StyledModal = styled(
   margin: auto;
   justify-content: space-between;
   overflow-y: auto;
+`;
+
+export const StyledDragIndicator = styled(DragIndicatorIcon)`
+  cursor: grab;
 `;

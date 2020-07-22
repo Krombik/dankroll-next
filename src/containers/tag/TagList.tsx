@@ -6,28 +6,18 @@ import { ThunkDispatcher, State } from "../../types";
 import { addTab } from "../../redux/articleTabs/actions";
 import Router from "next/router";
 import { createSelector } from "reselect";
-import { useSelector } from "react-redux";
 import { setModal } from "../../redux/modal/actions";
 
 type Props = {
   tagList: string[];
 };
 
-const selectData = createSelector(
-  (state: State) => state.articleTabs.articlePageNumbers,
-  (articlePageNumbers) => ({ articlePageNumbers })
-);
-
 const TagList: FC<Props> = ({ tagList }) => {
   const dispatch = useDispatch<ThunkDispatcher>();
-  const { articlePageNumbers } = useSelector(selectData);
-  const handleAddTag = async (value: string) => {
-    window.scrollTo({ left: 0, top: 0, behavior: "smooth" });
-    dispatch(addTab({ value, type: "tag" }));
-    const page = articlePageNumbers[`tag-${value}`];
+  const handleAddTab = async (tag: string) => {
     const path = {
       pathname: "/",
-      query: { type: "tag", value, ...(page ? { page: page + 1 } : {}) },
+      query: dispatch(addTab(tag)),
     };
     await Router.push(path, path, { shallow: true });
     dispatch(setModal(false));
@@ -42,7 +32,7 @@ const TagList: FC<Props> = ({ tagList }) => {
           component="li"
           key={index}
           onClick={() => {
-            handleAddTag(tag);
+            handleAddTab(tag);
           }}
         />
       ))}

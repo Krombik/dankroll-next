@@ -5,23 +5,41 @@ import { useDispatch } from "react-redux";
 import { ThunkDispatcher } from "../../types";
 import { setPageNumber } from "../../redux/articleTabs/actions";
 import { FC } from "react";
+import { useRouter } from "next/router";
 
 type Props = {
   page: number;
   count: number;
   tabKey: string;
   query: any;
-  pathname: string;
 };
 
-const Pagination: FC<Props> = ({ page, count, tabKey, query, pathname }) => {
+const Pagination: FC<Props> = ({ page, count, tabKey, query }) => {
   const dispatch = useDispatch<ThunkDispatcher>();
-  const path = (page: number) => ({
-    pathname,
-    query: { ...query, ...(page > 1 ? { page } : {}) },
-  });
-  const updatePageNumber = (_: any, number: number) => {
-    dispatch(setPageNumber(tabKey, number - 1));
+  const { pathname, asPath } = useRouter();
+  const dynamicRouteStartIndex = pathname.indexOf("[") + 1;
+  const dynamicRouteParamName = dynamicRouteStartIndex
+    ? pathname.slice(dynamicRouteStartIndex, pathname.indexOf("]"))
+    : null;
+  const { [dynamicRouteParamName]: _, ...trueQuery } = query;
+  const queryStartIndex = asPath.indexOf("?");
+  const asPathname =
+    queryStartIndex !== -1 ? asPath.slice(0, asPath.indexOf("?")) : asPath;
+  const url = (page: number) => {
+    const query = { ...trueQuery, ...(page > 1 ? { page } : {}) };
+    return {
+      href: {
+        pathname,
+        query,
+      },
+      as: {
+        pathname: asPathname,
+        query,
+      },
+    };
+  };
+  const updatePageNumber = (_: any, page: number) => {
+    dispatch(setPageNumber(tabKey, page - 1));
   };
   return (
     <PaginationContainer
@@ -31,8 +49,8 @@ const Pagination: FC<Props> = ({ page, count, tabKey, query, pathname }) => {
       shape="rounded"
       onChange={updatePageNumber}
       renderItem={(item) => (
-        <Link href={path(item.page)} as={path(item.page)} passHref>
-          <PaginationItem component={"a"} {...item} />
+        <Link {...url(item.page)} shallow passHref>
+          <PaginationItem component="a" {...item} />
         </Link>
       )}
     />

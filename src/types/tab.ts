@@ -3,3 +3,9 @@ export type TabType = {
   type: string;
   key?: string;
 };
+
+export type TabQuery = {
+  type?: string;
+  value?: string;
+  page?: string | number;
+};

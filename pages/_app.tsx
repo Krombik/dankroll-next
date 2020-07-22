@@ -14,12 +14,11 @@ import { setDark } from "../src/redux/common/actions";
 
 const selectData = createSelector(
   (state: State) => state.common.isDark,
-  (state: State) => state.articleTabs.tabOrder,
-  (isDark, tabOrder) => ({ isDark, tabOrder })
+  (isDark) => ({ isDark })
 );
 
 const WrappedApp: FC<AppProps> = ({ Component, pageProps }) => {
-  const { isDark, tabOrder } = useSelector(selectData);
+  const { isDark } = useSelector(selectData);
   const dispatch = useDispatch<ThunkDispatcher>();
   useEffect(() => {
     const jssStyles = document.querySelector("#jss-server-side");
@@ -30,9 +29,6 @@ const WrappedApp: FC<AppProps> = ({ Component, pageProps }) => {
     if (clientTheme === false || clientTheme === true)
       dispatch(setDark(clientTheme));
   }, []);
-  useEffect(() => {
-    setToStorage("tabOrder", tabOrder);
-  }, [tabOrder]);
   useEffect(() => {
     setToStorage("isDark", isDark);
   }, [isDark]);

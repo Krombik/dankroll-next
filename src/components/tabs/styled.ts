@@ -6,6 +6,7 @@ export const StyledAddNewTabButton = styled(Tab)`
   order: 9999;
   .MuiGrid-item {
     width: 0;
+    overflow: hidden;
     transition: 0.3s ease-in-out;
   }
 `;

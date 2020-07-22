@@ -1,72 +1,91 @@
 import { ThunkResult } from "../../types";
-import { ActionTypes } from "./type";
-import { TabType } from "../../types/tab";
+import { ActionTypes, TabPagesType } from "./type";
+import { TabType, TabQuery } from "../../types/tab";
+import { tabKeyDecoder } from "../../utils/tabKeyDecoder";
+import { moveFromTo } from "../../utils/moveFromTo";
+import Router from "next/router";
 
-export const setArticlesCountPerPage = (count: number): ThunkResult => (
+export const setOffset = (offset: number): ThunkResult => (
   dispatch,
-  useState
+  getState
 ) => {
-  const { articlePageNumbers } = useState().articleTabs;
-  const newPageNumbers = {};
-  for (const key in articlePageNumbers) newPageNumbers[key] = 0;
+  const { tabPages: oldTabPages } = getState().articleTabs;
+  const tabPages = {};
+  for (const key in oldTabPages) tabPages[key] = 0;
   dispatch({
-    type: ActionTypes.SET_ARTICLES_PER_PAGE_COUNT,
+    type: ActionTypes.SET_OFFSET,
     payload: {
-      articlePageNumbers: newPageNumbers,
-      articlesPerPageCount: count,
+      tabPages,
+      offset,
     },
   });
 };
 
-export const serverSetArticlesCountPerPage = (count: number): ThunkResult => (
+export const serverSetOffset = (offset: number): ThunkResult => (dispatch) => {
+  dispatch({
+    type: ActionTypes.SERVER_SET_OFFSET,
+    payload: offset,
+  });
+};
+
+export const addTab = (key: string): ThunkResult<TabQuery> => (
+  dispatch,
+  getState
+) => {
+  const { tabList, tabPages } = getState().articleTabs;
+  if (!tabList.some((item) => item === key))
+    dispatch({
+      type: ActionTypes.ADD_TAB,
+      payload: key,
+    });
+  const query: TabQuery = tabKeyDecoder(key);
+  const page = tabPages[key];
+  if (page) query.page = page + 1;
+  return query;
+};
+
+export const serverAddTab = (key: string, page: number): ThunkResult => (
   dispatch
 ) => {
   dispatch({
-    type: ActionTypes.SERVER_SET_ARTICLES_PER_PAGE_COUNT,
-    payload: count,
+    type: ActionTypes.SERVER_ADD_TAB,
+    payload: { key, page },
   });
-};
-
-export const addTab = (newTab: TabType): ThunkResult => (
-  dispatch,
-  useState
-) => {
-  const key = newTab.type + "-" + newTab.value;
-  if (!useState().articleTabs.tabList.some((tab) => tab.key === key)) {
-    dispatch({
-      type: ActionTypes.ADD_TAB,
-      payload: { newTab, key, page: 0 },
-    });
-  }
-};
-
-export const serverAddTab = (
-  newTab: TabType,
-  page: number
-): ThunkResult<string> => (dispatch) => {
-  const key = newTab.type + "-" + newTab.value;
-  dispatch({
-    type: ActionTypes.ADD_TAB,
-    payload: { newTab, key, page },
-  });
-  return key;
 };
 
 export const addTabsFromStorage = (clientOrder: string[]): ThunkResult => (
   dispatch,
   useState
 ) => {
-  const { tabOrder } = useState().articleTabs;
+  const { tabList } = useState().articleTabs;
   dispatch({
     type: ActionTypes.ADD_TABS,
     payload:
-      tabOrder.length > 0 && clientOrder.some((item) => item === tabOrder[0])
+      tabList.length > 0 && clientOrder.includes(tabList[0])
         ? clientOrder
-        : [...clientOrder, ...tabOrder],
+        : [...clientOrder, ...tabList],
   });
 };
 
-export const removeTab = (tab: string): ThunkResult => (dispatch) => {
+export const removeTab = (
+  tab: string,
+  currTab: string,
+  replace: typeof Router.replace
+): ThunkResult<Promise<void>> => async (dispatch, getState) => {
+  if (tab === currTab) {
+    const { tabList, tabPages } = getState().articleTabs;
+    let newOrder = tabList.indexOf(currTab) + 1;
+    if (newOrder === tabList.length) newOrder -= 2;
+    let query: TabQuery = {};
+    if (newOrder >= 0) query = tabKeyDecoder(tabList[newOrder]);
+    const page = tabPages[query.value || "default"];
+    if (page) query.page = page + 1;
+    const url = {
+      pathname: "/",
+      query,
+    };
+    await replace(url, url, { shallow: true });
+  }
   dispatch({
     type: ActionTypes.REMOVE_TAB,
     payload: tab,
@@ -78,15 +97,26 @@ export const setPageNumber = (key: string, page: number): ThunkResult => (
 ) => {
   dispatch({
     type: ActionTypes.SET_PAGE_NUMBER,
-    payload: { key, page },
+    payload: { [key]: page },
+  });
+};
+
+export const serverSetPageNumbers = (payload: TabPagesType): ThunkResult => (
+  dispatch
+) => {
+  dispatch({
+    type: ActionTypes.SERVER_SET_PAGE_NUMBERS,
+    payload,
   });
 };
 
 export const moveTab = (from: number, to: number): ThunkResult => (
-  dispatch
+  dispatch,
+  getState
 ) => {
+  const { tabList } = getState().articleTabs;
   dispatch({
     type: ActionTypes.MOVE_TAB,
-    payload: { from, to },
+    payload: moveFromTo(tabList, from, to),
   });
 };

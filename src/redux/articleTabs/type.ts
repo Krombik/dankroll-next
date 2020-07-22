@@ -1,31 +1,37 @@
 import { TabType } from "../../types/tab";
 
 export enum ActionTypes {
-  SET_ARTICLES_PER_PAGE_COUNT = "SET_ARTICLES_COUNT_PER_PAGE",
-  SERVER_SET_ARTICLES_PER_PAGE_COUNT = "SERVER_SET_ARTICLES_PER_PAGE_COUNT",
-  ADD_TAB = "ADD_TAG",
-  ADD_TABS = "ADD_TAGS",
-  REMOVE_TAB = "REMOVE_TAG",
-  MOVE_TAB = "MVE_TAB",
+  SET_OFFSET = "SET_OFFSET",
+  SERVER_SET_OFFSET = "SERVER_SET_OFFSET",
+  ADD_TAB = "ADD_TAB",
+  SERVER_ADD_TAB = "SERVER_ADD_TAB",
+  ADD_TABS = "ADD_TABS",
+  REMOVE_TAB = "REMOVE_TAB",
+  MOVE_TAB = "MOVE_TAB",
   SET_PAGE_NUMBER = "SET_PAGE_NUMBERS",
+  SERVER_SET_PAGE_NUMBERS = "SERVER_SET_PAGE_NUMBERS",
 }
 
-type SetArticlesPerPageCount = {
-  type: ActionTypes.SET_ARTICLES_PER_PAGE_COUNT;
-  payload: {
-    articlePageNumbers: { [key: string]: number };
-    articlesPerPageCount: number;
-  };
+export type TabPagesType = { [key: string]: number };
+
+type SetOffset = {
+  type: ActionTypes.SET_OFFSET;
+  payload: { offset: number; tabPages: TabPagesType };
 };
 
-type ServerSetArticlesPerPageCount = {
-  type: ActionTypes.SERVER_SET_ARTICLES_PER_PAGE_COUNT;
+type ServerSetOffset = {
+  type: ActionTypes.SERVER_SET_OFFSET;
   payload: number;
 };
 
 type AddTab = {
   type: ActionTypes.ADD_TAB;
-  payload: { newTab: TabType; key: string; page: number };
+  payload: string;
+};
+
+type ServerAddTab = {
+  type: ActionTypes.SERVER_ADD_TAB;
+  payload: { key: string; page: number };
 };
 
 type AddTabs = {
@@ -40,19 +46,26 @@ type RemoveTab = {
 
 type MoveTab = {
   type: ActionTypes.MOVE_TAB;
-  payload: { from: number; to: number };
+  payload: string[];
 };
 
 type SetPageNumber = {
   type: ActionTypes.SET_PAGE_NUMBER;
-  payload: { key: string; page: number };
+  payload: TabPagesType;
+};
+
+type ServerSetPageNumbers = {
+  type: ActionTypes.SERVER_SET_PAGE_NUMBERS;
+  payload: TabPagesType;
 };
 
 export type ArticleActions =
-  | SetArticlesPerPageCount
-  | ServerSetArticlesPerPageCount
+  | SetOffset
+  | ServerSetOffset
   | AddTab
+  | ServerAddTab
   | AddTabs
   | RemoveTab
   | MoveTab
-  | SetPageNumber;
+  | SetPageNumber
+  | ServerSetPageNumbers;
