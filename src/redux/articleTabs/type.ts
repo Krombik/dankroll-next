@@ -1,11 +1,8 @@
-import { TabType } from "../../types/tab";
-
 export enum ActionTypes {
   SET_OFFSET = "SET_OFFSET",
   SERVER_SET_OFFSET = "SERVER_SET_OFFSET",
   ADD_TAB = "ADD_TAB",
   SERVER_ADD_TAB = "SERVER_ADD_TAB",
-  ADD_TABS = "ADD_TABS",
   REMOVE_TAB = "REMOVE_TAB",
   MOVE_TAB = "MOVE_TAB",
   SET_PAGE_NUMBER = "SET_PAGE_NUMBERS",
@@ -34,11 +31,6 @@ type ServerAddTab = {
   payload: { key: string; page: number };
 };
 
-type AddTabs = {
-  type: ActionTypes.ADD_TABS;
-  payload: string[];
-};
-
 type RemoveTab = {
   type: ActionTypes.REMOVE_TAB;
   payload: string;
@@ -64,7 +56,6 @@ export type ArticleActions =
   | ServerSetOffset
   | AddTab
   | ServerAddTab
-  | AddTabs
   | RemoveTab
   | MoveTab
   | SetPageNumber

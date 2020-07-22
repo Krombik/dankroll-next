@@ -12,11 +12,11 @@ import Banner from "../common/Banner";
 import UserSubscribeButton from "./UserSubscribeButton";
 import UserSettingsButton from "./UserSettingsButton";
 import { getUserUrl } from "../../api/user";
-import { setError } from "../../redux/common/actions";
+import { setError } from "../../redux/error/actions";
 
 const selectData = createSelector(
-  (state: State) => state.common.token,
-  (state: State) => state.common.currentUserName,
+  (state: State) => state.authentication.token,
+  (state: State) => state.authentication.currentUserName,
   (token, currentUserName) => ({ token, currentUserName })
 );
 

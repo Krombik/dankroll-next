@@ -5,7 +5,7 @@ import Comment from "../../components/common/Comment";
 import { FetchRV, ThunkDispatcher } from "../../types";
 import { deleteArticleComment } from "../../api/comment";
 import { useDispatch } from "react-redux";
-import { setError } from "../../redux/common/actions";
+import { setError } from "../../redux/error/actions";
 
 type Props = {
   comments: CommentType[];

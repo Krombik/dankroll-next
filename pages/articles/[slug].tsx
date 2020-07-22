@@ -10,7 +10,7 @@ import fetcher from "../../src/utils/fetcher";
 import { ArticleObj } from "../../src/types/article";
 import { CommentsObj } from "../../src/types/comment";
 import { parseCookies } from "nookies";
-import { serverSetAuthorized } from "../../src/redux/common/actions";
+import { serverSetAuthorized } from "../../src/redux/authentication/actions";
 import { serverSetOffset } from "../../src/redux/articleTabs/actions";
 
 const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({

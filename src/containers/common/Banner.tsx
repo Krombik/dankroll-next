@@ -7,22 +7,22 @@ import { createSelector } from "reselect";
 import { State } from "../../types";
 
 const selectData = createSelector(
-  (state: State) => state.common.isDark,
-  (isDark) => ({ isDark })
+  (state: State) => state.common.dark,
+  (dark) => ({ dark })
 );
 
 const Banner: FC = ({ children }) => {
-  const { isDark } = useSelector(selectData);
+  const { dark } = useSelector(selectData);
   const theme = useTheme();
   const invertTheme = useMemo(
     () =>
       createMuiTheme({
         ...theme,
         palette: {
-          type: isDark ? "light" : "dark",
+          type: dark ? "light" : "dark",
         },
       }),
-    [isDark]
+    [dark]
   );
   return (
     <ThemeProvider theme={invertTheme}>

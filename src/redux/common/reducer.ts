@@ -1,21 +1,11 @@
 import { ActionTypes, CommonActions } from "./type";
 
 type State = {
-  isDark: boolean;
-  token: string;
-  currentUserName: string;
-  error: boolean;
-  errorText: string;
-  errorStatus: number;
+  dark: boolean;
 };
 
 const initialState: State = {
-  isDark: true,
-  token: "",
-  currentUserName: "",
-  error: false,
-  errorText: "",
-  errorStatus: 0,
+  dark: true,
 };
 
 export default function reducer(
@@ -26,17 +16,7 @@ export default function reducer(
     case ActionTypes.SET_DARK:
       return {
         ...state,
-        isDark: action.payload,
-      };
-    case ActionTypes.SET_AUTHORIZED:
-      return {
-        ...state,
-        ...action.payload,
-      };
-    case ActionTypes.SET_ERROR:
-      return {
-        ...state,
-        ...action.payload,
+        dark: action.payload,
       };
     default:
       return state;

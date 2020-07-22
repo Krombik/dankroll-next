@@ -7,7 +7,7 @@ import { StyledSwitchableIcon } from "../../components/article/styled";
 import BannerButton from "../../components/common/BannerButton";
 import FavoriteTwoToneIcon from "@material-ui/icons/FavoriteTwoTone";
 import { useDispatch } from "react-redux";
-import { setError } from "../../redux/common/actions";
+import { setError } from "../../redux/error/actions";
 
 type Props = {
   like: boolean;

@@ -3,7 +3,8 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import { updateCurrentUser, getCurrentUser } from "../../api/user";
-import { setAuthorized, setError } from "../../redux/common/actions";
+import { setError } from "../../redux/error/actions";
+import { setAuthorized } from "../../redux/authentication/actions";
 import { setCookie } from "nookies";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import { setModal } from "../../redux/modal/actions";
@@ -19,7 +20,7 @@ import {
 import Router from "next/router";
 
 const selectData = createSelector(
-  (state: State) => state.common.token,
+  (state: State) => state.authentication.token,
   (token) => ({ token })
 );
 

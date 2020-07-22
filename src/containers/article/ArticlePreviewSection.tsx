@@ -8,7 +8,7 @@ import { setModal } from "../../redux/modal/actions";
 import ArticlePreview from "../../components/article/ArticlePreview";
 import ArticlePreviewLikeButton from "./ArticlePreviewLikeButton";
 import TagList from "../tag/TagList";
-import { setError } from "../../redux/common/actions";
+import { setError } from "../../redux/error/actions";
 
 type Props = {
   data: FetchRV<ArticlesObj>[];

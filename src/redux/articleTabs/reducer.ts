@@ -1,7 +1,4 @@
 import { ActionTypes, ArticleActions, TabPagesType } from "./type";
-import { TabType } from "../../types/tab";
-import { moveFromTo } from "../../utils/moveFromTo";
-import { tabKeyDecoder } from "../../utils/tabKeyDecoder";
 
 type State = {
   offset: number;
@@ -44,12 +41,6 @@ export default function reducer(
           ...state.tabPages,
           [action.payload.key]: action.payload.page,
         },
-      };
-    case ActionTypes.ADD_TABS:
-      return {
-        ...state,
-        tabList: action.payload,
-        tabPages: Object.fromEntries(action.payload.map((item) => [item, 0])),
       };
     case ActionTypes.REMOVE_TAB:
       return {

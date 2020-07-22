@@ -7,7 +7,6 @@ import AppBar from "@material-ui/core/AppBar";
 import SortableTabs from "../src/containers/tabs/SortableTabs";
 import {
   serverAddTab,
-  setPageNumber,
   serverSetOffset,
   serverSetPageNumbers,
 } from "../src/redux/articleTabs/actions";
@@ -18,7 +17,7 @@ import Typography from "@material-ui/core/Typography";
 import { ArticlesObj } from "../src/types/article";
 import fetcher from "../src/utils/fetcher";
 import { parseCookies } from "nookies";
-import { serverSetAuthorized } from "../src/redux/common/actions";
+import { serverSetAuthorized } from "../src/redux/authentication/actions";
 import { TabQuery } from "../src/types/tab";
 import { TabPagesType } from "../src/redux/articleTabs/type";
 

@@ -9,7 +9,7 @@ import CardActions from "@material-ui/core/CardActions";
 import { FetchRV, ThunkDispatcher } from "../../types";
 import { createArticleComment } from "../../api/comment";
 import { useDispatch } from "react-redux";
-import { setError } from "../../redux/common/actions";
+import { setError } from "../../redux/error/actions";
 
 type Props = {
   slug: string;

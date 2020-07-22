@@ -18,7 +18,7 @@ import ArticlePreviewSkeletonSection from "./ArticlePreviewSkeletonSection";
 import Typography from "@material-ui/core/Typography";
 
 const selectData = createSelector(
-  (state: State) => state.common.token,
+  (state: State) => state.authentication.token,
   (state: State) => state.modal.open,
   (state: State) => state.articleTabs.offset,
   (token, open, articlesPerPageCount) => ({ token, open, articlesPerPageCount })

@@ -11,10 +11,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { State, ThunkDispatcher, FetchRV } from "../../types";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import { setModal } from "../../redux/modal/actions";
-import { setError } from "../../redux/common/actions";
+import { setError } from "../../redux/error/actions";
 
 const selectData = createSelector(
-  (state: State) => state.common.token,
+  (state: State) => state.authentication.token,
   (token) => ({ token })
 );
 

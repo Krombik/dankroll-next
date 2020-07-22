@@ -12,7 +12,7 @@ import ArticleControlButtons from "./ArticleControlButtons";
 import { useRequest } from "../../utils/useRequest";
 import ArticleLikeButton from "./ArticleLikeButton";
 import { useDispatch } from "react-redux";
-import { setError } from "../../redux/common/actions";
+import { setError } from "../../redux/error/actions";
 
 type Props = {
   initialArticle?: FetchRV<ArticleObj>;

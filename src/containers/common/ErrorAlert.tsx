@@ -4,12 +4,12 @@ import Alert from "@material-ui/lab/Alert";
 import { State, ThunkDispatcher } from "../../types";
 import { createSelector } from "reselect";
 import { useSelector, useDispatch } from "react-redux";
-import { setError } from "../../redux/common/actions";
+import { setError } from "../../redux/error/actions";
 
 const selectData = createSelector(
-  (state: State) => state.common.error,
-  (state: State) => state.common.errorStatus,
-  (state: State) => state.common.errorText,
+  (state: State) => state.error.error,
+  (state: State) => state.error.errorStatus,
+  (state: State) => state.error.errorText,
   (error, errorStatus, errorText) => ({ error, errorStatus, errorText })
 );
 

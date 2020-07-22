@@ -5,42 +5,35 @@ import { useEffect, FC, useMemo } from "react";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import makeTheme from "../src/utils/makeTheme";
 import { AppProps } from "next/app";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { createSelector } from "reselect";
-import { State, ThunkDispatcher } from "../src/types";
-import { getFromStorage, setToStorage } from "../src/utils/storage";
-import { addTabsFromStorage } from "../src/redux/articleTabs/actions";
-import { setDark } from "../src/redux/common/actions";
+import { State } from "../src/types";
+import { useStore } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
 
 const selectData = createSelector(
-  (state: State) => state.common.isDark,
-  (isDark) => ({ isDark })
+  (state: State) => state.common.dark,
+  (dark) => ({ dark })
 );
 
 const WrappedApp: FC<AppProps> = ({ Component, pageProps }) => {
-  const { isDark } = useSelector(selectData);
-  const dispatch = useDispatch<ThunkDispatcher>();
+  const { dark } = useSelector(selectData);
   useEffect(() => {
     const jssStyles = document.querySelector("#jss-server-side");
     if (jssStyles) jssStyles.parentElement.removeChild(jssStyles);
-    const clientOrder = getFromStorage<string[]>("tabOrder");
-    if (clientOrder?.length > 0) dispatch(addTabsFromStorage(clientOrder));
-    const clientTheme = getFromStorage<boolean>("isDark");
-    if (clientTheme === false || clientTheme === true)
-      dispatch(setDark(clientTheme));
   }, []);
-  useEffect(() => {
-    setToStorage("isDark", isDark);
-  }, [isDark]);
-  const theme = useMemo(() => makeTheme(isDark), [isDark]);
+  const theme = useMemo(() => makeTheme(dark), [dark]);
+  const store: any = useStore();
   return (
     <StylesProvider injectFirst>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-      </ThemeProvider>
+      <PersistGate persistor={store.__persistor} loading={<div>Loading</div>}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </ThemeProvider>
+      </PersistGate>
     </StylesProvider>
   );
 };

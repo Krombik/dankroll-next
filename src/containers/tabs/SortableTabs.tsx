@@ -10,11 +10,10 @@ import AddNewTabButton from "./AddNewTabButton";
 import SortableList from "../common/SortableList";
 import Tabs from "./Tabs";
 import Router from "next/router";
-import { TabQuery } from "../../types/tab";
 
 const selectData = createSelector(
   (state: State) => state.articleTabs.tabList,
-  (state: State) => state.common.currentUserName,
+  (state: State) => state.authentication.currentUserName,
   (tabList, currentUserName) => ({
     tabList,
     currentUserName,

@@ -4,15 +4,12 @@ import { addTab } from "../../redux/articleTabs/actions";
 import AddIcon from "@material-ui/icons/Add";
 import Grid from "@material-ui/core/Grid";
 import Input from "@material-ui/core/Input";
-import InputAdornment from "@material-ui/core/InputAdornment";
 import { useState, useRef, FC, memo, ChangeEvent, KeyboardEvent } from "react";
 import { StyledAddNewTabButton } from "../../components/tabs/styled";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import Router from "next/router";
-import { TabProps, ButtonProps } from "@material-ui/core";
+import { TabProps } from "@material-ui/core";
 import TooltipIconButton from "../../components/common/TooltipIconButton";
-import { ComponentNameToClassKey } from "@material-ui/core/styles/overrides";
-import { CommonProps } from "@material-ui/core/OverridableComponent";
 
 const AddNewTabButton: FC<TabProps & { component: string }> = memo((props) => {
   const ref = useRef<HTMLInputElement>(null);

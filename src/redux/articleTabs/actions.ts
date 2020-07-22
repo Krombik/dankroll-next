@@ -1,6 +1,6 @@
 import { ThunkResult } from "../../types";
 import { ActionTypes, TabPagesType } from "./type";
-import { TabType, TabQuery } from "../../types/tab";
+import { TabQuery } from "../../types/tab";
 import { tabKeyDecoder } from "../../utils/tabKeyDecoder";
 import { moveFromTo } from "../../utils/moveFromTo";
 import Router from "next/router";
@@ -50,20 +50,6 @@ export const serverAddTab = (key: string, page: number): ThunkResult => (
   dispatch({
     type: ActionTypes.SERVER_ADD_TAB,
     payload: { key, page },
-  });
-};
-
-export const addTabsFromStorage = (clientOrder: string[]): ThunkResult => (
-  dispatch,
-  useState
-) => {
-  const { tabList } = useState().articleTabs;
-  dispatch({
-    type: ActionTypes.ADD_TABS,
-    payload:
-      tabList.length > 0 && clientOrder.includes(tabList[0])
-        ? clientOrder
-        : [...clientOrder, ...tabList],
   });
 };
 

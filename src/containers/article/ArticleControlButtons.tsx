@@ -7,7 +7,7 @@ import { setModal } from "../../redux/modal/actions";
 import { deleteArticle } from "../../api/article";
 import Router from "next/router";
 import BannerButton from "../../components/common/BannerButton";
-import { setError } from "../../redux/common/actions";
+import { setError } from "../../redux/error/actions";
 
 type Props = {
   slug: string;

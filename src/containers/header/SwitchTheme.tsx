@@ -6,17 +6,17 @@ import { State, ThunkDispatcher } from "../../types";
 import { setDark } from "../../redux/common/actions";
 
 const selectData = createSelector(
-  (state: State) => state.common.isDark,
-  (isDark) => ({ isDark })
+  (state: State) => state.common.dark,
+  (dark) => ({ dark })
 );
 
 const SwitchTheme: FC = () => {
   const dispatch = useDispatch<ThunkDispatcher>();
-  const { isDark } = useSelector(selectData);
+  const { dark } = useSelector(selectData);
   const handleTheme = () => {
-    dispatch(setDark(!isDark));
+    dispatch(setDark(!dark));
   };
-  return <Switch checked={isDark} onChange={handleTheme} color="default" />;
+  return <Switch checked={dark} onChange={handleTheme} color="default" />;
 };
 
 export default SwitchTheme;

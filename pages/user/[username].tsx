@@ -10,7 +10,6 @@ import { getUserUrl } from "../../src/api/user";
 import Grid from "@material-ui/core/Grid";
 import ArticleList from "../../src/containers/article/ArticlesList";
 import {
-  setPageNumber,
   serverSetOffset,
   serverSetPageNumbers,
 } from "../../src/redux/articleTabs/actions";
@@ -18,7 +17,7 @@ import { ArticlesObj } from "../../src/types/article";
 import fetcher from "../../src/utils/fetcher";
 import { UserObj } from "../../src/types/user";
 import { parseCookies } from "nookies";
-import { serverSetAuthorized } from "../../src/redux/common/actions";
+import { serverSetAuthorized } from "../../src/redux/authentication/actions";
 import Tabs from "../../src/containers/tabs/Tabs";
 import UserSection from "../../src/containers/user/UserSection";
 import { TabPagesType } from "../../src/redux/articleTabs/type";

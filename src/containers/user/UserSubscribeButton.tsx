@@ -5,7 +5,7 @@ import { StyledSwitchableIcon } from "../../components/article/styled";
 import { followUser } from "../../api/user";
 import { useDispatch } from "react-redux";
 import { ThunkDispatcher } from "../../types";
-import { setError } from "../../redux/common/actions";
+import { setError } from "../../redux/error/actions";
 
 type Props = {
   username: string;

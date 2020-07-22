@@ -7,5 +7,9 @@ export const getFromStorage = <T = any>(key: string): T => {
 };
 
 export const setToStorage = (key: string, value: any) => {
-  localStorage.setItem(key, JSON.stringify(value));
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch (error) {
+    console.log(error);
+  }
 };
