@@ -1,4 +1,4 @@
-import RemovableTab from "./RemovableTab";
+import RemovableTab from "../../components/tabs/RemovableTab";
 import Tab from "@material-ui/core/Tab";
 import { useSelector } from "react-redux";
 import { createSelector } from "reselect";
@@ -51,7 +51,6 @@ const SortableTabs: FC = memo(() => {
             onRemove={handleRemove}
           />
         ))}
-
         <AddNewTabButton value="add" component="div" />
       </Tabs>
     </SortableList>

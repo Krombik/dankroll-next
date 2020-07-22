@@ -8,8 +8,6 @@ import { AppProps } from "next/app";
 import { useSelector } from "react-redux";
 import { createSelector } from "reselect";
 import { State } from "../src/types";
-import { useStore } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react";
 
 const selectData = createSelector(
   (state: State) => state.common.dark,
@@ -23,17 +21,14 @@ const WrappedApp: FC<AppProps> = ({ Component, pageProps }) => {
     if (jssStyles) jssStyles.parentElement.removeChild(jssStyles);
   }, []);
   const theme = useMemo(() => makeTheme(dark), [dark]);
-  const store: any = useStore();
   return (
     <StylesProvider injectFirst>
-      <PersistGate persistor={store.__persistor} loading={<div>Loading</div>}>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        </ThemeProvider>
-      </PersistGate>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </ThemeProvider>
     </StylesProvider>
   );
 };

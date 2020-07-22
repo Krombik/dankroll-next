@@ -17,6 +17,12 @@ const bindMiddleware = (middleware: Middleware) => {
 const reducer = (state: State, action: Actions) => {
   if (action.type === HYDRATE) {
     delete action.payload.modal;
+    delete action.payload.common;
+    if (
+      action.payload.articleTabs.tabList.length <
+      state.articleTabs.tabList.length
+    )
+      delete action.payload.articleTabs;
     return { ...state, ...action.payload };
   }
   if (action.type === REHYDRATE) {
@@ -36,7 +42,7 @@ const reducer = (state: State, action: Actions) => {
 
 const initStore = () => {
   const store: any = createStore(reducer, bindMiddleware(thunkMiddleware));
-  if (typeof window !== "undefined") store.__persistor = persistStore(store);
+  if (typeof window !== "undefined") persistStore(store);
   return store;
 };
 

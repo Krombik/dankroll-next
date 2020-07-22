@@ -14,15 +14,10 @@ type Props = {
   data: FetchRV<ArticlesObj>[];
   token: string;
   mutate: (data?: FetchRV<ArticlesObj>[], shouldRevalidate?: boolean) => any;
-  articlesPerPageCount: number;
+  offset: number;
 };
 
-const ArticlePreviewSection: FC<Props> = ({
-  data,
-  token,
-  mutate,
-  articlesPerPageCount,
-}) => {
+const ArticlePreviewSection: FC<Props> = ({ data, token, mutate, offset }) => {
   const articles = data
     .filter((item) => !item.status)
     .flatMap(({ articles }) => articles);
@@ -35,9 +30,8 @@ const ArticlePreviewSection: FC<Props> = ({
     const res = await likeArticle(!liked, slug, token);
     if (res.article) {
       const newData = cloneDeep(data);
-      newData[Math.floor(index / articlesPerPageCount)].articles[
-        index % articlesPerPageCount
-      ] = res.article;
+      newData[Math.floor(index / offset)].articles[index % offset] =
+        res.article;
       mutate(newData, false);
     } else {
       dispatch(setError(true, res.status, res.errors));

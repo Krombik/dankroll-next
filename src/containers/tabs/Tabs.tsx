@@ -5,6 +5,7 @@ import { FC, useMemo, memo } from "react";
 import Router, { useRouter } from "next/router";
 import { tabKeyDecoder } from "../../utils/tabKeyDecoder";
 import MuiTabs from "@material-ui/core/Tabs";
+import { TabQuery } from "../../types/tab";
 
 const selectData = createSelector(
   (state: State) => state.articleTabs.tabPages,
@@ -13,25 +14,22 @@ const selectData = createSelector(
 
 type Props = { emptyType: string };
 
-const Tabs: FC<Props> = memo(({ children, emptyType }) => {
+const Tabs: FC<Props> = ({ children, emptyType }) => {
   const { tabPages } = useSelector(selectData);
   const {
     query: { type = emptyType, value },
-    push,
-    pathname,
-    asPath,
   } = useRouter();
   const currTab = type + (value ? "-" + value : "");
-  const handleChange = (_: any, newValue: string) => {
+  const handleChange = async (_: any, newValue: string) => {
     if (newValue !== "add") {
       const newTab = tabKeyDecoder(newValue);
       const page = tabPages[newValue] + 1;
-      const query = {
-        ...(newTab.type !== emptyType ? newTab : {}),
-        ...(page > 1 ? { page } : {}),
-      };
+      let query: TabQuery = {};
+      if (newTab.type !== emptyType) query = newTab;
+      if (page > 1) query.page = page;
+      const { pathname, asPath } = Router;
       const queryStartIndex = asPath.indexOf("?");
-      push(
+      await Router.push(
         { query, pathname },
         {
           query,
@@ -52,6 +50,6 @@ const Tabs: FC<Props> = memo(({ children, emptyType }) => {
       {children}
     </MuiTabs>
   );
-});
+};
 
 export default Tabs;
