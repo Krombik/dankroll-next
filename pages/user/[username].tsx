@@ -20,6 +20,7 @@ import { parseCookies } from "nookies";
 import { serverSetAuthorized } from "../../src/redux/authentication/actions";
 import Tabs from "../../src/containers/tabs/Tabs";
 import UserSection from "../../src/containers/user/UserSection";
+import { TabValues } from "../../src/utils/constant";
 
 const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
   initialUser,
@@ -36,16 +37,16 @@ const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
       <UserSection initialUser={initialUser} username={username} />
       <Grid item xs={12}>
         <AppBar position="static" color="default">
-          <Tabs emptyType="author">
-            <Tab value="author" label="Last articles" />
-            <Tab value="favorited" label="Favorite articles" />
+          <Tabs emptyType={TabValues.AUTHOR}>
+            <Tab value={TabValues.AUTHOR} label="Last articles" />
+            <Tab value={TabValues.FAVORITED} label="Favorite articles" />
           </Tabs>
         </AppBar>
         <ArticleList
           initialData={initialArticles}
           initialTab={initialTab}
           valueKey="username"
-          emptyType="author"
+          emptyType={TabValues.AUTHOR}
         />
       </Grid>
     </Grid>
@@ -56,7 +57,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
   async (ctx: ServerSideContext) => {
     const { username, page, type }: any = ctx.query;
     const { token, offset = 20 } = parseCookies(ctx);
-    if (type && type !== "favorited") {
+    if (type && type !== TabValues.FAVORITED) {
       ctx.res
         .writeHead(301, { Location: `/user/${decodeURIComponent(username)}/` })
         .end();
@@ -66,7 +67,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
     const initialPage = page && +page > 0 ? +page - 1 : 0;
     const initialUser = await fetcher.get<UserObj>(getUserUrl(username), token);
     const initialTab = {
-      type: type || "author",
+      type: type || TabValues.AUTHOR,
       value: username,
     };
     const initialArticles = await fetcher.get<ArticlesObj>(

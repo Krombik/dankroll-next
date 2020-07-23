@@ -4,6 +4,7 @@ import { TabQuery } from "../../types/tab";
 import { tabKeyDecoder } from "../../utils/tabKeyDecoder";
 import { moveFromTo } from "../../utils/moveFromTo";
 import Router from "next/router";
+import { TabValues } from "../../utils/constant";
 
 export const setOffset = (offset: number): ThunkResult => (dispatch) => {
   dispatch({
@@ -49,7 +50,7 @@ export const removeTab = (
     if (newOrder === tabList.length) newOrder -= 2;
     let query: TabQuery = {};
     if (newOrder >= 0) query = tabKeyDecoder(tabList[newOrder]);
-    const page = tabPages[query.value || "default"];
+    const page = tabPages[query.value || TabValues.DEFAULT];
     if (page) query.page = page + 1;
     const url = {
       pathname: "/",

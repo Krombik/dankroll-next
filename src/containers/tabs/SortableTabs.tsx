@@ -10,6 +10,7 @@ import AddNewTabButton from "./AddNewTabButton";
 import SortableList from "../common/SortableList";
 import Tabs from "./Tabs";
 import Router from "next/router";
+import { TabValues } from "../../utils/constant";
 
 const selectData = createSelector(
   (state: State) => state.articleTabs.tabList,
@@ -38,11 +39,11 @@ const SortableTabs: FC = memo(() => {
   );
   return (
     <SortableList axis="x" lockAxis="x" distance={10} onSortEnd={onSortEnd}>
-      <Tabs emptyType="default">
+      <Tabs emptyType={TabValues.DEFAULT}>
         {currentUserName && (
-          <Tab value="feed" label={`${currentUserName}'s feed`} />
+          <Tab value={TabValues.FEED} label={`${currentUserName}'s feed`} />
         )}
-        <Tab value="default" label="Last articles" />
+        <Tab value={TabValues.DEFAULT} label="Last articles" />
         {tabList.map((tab, index) => (
           <RemovableTab
             key={index}
@@ -51,7 +52,7 @@ const SortableTabs: FC = memo(() => {
             onRemove={handleRemove}
           />
         ))}
-        <AddNewTabButton value="add" component="div" />
+        <AddNewTabButton value={TabValues.ADD} component="div" />
       </Tabs>
     </SortableList>
   );

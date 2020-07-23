@@ -1,4 +1,4 @@
-import { SERVER_BASE_URL } from "../utils/constant";
+import { SERVER_BASE_URL, TabValues } from "../utils/constant";
 import { getQuery } from "../utils/getQuery";
 import fetcher from "../utils/fetcher";
 import { ArticleObj, ArticleEditorType } from "../types/article";
@@ -10,8 +10,12 @@ export const getArticlesUrl = (
   limit: number
 ) =>
   `${SERVER_BASE_URL}/articles${
-    type !== "feed"
-      ? `?${type !== "default" ? `${type}=${encodeURIComponent(value)}&` : ""}`
+    type !== TabValues.FEED
+      ? `?${
+          type !== TabValues.DEFAULT
+            ? `${type}=${encodeURIComponent(value)}&`
+            : ""
+        }`
       : "/feed?"
   }${getQuery(limit, page)}`;
 

@@ -1,11 +1,12 @@
 import { useSelector } from "react-redux";
 import { createSelector } from "reselect";
 import { State } from "../../types";
-import { FC, useMemo, memo } from "react";
+import { FC } from "react";
 import Router, { useRouter } from "next/router";
 import { tabKeyDecoder } from "../../utils/tabKeyDecoder";
 import MuiTabs from "@material-ui/core/Tabs";
 import { TabQuery } from "../../types/tab";
+import { TabValues } from "../../utils/constant";
 
 const selectData = createSelector(
   (state: State) => state.articleTabs.tabPages,
@@ -21,7 +22,7 @@ const Tabs: FC<Props> = ({ children, emptyType }) => {
   } = useRouter();
   const currTab = type + (value ? "-" + value : "");
   const handleChange = async (_: any, newValue: string) => {
-    if (newValue !== "add") {
+    if (newValue !== TabValues.ADD) {
       const newTab = tabKeyDecoder(newValue);
       const page = tabPages[newValue];
       let query: TabQuery = {};

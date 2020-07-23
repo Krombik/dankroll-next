@@ -19,6 +19,7 @@ import fetcher from "../src/utils/fetcher";
 import { parseCookies } from "nookies";
 import { serverSetAuthorized } from "../src/redux/authentication/actions";
 import { TabQuery } from "../src/types/tab";
+import { TabValues } from "../src/utils/constant";
 
 const Index: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
   initialArticles,
@@ -44,7 +45,7 @@ const Index: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
         <ArticleList
           initialData={initialArticles}
           initialTab={initialTab}
-          emptyType="default"
+          emptyType={TabValues.DEFAULT}
           valueKey="value"
         />
       </Grid>
@@ -57,13 +58,13 @@ export const getServerSideProps = wrapper.getServerSideProps(
     const { token, offset = 20 } = parseCookies(ctx);
     if (
       initialTab.type &&
-      (initialTab.type !== "tag" || !initialTab.value) &&
-      (initialTab.type !== "feed" || !token)
+      (initialTab.type !== TabValues.TAG || !initialTab.value) &&
+      (initialTab.type !== TabValues.FEED || !token)
     ) {
       ctx.res.writeHead(301, { Location: "/" }).end();
       return null;
     }
-    if (!initialTab.type) initialTab.type = "default";
+    if (!initialTab.type) initialTab.type = TabValues.DEFAULT;
     if (token) await ctx.store.dispatch(serverSetAuthorized(token));
     const initialPage = page && +page > 0 ? +page - 1 : 0;
     const initialArticles = await fetcher.get<ArticlesObj>(
@@ -71,7 +72,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
       token
     );
     let key = initialTab.type;
-    if (initialTab.type === "tag") {
+    if (initialTab.type === TabValues.TAG) {
       key = initialTab.type + "-" + initialTab.value;
       ctx.store.dispatch(addTab(key));
     }
