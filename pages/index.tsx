@@ -19,7 +19,7 @@ import fetcher from "../src/utils/fetcher";
 import { parseCookies } from "nookies";
 import { serverSetAuthorized } from "../src/redux/authentication/actions";
 import { TabQuery } from "../src/types/tab";
-import { TabValues } from "../src/utils/constant";
+import { TabValues, SITE_NAME } from "../src/utils/constant";
 
 const Index: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
   initialArticles,
@@ -33,7 +33,7 @@ const Index: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
         <Banner>
           <Grid item container justify="center">
             <Typography variant="h1" color="textPrimary">
-              Blog-test
+              {SITE_NAME}
             </Typography>
           </Grid>
         </Banner>
@@ -42,13 +42,13 @@ const Index: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
         <AppBar position="static" color="default" component="nav">
           <SortableTabs />
         </AppBar>
-        <ArticleList
-          initialData={initialArticles}
-          initialTab={initialTab}
-          emptyType={TabValues.DEFAULT}
-          valueKey="value"
-        />
       </Grid>
+      <ArticleList
+        initialData={initialArticles}
+        initialTab={initialTab}
+        emptyType={TabValues.DEFAULT}
+        valueKey="value"
+      />
     </Grid>
   );
 };

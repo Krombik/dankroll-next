@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const StyledTagList = styled.ul`
+export const StyledTagList = styled.div`
   padding: 0 8px;
   margin: 0 0 15px;
   position: relative;
@@ -29,7 +29,6 @@ export const StyledTag = styled.div`
   }
   .drag-area {
     padding-left: 2px;
-    cursor: grab;
     font-size: 0.7rem;
     display: inline-flex;
     align-self: center;

@@ -34,7 +34,9 @@ const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
   }: any = useRouter();
   return (
     <Grid container spacing={3}>
-      <UserSection initialUser={initialUser} username={username} />
+      <Grid item xs={12}>
+        <UserSection initialUser={initialUser} username={username} />
+      </Grid>
       <Grid item xs={12}>
         <AppBar position="static" color="default">
           <Tabs emptyType={TabValues.AUTHOR}>
@@ -42,13 +44,13 @@ const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
             <Tab value={TabValues.FAVORITED} label="Favorite articles" />
           </Tabs>
         </AppBar>
-        <ArticleList
-          initialData={initialArticles}
-          initialTab={initialTab}
-          valueKey="username"
-          emptyType={TabValues.AUTHOR}
-        />
       </Grid>
+      <ArticleList
+        initialData={initialArticles}
+        initialTab={initialTab}
+        valueKey="username"
+        emptyType={TabValues.AUTHOR}
+      />
     </Grid>
   );
 };

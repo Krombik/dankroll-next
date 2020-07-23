@@ -10,6 +10,7 @@ import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import Router from "next/router";
 import { TabProps } from "@material-ui/core";
 import TooltipIconButton from "../../components/common/TooltipIconButton";
+import { TabValues } from "../../utils/constant";
 
 const AddNewTabButton: FC<TabProps & { component: string }> = memo((props) => {
   const ref = useRef<HTMLInputElement>(null);
@@ -20,7 +21,7 @@ const AddNewTabButton: FC<TabProps & { component: string }> = memo((props) => {
     if (isSearchOpen && newTabName.trim() !== "") {
       const path = {
         pathname: "/",
-        query: dispatch(addTab("tag-" + newTabName)),
+        query: dispatch(addTab(`${TabValues.TAG}-${newTabName}`)),
       };
       Router.push(path, path, { shallow: true });
       setSearchOpen(false);

@@ -65,6 +65,9 @@ const makeTheme = (isDark: boolean) =>
               "overflow-x": "hidden",
               "max-width": "100vw",
             },
+            ".draggable": {
+              cursor: "grab",
+            },
           },
         },
       },

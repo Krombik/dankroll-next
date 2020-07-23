@@ -19,7 +19,7 @@ const reducer = (state: State, action: Actions) => {
     delete action.payload.modal;
     delete action.payload.common;
     if (
-      action.payload.articleTabs.tabList.length <
+      action.payload.articleTabs?.tabList.length <
       state.articleTabs.tabList.length
     )
       delete action.payload.articleTabs;

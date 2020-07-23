@@ -1,12 +1,12 @@
 import { StyledTagList } from "../../components/tag/styled";
-import { FC } from "react";
+import { FC, SyntheticEvent, useCallback } from "react";
 import Chip from "@material-ui/core/Chip";
 import { useDispatch } from "react-redux";
-import { ThunkDispatcher, State } from "../../types";
+import { ThunkDispatcher } from "../../types";
 import { addTab } from "../../redux/articleTabs/actions";
 import Router from "next/router";
-import { createSelector } from "reselect";
 import { setModal } from "../../redux/modal/actions";
+import { TabValues } from "../../utils/constant";
 
 type Props = {
   tagList: string[];
@@ -14,14 +14,17 @@ type Props = {
 
 const TagList: FC<Props> = ({ tagList }) => {
   const dispatch = useDispatch<ThunkDispatcher>();
-  const handleAddTab = async (tag: string) => {
-    const path = {
-      pathname: "/",
-      query: dispatch(addTab(tag)),
-    };
-    await Router.push(path, path, { shallow: true });
-    dispatch(setModal(false));
-  };
+  const handleAddTab = useCallback(
+    async (e: SyntheticEvent<HTMLButtonElement>) => {
+      const path = {
+        pathname: "/",
+        query: dispatch(addTab(`${TabValues.TAG}-${e.currentTarget.value}`)),
+      };
+      await Router.push(path, path, { shallow: true });
+      dispatch(setModal(false));
+    },
+    []
+  );
   return (
     <StyledTagList>
       {tagList.map((tag, index) => (
@@ -29,11 +32,10 @@ const TagList: FC<Props> = ({ tagList }) => {
           label={"#" + tag}
           variant="outlined"
           size="small"
-          component="li"
+          component="button"
           key={index}
-          onClick={() => {
-            handleAddTab(tag);
-          }}
+          value={tag}
+          onClick={handleAddTab}
         />
       ))}
     </StyledTagList>

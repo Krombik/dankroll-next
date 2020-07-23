@@ -14,6 +14,7 @@ import NextLink from "next/link";
 import { setModal } from "../../redux/modal/actions";
 import { ModalType } from "../../redux/modal/type";
 import SettingsDial from "./SettingsDial";
+import { SITE_NAME } from "../../utils/constant";
 
 const selectData = createSelector(
   (state: State) => state.authentication.currentUserName,
@@ -34,7 +35,7 @@ const Header: FC = memo(() => {
             <Typography variant="h6">
               <NextLink as="/" href="/" passHref>
                 <Link color="inherit" underline="none">
-                  Blog-test
+                  {SITE_NAME}
                 </Link>
               </NextLink>
             </Typography>

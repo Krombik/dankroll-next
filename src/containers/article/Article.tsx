@@ -2,13 +2,13 @@ import { ArticleObj } from "../../types/article";
 import Grid from "@material-ui/core/Grid";
 import { FC, useEffect } from "react";
 import { CommentsObj } from "../../types/comment";
-import GridDivider from "../../components/common/GridDivider";
 import { FetchRV, State, ThunkDispatcher } from "../../types";
 import { createSelector } from "reselect";
 import { useSelector, useDispatch } from "react-redux";
 import { setModal } from "../../redux/modal/actions";
 import CommentSection from "../comment/CommentSection";
 import ArticleSection from "./ArticleSection";
+import { FullWidthDivider } from "../../components/common/styled";
 
 const selectData = createSelector(
   (state: State) => state.authentication.token,
@@ -36,22 +36,22 @@ const Article: FC<Props> = ({ initialArticle, initialComments, slug }) => {
     };
   }, []);
   return (
-    <Grid container justify="center" alignItems="center" spacing={3}>
-      <Grid item container spacing={3}>
-        <ArticleSection
-          initialArticle={initialArticle}
-          slug={slug}
-          token={token}
-          currentUserName={currentUserName}
-        />
-        <GridDivider item xs={12} />
-        <CommentSection
-          initialComments={initialComments}
-          slug={slug}
-          token={token}
-          currentUserName={currentUserName}
-        />
+    <Grid item container spacing={3}>
+      <ArticleSection
+        initialArticle={initialArticle}
+        slug={slug}
+        token={token}
+        currentUserName={currentUserName}
+      />
+      <Grid item xs={12}>
+        <FullWidthDivider />
       </Grid>
+      <CommentSection
+        initialComments={initialComments}
+        slug={slug}
+        token={token}
+        currentUserName={currentUserName}
+      />
     </Grid>
   );
 };

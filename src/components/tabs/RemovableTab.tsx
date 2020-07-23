@@ -4,7 +4,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import Grid from "@material-ui/core/Grid";
 import SortableItem from "../../containers/common/SortableItem";
 import TooltipIconButton from "../common/TooltipIconButton";
-import { StyledDragIndicator } from "../common/styled";
+import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
 
 interface Props extends TabProps {
   index: number;
@@ -26,7 +26,7 @@ const RemovableTab: FC<Props> = memo(({ index, onRemove, ...props }) => (
             alignItems="center"
             spacing={3}
           >
-            <StyledDragIndicator fontSize="inherit" />
+            <DragIndicatorIcon className="draggable" fontSize="inherit" />
             <TooltipIconButton
               tooltip="Close tab"
               value={props.value}

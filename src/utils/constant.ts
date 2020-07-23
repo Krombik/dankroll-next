@@ -8,3 +8,5 @@ export enum TabValues {
   FAVORITED = "favorited",
   TAG = "tag",
 }
+
+export const SITE_NAME = "blog-test";

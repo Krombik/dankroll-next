@@ -36,7 +36,7 @@ const EditableTagList: FC<Props> = ({ tagList, editTags }) => {
   };
   return (
     <SortableList axis="xy" distance={10} onSortEnd={onSortEnd}>
-      <StyledTagList as="div">
+      <StyledTagList>
         {tagList.map((tag, index) => (
           <SortableItem index={index} key={index}>
             <StyledTag>

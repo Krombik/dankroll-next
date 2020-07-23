@@ -96,7 +96,7 @@ const ArticleList: FC<Props> = ({
   const isLoading = data?.length === 0 || data?.length !== size;
   const pageCount = Math.ceil(articlesCount / offset);
   return (
-    <Grid container spacing={3}>
+    <>
       {data && (
         <ArticlePreviewSection
           data={data}
@@ -138,7 +138,7 @@ const ArticleList: FC<Props> = ({
           </Grid>
         </>
       )}
-    </Grid>
+    </>
   );
 };
 export default ArticleList;

@@ -44,7 +44,7 @@ const EditableSpan: FC<TextFieldProps & Props> = ({
       />
       {draggable && (
         <span className="drag-area">
-          <DragIndicatorIcon fontSize="inherit" />
+          <DragIndicatorIcon fontSize="inherit" className="draggable" />
         </span>
       )}
     </>
