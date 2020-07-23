@@ -26,12 +26,8 @@ const reducer = (state: State, action: Actions) => {
     return { ...state, ...action.payload };
   }
   if (action.type === REHYDRATE) {
-    const clientTabList: string[] = (action.payload as any).tabList;
+    const clientTabList: string[] = (action.payload as any)?.tabList;
     if (clientTabList) {
-      (action.payload as any).tabPages = {
-        ...Object.fromEntries(clientTabList.map((key) => [key, 0])),
-        ...state.articleTabs.tabPages,
-      };
       const serverTab = state.articleTabs.tabList[0];
       if (serverTab && !clientTabList.includes(serverTab))
         clientTabList.push(serverTab);

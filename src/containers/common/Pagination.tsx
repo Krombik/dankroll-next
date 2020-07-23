@@ -39,7 +39,7 @@ const Pagination: FC<Props> = ({ page, count, tabKey, query }) => {
     };
   };
   const updatePageNumber = (_: any, page: number) => {
-    dispatch(setPageNumber(tabKey, page - 1));
+    dispatch(setPageNumber({ [tabKey]: page - 1 }));
   };
   return (
     <PaginationContainer

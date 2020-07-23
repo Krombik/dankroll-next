@@ -11,7 +11,7 @@ import Grid from "@material-ui/core/Grid";
 import ArticleList from "../../src/containers/article/ArticlesList";
 import {
   serverSetOffset,
-  serverSetPageNumbers,
+  setPageNumber,
 } from "../../src/redux/articleTabs/actions";
 import { ArticlesObj } from "../../src/types/article";
 import fetcher from "../../src/utils/fetcher";
@@ -20,7 +20,6 @@ import { parseCookies } from "nookies";
 import { serverSetAuthorized } from "../../src/redux/authentication/actions";
 import Tabs from "../../src/containers/tabs/Tabs";
 import UserSection from "../../src/containers/user/UserSection";
-import { TabPagesType } from "../../src/redux/articleTabs/type";
 
 const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
   initialUser,
@@ -57,23 +56,27 @@ export const getServerSideProps = wrapper.getServerSideProps(
   async (ctx: ServerSideContext) => {
     const { username, page, type }: any = ctx.query;
     const { token, offset = 20 } = parseCookies(ctx);
+    if (type && type !== "favorited") {
+      ctx.res
+        .writeHead(301, { Location: `/user/${decodeURIComponent(username)}/` })
+        .end();
+      return null;
+    }
     if (token) await ctx.store.dispatch(serverSetAuthorized(token));
     const initialPage = page && +page > 0 ? +page - 1 : 0;
     const initialUser = await fetcher.get<UserObj>(getUserUrl(username), token);
     const initialTab = {
-      type: type === "favorited" ? type : "author",
+      type: type || "author",
       value: username,
     };
     const initialArticles = await fetcher.get<ArticlesObj>(
       getArticlesUrl(initialTab.type, username, initialPage, +offset),
       token
     );
-    const initialTabs: TabPagesType = {
-      ["author-" + username]: 0,
-      ["favorited-" + username]: 0,
-    };
-    initialTabs[initialTab.type + "-" + username] = initialPage;
-    ctx.store.dispatch(serverSetPageNumbers(initialTabs));
+    if (initialPage)
+      ctx.store.dispatch(
+        setPageNumber({ [initialTab.type + "-" + username]: initialPage })
+      );
     ctx.store.dispatch(serverSetOffset(+offset));
     return {
       props: {

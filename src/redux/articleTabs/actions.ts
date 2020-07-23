@@ -5,17 +5,11 @@ import { tabKeyDecoder } from "../../utils/tabKeyDecoder";
 import { moveFromTo } from "../../utils/moveFromTo";
 import Router from "next/router";
 
-export const setOffset = (offset: number): ThunkResult => (
-  dispatch,
-  getState
-) => {
-  const { tabPages: oldTabPages } = getState().articleTabs;
-  const tabPages = {};
-  for (const key in oldTabPages) tabPages[key] = 0;
+export const setOffset = (offset: number): ThunkResult => (dispatch) => {
   dispatch({
     type: ActionTypes.SET_OFFSET,
     payload: {
-      tabPages,
+      tabPages: {},
       offset,
     },
   });
@@ -44,15 +38,6 @@ export const addTab = (key: string): ThunkResult<TabQuery> => (
   return query;
 };
 
-export const serverAddTab = (key: string, page: number): ThunkResult => (
-  dispatch
-) => {
-  dispatch({
-    type: ActionTypes.SERVER_ADD_TAB,
-    payload: { key, page },
-  });
-};
-
 export const removeTab = (
   tab: string,
   currTab: string,
@@ -78,20 +63,11 @@ export const removeTab = (
   });
 };
 
-export const setPageNumber = (key: string, page: number): ThunkResult => (
+export const setPageNumber = (payload: TabPagesType): ThunkResult => (
   dispatch
 ) => {
   dispatch({
     type: ActionTypes.SET_PAGE_NUMBER,
-    payload: { [key]: page },
-  });
-};
-
-export const serverSetPageNumbers = (payload: TabPagesType): ThunkResult => (
-  dispatch
-) => {
-  dispatch({
-    type: ActionTypes.SERVER_SET_PAGE_NUMBERS,
     payload,
   });
 };

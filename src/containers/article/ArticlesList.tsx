@@ -37,7 +37,6 @@ const ArticleList: FC<Props> = ({
   emptyType,
   valueKey,
 }) => {
-  console.log("kek");
   const { token, open, offset } = useSelector(selectData);
   const {
     query: { page, ...query },

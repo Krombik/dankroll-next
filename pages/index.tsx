@@ -6,9 +6,9 @@ import { NextPage } from "next";
 import AppBar from "@material-ui/core/AppBar";
 import SortableTabs from "../src/containers/tabs/SortableTabs";
 import {
-  serverAddTab,
   serverSetOffset,
-  serverSetPageNumbers,
+  setPageNumber,
+  addTab,
 } from "../src/redux/articleTabs/actions";
 import DefaultErrorPage from "next/error";
 import Banner from "../src/containers/common/Banner";
@@ -19,7 +19,6 @@ import fetcher from "../src/utils/fetcher";
 import { parseCookies } from "nookies";
 import { serverSetAuthorized } from "../src/redux/authentication/actions";
 import { TabQuery } from "../src/types/tab";
-import { TabPagesType } from "../src/redux/articleTabs/type";
 
 const Index: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
   initialArticles,
@@ -39,7 +38,7 @@ const Index: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
         </Banner>
       </Grid>
       <Grid item xs={12}>
-        <AppBar position="static" color="default">
+        <AppBar position="static" color="default" component="nav">
           <SortableTabs />
         </AppBar>
         <ArticleList
@@ -55,26 +54,29 @@ const Index: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
 export const getServerSideProps = wrapper.getServerSideProps(
   async (ctx: ServerSideContext) => {
     const { page, ...initialTab }: TabQuery = ctx.query;
-    const { type, value } = initialTab;
     const { token, offset = 20 } = parseCookies(ctx);
+    if (
+      initialTab.type &&
+      (initialTab.type !== "tag" || !initialTab.value) &&
+      (initialTab.type !== "feed" || !token)
+    ) {
+      ctx.res.writeHead(301, { Location: "/" }).end();
+      return null;
+    }
+    if (!initialTab.type) initialTab.type = "default";
     if (token) await ctx.store.dispatch(serverSetAuthorized(token));
     const initialPage = page && +page > 0 ? +page - 1 : 0;
     const initialArticles = await fetcher.get<ArticlesObj>(
-      getArticlesUrl(type, value, initialPage, +offset),
+      getArticlesUrl(initialTab.type, initialTab.value, initialPage, +offset),
       token
     );
-    const defaultTabs: TabPagesType = {
-      default: 0,
-    };
-    if (token) defaultTabs.feed = 0;
-    if (type === "tag" && value)
-      ctx.store.dispatch(serverAddTab(type + "-" + value, initialPage));
-    else if (type === "feed" && token) defaultTabs.feed = initialPage;
-    else defaultTabs.default = initialPage;
-    ctx.store.dispatch(serverSetPageNumbers(defaultTabs));
+    let key = initialTab.type;
+    if (initialTab.type === "tag") {
+      key = initialTab.type + "-" + initialTab.value;
+      ctx.store.dispatch(addTab(key));
+    }
+    if (initialPage) ctx.store.dispatch(setPageNumber({ [key]: initialPage }));
     ctx.store.dispatch(serverSetOffset(+offset));
-    if (type !== "tag" && (!token || type !== "feed"))
-      initialTab.type = "default";
     return {
       props: {
         initialArticles,

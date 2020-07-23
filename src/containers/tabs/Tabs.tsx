@@ -23,10 +23,10 @@ const Tabs: FC<Props> = ({ children, emptyType }) => {
   const handleChange = async (_: any, newValue: string) => {
     if (newValue !== "add") {
       const newTab = tabKeyDecoder(newValue);
-      const page = tabPages[newValue] + 1;
+      const page = tabPages[newValue];
       let query: TabQuery = {};
       if (newTab.type !== emptyType) query = newTab;
-      if (page > 1) query.page = page;
+      if (page) query.page = page + 1;
       const { pathname, asPath } = Router;
       const queryStartIndex = asPath.indexOf("?");
       await Router.push(
