@@ -45,12 +45,10 @@ The example application is a social blogging site. It uses a custom API for all 
   - ErrorAlert component
 - Home page (URL: /)
   - Tabs with list of articles
-    - Feed of current user (available only for authorized user)
+    - Feed of current user (only shown to authorized user)
     - Global (last articles)
     - Tabs opened by user, can be closed and dragged (stored in localstorage)
-    - Add new tab button
-      - By tag (starts from #)
-      - By user
+    - Add new tab (by tag) button
   - List of articles preview by current tab, every item contains:
     - Author avatar (link to author profile)
     - Author username (link to author profile)
