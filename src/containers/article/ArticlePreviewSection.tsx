@@ -23,8 +23,8 @@ const ArticlePreviewSection: FC<Props> = ({ data, token, mutate, offset }) => {
     .flatMap(({ articles }) => articles) as ArticleType[];
   const dispatch = useDispatch<ThunkDispatcher>();
   useEffect(() => {
-    if (data[data.length - 1].status)
-      dispatch(setError(true, data[data.length - 1].status));
+    const lastData = data[data.length - 1];
+    if (lastData.status) dispatch(setError(true, lastData));
   });
   const handleLike = async (liked: boolean, slug: string, index: number) => {
     const res = await likeArticle(!liked, slug, token);
@@ -34,7 +34,7 @@ const ArticlePreviewSection: FC<Props> = ({ data, token, mutate, offset }) => {
         res.article;
       mutate(newData, false);
     } else {
-      dispatch(setError(true, res.status, res.errors));
+      dispatch(setError(true, res));
     }
   };
   const handleModal = useCallback((e: MouseEvent<HTMLAnchorElement>) => {

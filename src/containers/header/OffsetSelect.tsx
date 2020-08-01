@@ -1,4 +1,4 @@
-import { FC, ChangeEvent } from "react";
+import { FC } from "react";
 import { createSelector } from "reselect";
 import { useSelector, useDispatch } from "react-redux";
 import { State, ThunkDispatcher } from "../../types";

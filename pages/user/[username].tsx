@@ -3,7 +3,6 @@ import { ServerSideContext, PropsFromServer } from "../../src/types";
 import { getArticlesUrl } from "../../src/api/article";
 import { NextPage } from "next";
 import DefaultErrorPage from "next/error";
-import { useRouter } from "next/router";
 import AppBar from "@material-ui/core/AppBar";
 import Tab from "@material-ui/core/Tab";
 import { getUserUrl } from "../../src/api/user";
@@ -26,16 +25,13 @@ const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
   initialUser,
   initialArticles,
   initialTab,
-}) => {
-  if (initialUser.status && !initialUser.profile)
-    return <DefaultErrorPage statusCode={initialUser.status} />;
-  const {
-    query: { username },
-  }: any = useRouter();
-  return (
+}) =>
+  initialUser.status && !initialUser.profile ? (
+    <DefaultErrorPage statusCode={initialUser.status} />
+  ) : (
     <Grid container spacing={3}>
       <Grid item xs={12}>
-        <UserSection initialUser={initialUser} username={username} />
+        <UserSection initialUser={initialUser} />
       </Grid>
       <Grid item xs={12}>
         <AppBar position="static" color="default">
@@ -53,7 +49,6 @@ const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
       />
     </Grid>
   );
-};
 
 export const getServerSideProps = wrapper.getServerSideProps(
   async (ctx: ServerSideContext) => {

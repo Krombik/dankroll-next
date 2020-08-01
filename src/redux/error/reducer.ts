@@ -1,15 +1,15 @@
 import { ActionTypes, ErrorActions } from "./type";
 
 type State = {
-  error: boolean;
-  errorText: string;
-  errorStatus: number;
+  show: boolean;
+  text: string;
+  status: number;
 };
 
 const initialState: State = {
-  error: false,
-  errorText: "",
-  errorStatus: 0,
+  show: false,
+  text: "",
+  status: 0,
 };
 
 export default function reducer(

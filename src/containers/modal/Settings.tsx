@@ -45,9 +45,8 @@ const Settings: FC = () => {
   const currUserData = useRef<AuthorizedUserType | null>(null);
   const dispatch = useDispatch<ThunkDispatcher>();
   useEffect(() => {
-    if (data?.status) dispatch(setError(true, data.status));
+    if (data?.status) dispatch(setError(true, data));
   });
-  // if (data?.user && data.user.image === null) data.user.image = "";
   if (!currUserData.current && data?.user) currUserData.current = data.user;
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (data?.user)
@@ -86,7 +85,7 @@ const Settings: FC = () => {
         setCookie(null, "token", data.user.token, { path: "/" });
         dispatch(setModal(false));
       } else {
-        dispatch(setError(true, data.status, data.errors));
+        dispatch(setError(true, data));
       }
     }
     setLoading(false);

@@ -7,36 +7,29 @@ import { useSelector, useDispatch } from "react-redux";
 import { setError } from "../../redux/error/actions";
 
 const selectData = createSelector(
-  (state: State) => state.error.error,
-  (state: State) => state.error.errorStatus,
-  (state: State) => state.error.errorText,
-  (error, errorStatus, errorText) => ({ error, errorStatus, errorText })
+  (state: State) => state.error.show,
+  (state: State) => state.error.status,
+  (state: State) => state.error.text,
+  (show, status, text) => ({ show, status, text })
 );
 
 const ErrorAlert: FC = memo(() => {
-  const { error, errorStatus, errorText } = useSelector(selectData);
+  const { show, status, text } = useSelector(selectData);
   const dispatch = useDispatch<ThunkDispatcher>();
   const handleClose = useCallback(() => {
     dispatch(setError(false));
   }, []);
   return (
-    <Snackbar open={error} autoHideDuration={6000} onClose={handleClose}>
+    <Snackbar open={show} autoHideDuration={6000} onClose={handleClose}>
       <Alert
         elevation={6}
         variant="filled"
         onClose={handleClose}
         severity="error"
       >
-        <strong>{errorStatus}</strong>
+        <strong>{status}</strong>
         {" - "}
-        {errorText ||
-          (errorStatus === 401
-            ? "Unauthorized"
-            : errorStatus === 404
-            ? "Not Found"
-            : errorStatus === 500
-            ? "Internal Server Error"
-            : "Something going wrong")}
+        {text}
       </Alert>
     </Snackbar>
   );

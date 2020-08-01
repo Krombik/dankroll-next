@@ -1,5 +1,5 @@
 import { wrapper } from "../../src/redux/store";
-import { ServerSideContext, PropsFromServer, FetchRV } from "../../src/types";
+import { ServerSideContext, PropsFromServer } from "../../src/types";
 import { getArticleUrl } from "../../src/api/article";
 import { NextPage } from "next";
 import DefaultErrorPage from "next/error";
@@ -37,11 +37,11 @@ export const getServerSideProps = wrapper.getServerSideProps(
     const { token, offset = 20 } = parseCookies(ctx);
     if (token) await ctx.store.dispatch(serverSetAuthorized(token));
     ctx.store.dispatch(serverSetOffset(+offset));
-    const initialArticle = await fetcher.get<FetchRV<ArticleObj>>(
+    const initialArticle = await fetcher.get<ArticleObj>(
       getArticleUrl(slug),
       token
     );
-    const initialComments = await fetcher.get<FetchRV<CommentsObj>>(
+    const initialComments = await fetcher.get<CommentsObj>(
       getArticleCommentsUrl(slug),
       token
     );

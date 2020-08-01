@@ -28,7 +28,7 @@ const Comments: FC<Props> = ({
     if (!loading) {
       const data = await deleteArticleComment(slug, id, token);
       if (data.status) {
-        dispatch(setError(true, data.status, data.errors));
+        dispatch(setError(true, data));
       } else {
         mutate({ comments: comments.filter((item) => item.id !== id) }, false);
       }

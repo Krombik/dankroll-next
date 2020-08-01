@@ -33,7 +33,7 @@ const ArticleSection: FC<Props> = ({
   );
   const dispatch = useDispatch<ThunkDispatcher>();
   useEffect(() => {
-    if (data?.status) dispatch(setError(true, data.status));
+    if (data?.status) dispatch(setError(true, data));
   });
   if (!data) return <Spinner />;
   const { article } = data;

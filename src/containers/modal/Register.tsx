@@ -39,7 +39,7 @@ const Register: FC<Props> = ({ openModal }) => {
       setCookie(null, "token", data.user.token, { path: "/" });
       dispatch(setModal(false));
     } else {
-      dispatch(setError(true, data.status, data.errors));
+      dispatch(setError(true, data));
     }
     setLoading(false);
   };

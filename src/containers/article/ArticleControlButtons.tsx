@@ -25,7 +25,7 @@ const ArticleControlButtons: FC<Props> = ({ slug, token }) => {
       loading = true;
       const data = await deleteArticle(slug, token);
       if (data.status) {
-        dispatch(setError(true, data.status, data.errors));
+        dispatch(setError(true, data));
       } else {
         dispatch(setModal(false));
         if (window.history.length > 0) Router.back();

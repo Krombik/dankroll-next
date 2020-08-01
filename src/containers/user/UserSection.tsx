@@ -13,6 +13,7 @@ import UserSubscribeButton from "./UserSubscribeButton";
 import UserSettingsButton from "./UserSettingsButton";
 import { getUserUrl } from "../../api/user";
 import { setError } from "../../redux/error/actions";
+import { useRouter } from "next/router";
 
 const selectData = createSelector(
   (state: State) => state.authentication.token,
@@ -22,18 +23,20 @@ const selectData = createSelector(
 
 type Props = {
   initialUser: FetchRV<UserObj>;
-  username: string;
 };
 
-const UserSection: FC<Props> = ({ initialUser, username }) => {
+const UserSection: FC<Props> = ({ initialUser }) => {
   const { token, currentUserName } = useSelector(selectData);
+  const {
+    query: { username },
+  } = useRouter();
   const { data = initialUser, mutate } = useRequest<UserObj>(
-    [getUserUrl(username), token],
+    [getUserUrl(username as string), token],
     initialUser
   );
   const dispatch = useDispatch<ThunkDispatcher>();
   useEffect(() => {
-    if (data?.status) dispatch(setError(true, data.status));
+    if (data?.status) dispatch(setError(true, data));
   });
   if (!data) return <Spinner />;
   const user = data.profile;

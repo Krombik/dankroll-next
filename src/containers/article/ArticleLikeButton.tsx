@@ -30,7 +30,7 @@ const ArticleLikeButton: FC<Props> = ({
     if (data.article) {
       mutate(data, false);
     } else {
-      dispatch(setError(true, data.status, data.errors));
+      dispatch(setError(true, data));
     }
   };
   return (

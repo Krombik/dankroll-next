@@ -24,10 +24,10 @@ import { TabValues, SITE_NAME } from "../src/utils/constant";
 const Index: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
   initialArticles,
   initialTab,
-}) => {
-  if (initialArticles?.status && !initialArticles.articles)
-    return <DefaultErrorPage statusCode={initialArticles.status} />;
-  return (
+}) =>
+  initialArticles?.status && !initialArticles.articles ? (
+    <DefaultErrorPage statusCode={initialArticles.status} />
+  ) : (
     <Grid container spacing={3}>
       <Grid item xs={12}>
         <Banner>
@@ -51,7 +51,6 @@ const Index: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
       />
     </Grid>
   );
-};
 
 export const getServerSideProps = wrapper.getServerSideProps(
   async (ctx: ServerSideContext) => {

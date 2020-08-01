@@ -30,7 +30,7 @@ const UserSubscribeButton: FC<Props> = ({
           if (data.profile) {
             mutate(data, false);
           } else {
-            dispatch(setError(true, data.status, data.errors));
+            dispatch(setError(true, data));
           }
         }
       }

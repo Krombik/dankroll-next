@@ -33,7 +33,7 @@ const PostComment: FC<Props> = ({ slug, token, mutate, comments }) => {
         mutate({ comments: [data.comment, ...comments] }, false);
         setComment("");
       } else {
-        dispatch(setError(true, data.status, data.errors));
+        dispatch(setError(true, data));
       }
       setLoading(false);
     }

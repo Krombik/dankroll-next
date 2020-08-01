@@ -10,7 +10,7 @@ import {
   GetServerSidePropsResult,
   GetStaticPropsResult,
 } from "next";
-import { AxiosResponse } from "axios";
+import { FetcherFailError } from "./error";
 
 export type PropsFromServer<T> = T extends GetServerSideProps<
   Promise<GetServerSidePropsResult<infer U> | null>
@@ -32,11 +32,6 @@ type ThunkStore = {
 
 export type ServerSideContext = GetServerSidePropsContext & ThunkStore;
 export type StaticPropsContext = GetStaticPropsContext & ThunkStore;
-
-export type ErrorsType = { [key: string]: string[] };
-export type ErrorsObj = { errors?: ErrorsType };
-
-type FetcherFailError = ErrorsObj & Pick<AxiosResponse, "status">;
 
 type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };
 type XOR<T, U> = T | U extends object
