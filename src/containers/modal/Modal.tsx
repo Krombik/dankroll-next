@@ -56,7 +56,9 @@ const Modal: FC = memo(() => {
         <Editor slug={slug} />
       ) : modal === "settings" ? (
         <Settings />
-      ) : null}
+      ) : (
+        <div></div>
+      )}
     </CustomModal>
   );
 });

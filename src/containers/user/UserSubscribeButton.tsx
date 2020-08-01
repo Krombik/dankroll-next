@@ -34,7 +34,7 @@ const UserSubscribeButton: FC<Props> = ({
           }
         }
       }
-    : null;
+    : undefined;
   return (
     <BannerButton
       tooltip={follow ? "Unsubscribe" : "Subscribe"}

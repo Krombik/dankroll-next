@@ -5,7 +5,7 @@ import Button from "@material-ui/core/Button";
 import FavoriteTwoToneIcon from "@material-ui/icons/FavoriteTwoTone";
 
 type Props = {
-  onLike: (liked: boolean, slug: string, index: number) => Promise<void>;
+  onLike?: (liked: boolean, slug: string, index: number) => Promise<void>;
   index: number;
   favorited: boolean;
   slug: string;
@@ -23,7 +23,7 @@ const ArticlePreviewLikeButton: FC<Props> = ({
   const handleLike = async () => {
     if (!loading) {
       loading = true;
-      await onLike(favorited, slug, index);
+      if (onLike) await onLike(favorited, slug, index);
     }
   };
   return (

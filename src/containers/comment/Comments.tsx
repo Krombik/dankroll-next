@@ -43,7 +43,9 @@ const Comments: FC<Props> = ({
             avatar={comment.author.image}
             date={new Date(comment.createdAt).toDateString()}
             onDelete={
-              comment.author.username === currentUserName ? deleteComment : null
+              comment.author.username === currentUserName
+                ? deleteComment
+                : undefined
             }
             body={comment.body}
             id={comment.id}

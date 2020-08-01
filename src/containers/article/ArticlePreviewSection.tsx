@@ -1,4 +1,4 @@
-import { ArticlesObj } from "../../types/article";
+import { ArticlesObj, ArticleType } from "../../types/article";
 import { FC, MouseEvent, useCallback, useEffect } from "react";
 import { likeArticle } from "../../api/article";
 import { FetchRV, ThunkDispatcher } from "../../types";
@@ -19,8 +19,8 @@ type Props = {
 
 const ArticlePreviewSection: FC<Props> = ({ data, token, mutate, offset }) => {
   const articles = data
-    .filter((item) => !item.status)
-    .flatMap(({ articles }) => articles);
+    .filter(({ articles }) => !!articles)
+    .flatMap(({ articles }) => articles) as ArticleType[];
   const dispatch = useDispatch<ThunkDispatcher>();
   useEffect(() => {
     if (data[data.length - 1].status)
@@ -29,7 +29,7 @@ const ArticlePreviewSection: FC<Props> = ({ data, token, mutate, offset }) => {
   const handleLike = async (liked: boolean, slug: string, index: number) => {
     const res = await likeArticle(!liked, slug, token);
     if (res.article) {
-      const newData = cloneDeep(data);
+      const newData = cloneDeep(data) as ArticlesObj[];
       newData[Math.floor(index / offset)].articles[index % offset] =
         res.article;
       mutate(newData, false);
@@ -59,7 +59,7 @@ const ArticlePreviewSection: FC<Props> = ({ data, token, mutate, offset }) => {
             <ArticlePreviewLikeButton
               favorited={article.favorited}
               favoritesCount={article.favoritesCount}
-              onLike={token ? handleLike : null}
+              onLike={token ? handleLike : undefined}
               slug={article.slug}
               index={index}
             />

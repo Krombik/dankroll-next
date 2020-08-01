@@ -16,15 +16,15 @@ const EditableTagList: FC<Props> = ({ tagList, editTags }) => {
   const onSortEnd = ({ oldIndex, newIndex }) => {
     editTags(moveFromTo(tagList, oldIndex, newIndex));
   };
-  const ref = useRef(null);
-  const editTag = (tag: string, index: number) => {
+  const ref = useRef<HTMLSpanElement>(null);
+  const editTag = (tag: string, index?: number) => {
     const tags = [...tagList];
-    tags[index] = tag;
+    tags[index || 0] = tag;
     editTags(tags);
   };
   const addTag = (tag: string) => {
     editTags([...tagList, tag]);
-    ref.current.innerHTML = "";
+    if (ref.current) ref.current.innerHTML = "";
   };
   const removeTag = (index: number) => {
     const tags = [...tagList];
@@ -32,7 +32,7 @@ const EditableTagList: FC<Props> = ({ tagList, editTags }) => {
     editTags(tags);
   };
   const setFocus = () => {
-    ref.current.focus();
+    ref.current?.focus();
   };
   return (
     <SortableList axis="xy" distance={10} onSortEnd={onSortEnd}>

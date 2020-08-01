@@ -5,14 +5,14 @@ import { ArticleObj, ArticleEditorType } from "../types/article";
 
 export const getArticlesUrl = (
   type: string,
-  value: string,
+  value: string | undefined,
   page: number,
   limit: number
 ) =>
   `${SERVER_BASE_URL}/articles${
     type !== TabValues.FEED
       ? `?${
-          type !== TabValues.DEFAULT
+          type !== TabValues.DEFAULT && value
             ? `${type}=${encodeURIComponent(value)}&`
             : ""
         }`

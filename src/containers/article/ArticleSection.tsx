@@ -37,7 +37,7 @@ const ArticleSection: FC<Props> = ({
   });
   if (!data) return <Spinner />;
   const { article } = data;
-  if (data.status && !article) return null;
+  if (data.status || !article) return null;
   return (
     <>
       <Grid item xs={12}>

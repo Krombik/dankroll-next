@@ -25,7 +25,7 @@ const Index: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
   initialArticles,
   initialTab,
 }) => {
-  if (initialArticles.status && !initialArticles.articles)
+  if (initialArticles?.status && !initialArticles.articles)
     return <DefaultErrorPage statusCode={initialArticles.status} />;
   return (
     <Grid container spacing={3}>
@@ -52,6 +52,7 @@ const Index: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
     </Grid>
   );
 };
+
 export const getServerSideProps = wrapper.getServerSideProps(
   async (ctx: ServerSideContext) => {
     const { page, ...initialTab }: TabQuery = ctx.query;

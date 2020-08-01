@@ -41,6 +41,8 @@ const ArticleList: FC<Props> = ({
   const {
     query: { page, ...query },
   } = useRouter();
+  const dispatch = useDispatch<ThunkDispatcher>();
+  const prevQuery = usePrevious(query);
   const { type = emptyType, [valueKey]: value }: any = query;
   const isInitial = initialTab.type === type && initialTab.value === value;
   const startPage = page && +page > 0 ? +page - 1 : 0;
@@ -53,16 +55,13 @@ const ArticleList: FC<Props> = ({
     (index) => [getArticlesUrl(type, value, startPage + index, offset), token],
     initialData
   );
-  const loadMore = () => {
-    setSize((x) => x + 1);
-  };
-  const prevQuery = usePrevious(query);
   useEffect(() => {
-    if (size === 1 && data?.length > 1) setSize(data.length);
+    if (setSize && data && size === 1 && data.length > 1) setSize(data.length);
   }, [type, value]);
   useEffect(() => {
     if (
-      size > 1 &&
+      setSize &&
+      (size || 0 > 1) &&
       prevQuery &&
       value === prevQuery.value &&
       type === prevQuery.type
@@ -72,7 +71,6 @@ const ArticleList: FC<Props> = ({
   useOnUpdateEffect(() => {
     if (!open) mutate();
   }, [open]);
-  const dispatch = useDispatch<ThunkDispatcher>();
   useEffect(() => {
     const handleRouteChange = async () => {
       const { pathname } = window.location;
@@ -91,27 +89,30 @@ const ArticleList: FC<Props> = ({
       window.removeEventListener("popstate", handleRouteChange);
     };
   }, []);
-  const articlesCount = data ? data[0]?.articlesCount : 0;
-  const isLoadMoreUnavailable = data?.length * offset >= articlesCount;
-  const isLoading = data?.length === 0 || data?.length !== size;
+  if (!data || !size || !setSize)
+    return <ArticlePreviewSkeletonSection count={offset} />;
+  const articlesCount = data[0]?.articlesCount as number;
+  if (data[0] && !articlesCount)
+    return (
+      <Grid item xs={12}>
+        <Typography align="center">No articles available</Typography>
+      </Grid>
+    );
+  const loadMore = () => {
+    setSize((x) => x + 1);
+  };
+  const isLoadMoreUnavailable = data.length * offset >= articlesCount;
+  const isLoading = data.length !== size;
   const pageCount = Math.ceil(articlesCount / offset);
   return (
     <>
-      {data && (
-        <ArticlePreviewSection
-          data={data}
-          token={token}
-          mutate={mutate}
-          offset={offset}
-        />
-      )}
-      {isLoading ? (
-        <ArticlePreviewSkeletonSection count={offset} />
-      ) : !articlesCount ? (
-        <Grid item xs={12}>
-          <Typography align="center">No articles available</Typography>
-        </Grid>
-      ) : null}
+      <ArticlePreviewSection
+        data={data}
+        token={token}
+        mutate={mutate}
+        offset={offset}
+      />
+      {isLoading && <ArticlePreviewSkeletonSection count={offset} />}
       {pageCount > 1 && (
         <>
           <Grid container item justify="center">

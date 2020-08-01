@@ -1,8 +1,8 @@
-import axios, { AxiosError } from "axios";
+import axios, { AxiosResponse } from "axios";
 import { FetchRV } from "../types";
 
 const fetcher = {
-  async get<T>(url: string, token?: string): Promise<FetchRV<T>> {
+  async get<T = {}>(url: string, token?: string): Promise<FetchRV<T>> {
     try {
       return (
         await axios.get(
@@ -17,11 +17,11 @@ const fetcher = {
         )
       ).data;
     } catch (error) {
-      const { data, status } = (error as AxiosError).response;
+      const { data, status } = error.response as AxiosResponse;
       return { ...data, status };
     }
   },
-  async delete<T>(url: string, token?: string): Promise<FetchRV<T>> {
+  async delete<T = {}>(url: string, token?: string): Promise<FetchRV<T>> {
     try {
       return (
         await axios.delete(
@@ -36,11 +36,11 @@ const fetcher = {
         )
       ).data;
     } catch (error) {
-      const { data, status } = (error as AxiosError).response;
+      const { data, status } = error.response as AxiosResponse;
       return { ...data, status };
     }
   },
-  async post<T>(
+  async post<T = {}>(
     url: string,
     content: any,
     token?: string
@@ -59,11 +59,15 @@ const fetcher = {
         await axios.post(url, content ? JSON.stringify(content) : {}, config)
       ).data;
     } catch (error) {
-      const { data, status } = (error as AxiosError).response;
+      const { data, status } = error.response as AxiosResponse;
       return { ...data, status };
     }
   },
-  async put<T>(url: string, content: any, token?: string): Promise<FetchRV<T>> {
+  async put<T = {}>(
+    url: string,
+    content: any,
+    token?: string
+  ): Promise<FetchRV<T>> {
     try {
       const config =
         !!content || !!token
@@ -78,7 +82,7 @@ const fetcher = {
         await axios.put(url, content ? JSON.stringify(content) : {}, config)
       ).data;
     } catch (error) {
-      const { data, status } = (error as AxiosError).response;
+      const { data, status } = error.response as AxiosResponse;
       return { ...data, status };
     }
   },

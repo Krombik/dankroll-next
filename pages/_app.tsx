@@ -17,8 +17,7 @@ const selectData = createSelector(
 const WrappedApp: FC<AppProps> = ({ Component, pageProps }) => {
   const { dark } = useSelector(selectData);
   useEffect(() => {
-    const jssStyles = document.querySelector("#jss-server-side");
-    if (jssStyles) jssStyles.parentElement.removeChild(jssStyles);
+    document.querySelector("#jss-server-side")?.remove();
   }, []);
   const theme = useMemo(() => makeTheme(dark), [dark]);
   return (

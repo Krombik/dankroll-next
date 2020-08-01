@@ -26,7 +26,7 @@ const AddNewTabButton: FC<TabProps & { component: string }> = memo((props) => {
       Router.push(path, path, { shallow: true });
       setSearchOpen(false);
       setNewTabName("");
-    } else ref.current.focus();
+    } else ref.current?.focus();
   };
   const handleClickAway = () => {
     setSearchOpen(false);

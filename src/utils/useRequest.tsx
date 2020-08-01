@@ -6,12 +6,13 @@ import { FetchRV } from "../types";
 
 export function useRequest<T = any>(
   key: keyInterface,
-  initialData: FetchRV<T>
+  initialData?: FetchRV<T>
 ) {
-  const ref = useRef(initialData);
+  const ref = useRef<FetchRV<T> | undefined>(initialData);
   const obj = useSWR<FetchRV<T>>(key, fetcher.get, {
     initialData: ref.current,
   });
+  obj.data;
   if (ref.current) ref.current = undefined;
   return obj;
 }
@@ -23,7 +24,7 @@ export function useRequestInfinity<T = any>(
   ) => string | any[],
   initialData: FetchRV<T>
 ) {
-  const ref = useRef([initialData]);
+  const ref = useRef<[FetchRV<T>] | undefined>([initialData]);
   const obj = useSWRInfinite<FetchRV<T>>(getKey, fetcher.get, {
     initialData: ref.current,
   });

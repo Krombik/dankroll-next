@@ -37,7 +37,7 @@ const UserSection: FC<Props> = ({ initialUser, username }) => {
   });
   if (!data) return <Spinner />;
   const user = data.profile;
-  if (data.status && !user) return null;
+  if (data.status || !user) return null;
   return (
     <Banner>
       <Grid item container justify="center">

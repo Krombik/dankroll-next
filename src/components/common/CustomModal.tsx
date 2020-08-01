@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const CustomModal: FC<StyledModalProps> = ({ children, ...props }) => {
-  const classes = useStyles({ article: props.article });
+  const classes = useStyles({ article: props.article } as StyledModalProps);
   return (
     <StyledModal
       disableEnforceFocus

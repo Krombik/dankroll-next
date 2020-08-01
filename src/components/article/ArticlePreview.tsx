@@ -26,7 +26,7 @@ const ArticlePreview: FC<Props> = ({
   title,
   description,
   children,
-  onModal = null,
+  onModal,
   href = "",
 }) => (
   <Grid item xs={12} lg={6}>

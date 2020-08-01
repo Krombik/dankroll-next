@@ -8,6 +8,7 @@ import Select from "@material-ui/core/Select";
 import { setOffset } from "../../redux/articleTabs/actions";
 import Router from "next/router";
 import { setCookie } from "nookies";
+import { SelectInputProps } from "@material-ui/core/Select/SelectInput";
 
 const selectData = createSelector(
   (state: State) => state.articleTabs.offset,
@@ -17,8 +18,8 @@ const selectData = createSelector(
 const OffsetSelect: FC = () => {
   const dispatch = useDispatch<ThunkDispatcher>();
   const { offset } = useSelector(selectData);
-  const handleCount = (e: ChangeEvent<HTMLInputElement>) => {
-    const count = +e.target.value;
+  const handleCount: SelectInputProps["onChange"] = (e) => {
+    const count = e.target.value as number;
     if (offset !== count) {
       dispatch(setOffset(count));
       setCookie(null, "offset", String(count), { path: "/" });

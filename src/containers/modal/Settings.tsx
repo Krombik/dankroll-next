@@ -1,4 +1,11 @@
-import { FC, useState, ChangeEvent, useCallback, useRef } from "react";
+import {
+  FC,
+  useState,
+  ChangeEvent,
+  useCallback,
+  useRef,
+  useEffect,
+} from "react";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
@@ -10,7 +17,7 @@ import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import { setModal } from "../../redux/modal/actions";
 import { createSelector } from "reselect";
 import { useSelector, useDispatch } from "react-redux";
-import { State, ThunkDispatcher } from "../../types";
+import { State, ThunkDispatcher, FetchRV } from "../../types";
 import useSWR from "swr";
 import {
   AuthorizedUserObj,
@@ -28,43 +35,50 @@ const Settings: FC = () => {
   const [loading, setLoading] = useState(false);
   const [password, setPassword] = useState("");
   const { token } = useSelector(selectData);
-  const {
-    data = {
-      user: { image: "", bio: "", username: "", email: "" },
-    } as AuthorizedUserObj,
-    mutate,
-  } = useSWR(token, getCurrentUser, {
-    revalidateOnFocus: false,
-  });
-  const prevUser = useRef<AuthorizedUserType>(null);
-  if (data?.user && data.user.image === null) data.user.image = "";
-  if (!prevUser.current && data.user.username)
-    prevUser.current = { ...data.user };
+  const { data, mutate } = useSWR<FetchRV<AuthorizedUserObj>>(
+    token,
+    getCurrentUser,
+    {
+      revalidateOnFocus: false,
+    }
+  );
+  const currUserData = useRef<AuthorizedUserType | null>(null);
   const dispatch = useDispatch<ThunkDispatcher>();
+  useEffect(() => {
+    if (data?.status) dispatch(setError(true, data.status));
+  });
+  // if (data?.user && data.user.image === null) data.user.image = "";
+  if (!currUserData.current && data?.user) currUserData.current = data.user;
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    mutate(
-      { user: { ...data.user, [e.currentTarget.name]: e.currentTarget.value } },
-      false
-    );
+    if (data?.user)
+      mutate(
+        {
+          user: { ...data.user, [e.currentTarget.name]: e.currentTarget.value },
+        },
+        false
+      );
   };
   const handlePassword = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setPassword(e.currentTarget.value);
   }, []);
   const handleSettings = async () => {
     setLoading(true);
-    const updateUser: Partial<UpdateUser> = {};
-    if (prevUser.current.username !== data.user.username)
-      updateUser.username = data.user.username;
-    if (prevUser.current.email !== data.user.email)
-      updateUser.email = data.user.email;
-    if (prevUser.current.bio !== data.user.bio) updateUser.bio = data.user.bio;
-    if (prevUser.current.image !== data.user.image)
-      updateUser.image = data.user.image;
-    if (password.length > 0) updateUser.password = password;
-    if (Object.keys(updateUser).length > 0) {
-      const data = await updateCurrentUser(updateUser, token);
+    const newUserData: Partial<UpdateUser> = {};
+    if (currUserData.current && data?.user) {
+      if (currUserData.current.username !== data.user.username)
+        newUserData.username = data.user.username;
+      if (currUserData.current.email !== data.user.email)
+        newUserData.email = data.user.email;
+      if (currUserData.current.bio != data.user.bio)
+        newUserData.bio = data.user.bio;
+      if (currUserData.current.image != data.user.image)
+        newUserData.image = data.user.image as string;
+    }
+    if (password.length > 0) newUserData.password = password;
+    if (Object.keys(newUserData).length > 0) {
+      const data = await updateCurrentUser(newUserData, token);
       if (data.user) {
-        prevUser.current = null;
+        currUserData.current = null;
         await Router.replace("/user/[value]", `/user/${data.user.username}`, {
           shallow: true,
         });
@@ -87,7 +101,8 @@ const Settings: FC = () => {
         </Grid>
         <Grid item xs={12}>
           <TextValidator
-            value={data?.user.image}
+            value={data?.user?.image || ""}
+            disabled={!data?.user}
             label="Avatar url"
             name="image"
             variant="outlined"
@@ -97,7 +112,8 @@ const Settings: FC = () => {
         </Grid>
         <Grid item xs={12}>
           <TextValidator
-            value={data?.user.username}
+            disabled={!data?.user}
+            value={data?.user?.username || ""}
             label="Username"
             name="username"
             variant="outlined"
@@ -109,7 +125,8 @@ const Settings: FC = () => {
         </Grid>
         <Grid item xs={12}>
           <TextValidator
-            value={data?.user.bio}
+            disabled={!data?.user}
+            value={data?.user?.bio || ""}
             label="Bio"
             name="bio"
             variant="outlined"
@@ -121,7 +138,8 @@ const Settings: FC = () => {
         </Grid>
         <Grid item xs={12}>
           <TextValidator
-            value={data?.user.email}
+            disabled={!data?.user}
+            value={data?.user?.email || ""}
             label="Email"
             type="email"
             name="email"
@@ -134,6 +152,7 @@ const Settings: FC = () => {
         </Grid>
         <Grid item xs={12}>
           <TextValidator
+            disabled={!data?.user}
             value={password}
             label="New password"
             type="password"
@@ -148,7 +167,7 @@ const Settings: FC = () => {
             variant="contained"
             type="submit"
             color="primary"
-            disabled={loading}
+            disabled={loading || !data?.user}
           >
             Update profile
           </Button>

@@ -8,7 +8,7 @@ export const setError = (
 ): ThunkResult => (dispatch) => {
   let errorText = "";
   if (typeof errorInfo === "object") {
-    const errorHandler = [];
+    const errorHandler: string[] = [];
     for (const key in errorInfo)
       errorHandler.push(`${key} ${errorInfo[key].join(", ")}`);
     errorText = errorHandler.join(", ");

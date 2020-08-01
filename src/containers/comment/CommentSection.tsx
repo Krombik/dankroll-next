@@ -34,7 +34,7 @@ const CommentSection: FC<Props> = ({
   });
   if (!data) return <Spinner />;
   const { comments } = data;
-  if (data.status && !comments) return null;
+  if (data.status || !comments) return null;
   return (
     <>
       <Grid item xs={12}>

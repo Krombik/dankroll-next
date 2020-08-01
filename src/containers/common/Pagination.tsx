@@ -20,7 +20,7 @@ const Pagination: FC<Props> = ({ page, count, tabKey, query }) => {
   const dynamicRouteStartIndex = pathname.indexOf("[") + 1;
   const dynamicRouteParamName = dynamicRouteStartIndex
     ? pathname.slice(dynamicRouteStartIndex, pathname.indexOf("]"))
-    : null;
+    : "";
   const { [dynamicRouteParamName]: _, ...trueQuery } = query;
   const queryStartIndex = asPath.indexOf("?");
   const asPathname =

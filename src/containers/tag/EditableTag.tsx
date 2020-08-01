@@ -8,7 +8,7 @@ type Props = {
   draggable?: boolean;
 };
 
-const EditableSpan: FC<TextFieldProps & Props> = ({
+const EditableTag: FC<TextFieldProps & Props> = ({
   value,
   onTag,
   index,
@@ -34,7 +34,7 @@ const EditableSpan: FC<TextFieldProps & Props> = ({
         InputProps={{ inputComponent: "span" }}
         size="small"
         inputProps={{
-          children: value,
+          children: value as string,
           contentEditable: true,
           suppressContentEditableWarning: true,
         }}
@@ -51,4 +51,4 @@ const EditableSpan: FC<TextFieldProps & Props> = ({
   );
 };
 
-export default EditableSpan;
+export default EditableTag;
