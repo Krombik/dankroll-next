@@ -8,6 +8,7 @@ import { AppProps } from "next/app";
 import { useSelector } from "react-redux";
 import { createSelector } from "reselect";
 import { State } from "../src/types";
+import { GlobalStyle } from "../src/components/common/styled";
 
 const selectData = createSelector(
   (state: State) => state.common.dark,
@@ -23,6 +24,7 @@ const WrappedApp: FC<AppProps> = ({ Component, pageProps }) => {
   return (
     <StylesProvider injectFirst>
       <ThemeProvider theme={theme}>
+        <GlobalStyle />
         <CssBaseline />
         <Layout>
           <Component {...pageProps} />

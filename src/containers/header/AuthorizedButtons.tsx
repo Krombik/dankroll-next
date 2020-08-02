@@ -1,8 +1,7 @@
 import { FC } from "react";
-import TooltipIconButton from "../../components/common/TooltipIconButton";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import MeetingRoomIcon from "@material-ui/icons/MeetingRoom";
-import TooltipIconLink from "../../components/common/TooltipIconLink";
+import TooltipIconButton from "../../components/common/TooltipIconButton";
 import CreateIcon from "@material-ui/icons/Create";
 import { useDispatch } from "react-redux";
 import { ThunkDispatcher } from "../../types";
@@ -25,13 +24,13 @@ const AuthorizedButtons: FC<Props> = ({ currentUserName, openModal }) => {
       <TooltipIconButton tooltip="New post" name="new" onClick={openModal}>
         <CreateIcon />
       </TooltipIconButton>
-      <TooltipIconLink
+      <TooltipIconButton
         tooltip={currentUserName}
         href="/user/[username]"
         as={`/user/${currentUserName}`}
       >
         <AccountCircleIcon />
-      </TooltipIconLink>
+      </TooltipIconButton>
       <TooltipIconButton tooltip="Logout" onClick={handleLogout}>
         <MeetingRoomIcon />
       </TooltipIconButton>

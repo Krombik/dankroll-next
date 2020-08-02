@@ -3,7 +3,6 @@ import { ServerSideContext, PropsFromServer } from "../src/types";
 import ArticleList from "../src/containers/article/ArticlesList";
 import { getArticlesUrl } from "../src/api/article";
 import { NextPage } from "next";
-import AppBar from "@material-ui/core/AppBar";
 import SortableTabs from "../src/containers/tabs/SortableTabs";
 import {
   serverSetOffset,
@@ -20,6 +19,8 @@ import { parseCookies } from "nookies";
 import { serverSetAuthorized } from "../src/redux/authentication/actions";
 import { TabQuery } from "../src/types/tab";
 import { TabValues, SITE_NAME } from "../src/utils/constant";
+import Gutter from "../src/components/common/Gutter";
+import TabBar from "../src/components/tabs/TabBar";
 
 const Index: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
   initialArticles,
@@ -28,28 +29,33 @@ const Index: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
   initialArticles?.status && !initialArticles.articles ? (
     <DefaultErrorPage statusCode={initialArticles.status} />
   ) : (
-    <Grid container spacing={3}>
-      <Grid item xs={12}>
-        <Banner>
-          <Grid item container justify="center">
-            <Typography variant="h1" color="textPrimary">
-              {SITE_NAME}
-            </Typography>
-          </Grid>
-        </Banner>
-      </Grid>
-      <Grid item xs={12}>
-        <AppBar position="static" color="default" component="nav">
-          <SortableTabs />
-        </AppBar>
-      </Grid>
-      <ArticleList
-        initialData={initialArticles}
-        initialTab={initialTab}
-        emptyType={TabValues.DEFAULT}
-        valueKey="value"
-      />
-    </Grid>
+    <>
+      <Banner justify="center">
+        <Grid
+          item
+          component={Typography}
+          variant="h1"
+          color="textPrimary"
+          css={`
+            margin-top: 25px;
+            margin-bottom: 25px;
+          `}
+        >
+          {SITE_NAME}
+        </Grid>
+      </Banner>
+      <TabBar>
+        <SortableTabs />
+      </TabBar>
+      <Gutter>
+        <ArticleList
+          initialData={initialArticles}
+          initialTab={initialTab}
+          emptyType={TabValues.DEFAULT}
+          valueKey="value"
+        />
+      </Gutter>
+    </>
   );
 
 export const getServerSideProps = wrapper.getServerSideProps(

@@ -42,29 +42,35 @@ const UserSection: FC<Props> = ({ initialUser }) => {
   const user = data.profile;
   if (data.status || !user) return null;
   return (
-    <Banner>
-      <Grid item container justify="center">
+    <Banner alignItems="center" direction="column">
+      <Grid item>
         <Avatar src={user.image} sizes="large">
           {user.username[0]}
         </Avatar>
       </Grid>
-      <Grid item container justify="center">
-        <Typography variant="h2" color="textPrimary">
-          {user.username}
-          {user.username !== currentUserName ? (
-            <UserSubscribeButton
-              token={token}
-              username={user.username}
-              follow={user.following}
-              mutate={mutate}
-            />
-          ) : (
-            <UserSettingsButton />
-          )}
-        </Typography>
+      <Grid
+        item
+        container
+        alignItems="center"
+        justify="center"
+        component={Typography}
+        variant="h2"
+        color="textPrimary"
+      >
+        <Grid item>{user.username}</Grid>
+        {user.username !== currentUserName ? (
+          <UserSubscribeButton
+            token={token}
+            username={user.username}
+            follow={user.following}
+            mutate={mutate}
+          />
+        ) : (
+          <UserSettingsButton />
+        )}
       </Grid>
-      <Grid item container justify="center">
-        <Typography color="textPrimary">{user.bio}</Typography>
+      <Grid item component={Typography} color="textPrimary">
+        {user.bio}
       </Grid>
     </Banner>
   );

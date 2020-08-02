@@ -3,7 +3,7 @@ import SettingsIcon from "@material-ui/icons/Settings";
 import { useDispatch } from "react-redux";
 import { ThunkDispatcher } from "../../types";
 import { setModal } from "../../redux/modal/actions";
-import BannerButton from "../../components/common/BannerButton";
+import TooltipIconButton from "../../components/common/TooltipIconButton";
 
 const UserSettingsButton: FC = () => {
   const dispatch = useDispatch<ThunkDispatcher>();
@@ -11,9 +11,9 @@ const UserSettingsButton: FC = () => {
     dispatch(setModal(true, "settings"));
   };
   return (
-    <BannerButton tooltip="Profile settings" onClick={openModal}>
+    <TooltipIconButton tooltip="Profile settings" onClick={openModal}>
       <SettingsIcon fontSize="inherit" color="inherit" />
-    </BannerButton>
+    </TooltipIconButton>
   );
 };
 

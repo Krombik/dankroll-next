@@ -10,6 +10,7 @@ import Spinner from "../../components/common/Spinner";
 import { useRequest } from "../../utils/useRequest";
 import { useDispatch } from "react-redux";
 import { setError } from "../../redux/error/actions";
+import Gutter from "../../components/common/Gutter";
 
 type Props = {
   token: string;
@@ -36,7 +37,7 @@ const CommentSection: FC<Props> = ({
   const { comments } = data;
   if (data.status || !comments) return null;
   return (
-    <>
+    <Gutter>
       <Grid item xs={12}>
         <Typography variant="h4">Comments: {comments.length}</Typography>
       </Grid>
@@ -59,7 +60,7 @@ const CommentSection: FC<Props> = ({
           currentUserName={currentUserName}
         />
       )}
-    </>
+    </Gutter>
   );
 };
 

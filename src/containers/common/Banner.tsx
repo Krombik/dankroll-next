@@ -1,17 +1,18 @@
-import { StyledBanner } from "../../components/common/styled";
 import { FC, useMemo } from "react";
 import { createMuiTheme, useTheme } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/styles";
 import { useSelector } from "react-redux";
 import { createSelector } from "reselect";
 import { State } from "../../types";
+import Gutter from "../../components/common/Gutter";
+import { Paper, GridProps } from "@material-ui/core";
 
 const selectData = createSelector(
   (state: State) => state.common.dark,
   (dark) => ({ dark })
 );
 
-const Banner: FC = ({ children }) => {
+const Banner: FC<GridProps> = (props) => {
   const { dark } = useSelector(selectData);
   const theme = useTheme();
   const invertTheme = useMemo(
@@ -26,9 +27,12 @@ const Banner: FC = ({ children }) => {
   );
   return (
     <ThemeProvider theme={invertTheme}>
-      <StyledBanner backgroundColor={invertTheme.palette.background.default}>
-        {children}
-      </StyledBanner>
+      <Gutter
+        component={Paper}
+        className="MuiGrid-item banner"
+        square
+        {...props}
+      />
     </ThemeProvider>
   );
 };

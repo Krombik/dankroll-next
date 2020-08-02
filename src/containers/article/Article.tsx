@@ -8,7 +8,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { setModal } from "../../redux/modal/actions";
 import CommentSection from "../comment/CommentSection";
 import ArticleSection from "./ArticleSection";
-import { FullWidthDivider } from "../../components/common/styled";
+import { Divider } from "@material-ui/core";
 
 const selectData = createSelector(
   (state: State) => state.authentication.token,
@@ -36,15 +36,21 @@ const Article: FC<Props> = ({ initialArticle, initialComments, slug }) => {
     };
   }, []);
   return (
-    <Grid item container spacing={3}>
+    <>
       <ArticleSection
         initialArticle={initialArticle}
         slug={slug}
         token={token}
         currentUserName={currentUserName}
       />
-      <Grid item xs={12}>
-        <FullWidthDivider />
+      <Grid
+        item
+        xs={12}
+        css={`
+          padding-top: 0 !important;
+        `}
+      >
+        <Divider />
       </Grid>
       <CommentSection
         initialComments={initialComments}
@@ -52,7 +58,7 @@ const Article: FC<Props> = ({ initialArticle, initialComments, slug }) => {
         token={token}
         currentUserName={currentUserName}
       />
-    </Grid>
+    </>
   );
 };
 

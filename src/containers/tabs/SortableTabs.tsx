@@ -38,7 +38,13 @@ const SortableTabs: FC = memo(() => {
     []
   );
   return (
-    <SortableList axis="x" lockAxis="x" distance={10} onSortEnd={onSortEnd}>
+    <SortableList
+      axis="x"
+      lockAxis="x"
+      distance={10}
+      onSortEnd={onSortEnd}
+      helperClass="dragging"
+    >
       <Tabs emptyType={TabValues.DEFAULT}>
         {currentUserName && (
           <Tab value={TabValues.FEED} label={`${currentUserName}'s feed`} />

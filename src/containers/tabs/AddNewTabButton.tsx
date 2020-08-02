@@ -5,10 +5,9 @@ import AddIcon from "@material-ui/icons/Add";
 import Grid from "@material-ui/core/Grid";
 import Input from "@material-ui/core/Input";
 import { useState, useRef, FC, memo, ChangeEvent, KeyboardEvent } from "react";
-import { StyledAddNewTabButton } from "../../components/tabs/styled";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import Router from "next/router";
-import { TabProps } from "@material-ui/core";
+import { TabProps, Tab } from "@material-ui/core";
 import TooltipIconButton from "../../components/common/TooltipIconButton";
 import { TabValues } from "../../utils/constant";
 
@@ -41,7 +40,15 @@ const AddNewTabButton: FC<TabProps & { component: string }> = memo((props) => {
     if (e.key === "Enter") addNewTab();
   };
   return (
-    <StyledAddNewTabButton
+    <Tab
+      css={`
+        min-width: 0;
+        .MuiGrid-item {
+          width: 0;
+          overflow: hidden;
+          transition: 0.3s ease-in-out;
+        }
+      `}
       disableRipple={true}
       {...props}
       label={

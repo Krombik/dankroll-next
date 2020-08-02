@@ -1,11 +1,11 @@
 import { FC } from "react";
 import SubscriptionsTwoToneIcon from "@material-ui/icons/SubscriptionsTwoTone";
-import BannerButton from "../../components/common/BannerButton";
-import { StyledSwitchableIcon } from "../../components/article/styled";
 import { followUser } from "../../api/user";
 import { useDispatch } from "react-redux";
 import { ThunkDispatcher } from "../../types";
 import { setError } from "../../redux/error/actions";
+import TooltipIconButton from "../../components/common/TooltipIconButton";
+import { StyledSwitchableIcon } from "../../components/common/styled";
 
 type Props = {
   username: string;
@@ -36,7 +36,7 @@ const UserSubscribeButton: FC<Props> = ({
       }
     : undefined;
   return (
-    <BannerButton
+    <TooltipIconButton
       tooltip={follow ? "Unsubscribe" : "Subscribe"}
       disabled={!token}
       onClick={handleSubscribe}
@@ -47,7 +47,7 @@ const UserSubscribeButton: FC<Props> = ({
         active={follow}
         Icon={SubscriptionsTwoToneIcon}
       />
-    </BannerButton>
+    </TooltipIconButton>
   );
 };
 

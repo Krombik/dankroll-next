@@ -3,11 +3,11 @@ import { FC } from "react";
 import { likeArticle } from "../../api/article";
 import { FetchRV, ThunkDispatcher } from "../../types";
 import Badge from "@material-ui/core/Badge";
-import { StyledSwitchableIcon } from "../../components/article/styled";
-import BannerButton from "../../components/common/BannerButton";
 import FavoriteTwoToneIcon from "@material-ui/icons/FavoriteTwoTone";
 import { useDispatch } from "react-redux";
 import { setError } from "../../redux/error/actions";
+import TooltipIconButton from "../../components/common/TooltipIconButton";
+import { StyledSwitchableIcon } from "../../components/common/styled";
 
 type Props = {
   like: boolean;
@@ -34,7 +34,7 @@ const ArticleLikeButton: FC<Props> = ({
     }
   };
   return (
-    <BannerButton
+    <TooltipIconButton
       tooltip={like ? "Dislike" : "Like"}
       disabled={!token}
       onClick={handleLike}
@@ -52,7 +52,7 @@ const ArticleLikeButton: FC<Props> = ({
           Icon={FavoriteTwoToneIcon}
         />
       </Badge>
-    </BannerButton>
+    </TooltipIconButton>
   );
 };
 

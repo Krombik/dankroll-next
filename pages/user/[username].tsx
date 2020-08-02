@@ -20,6 +20,8 @@ import { serverSetAuthorized } from "../../src/redux/authentication/actions";
 import Tabs from "../../src/containers/tabs/Tabs";
 import UserSection from "../../src/containers/user/UserSection";
 import { TabValues } from "../../src/utils/constant";
+import TabBar from "../../src/components/tabs/TabBar";
+import Gutter from "../../src/components/common/Gutter";
 
 const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
   initialUser,
@@ -29,25 +31,23 @@ const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
   initialUser.status && !initialUser.profile ? (
     <DefaultErrorPage statusCode={initialUser.status} />
   ) : (
-    <Grid container spacing={3}>
-      <Grid item xs={12}>
-        <UserSection initialUser={initialUser} />
-      </Grid>
-      <Grid item xs={12}>
-        <AppBar position="static" color="default">
-          <Tabs emptyType={TabValues.AUTHOR}>
-            <Tab value={TabValues.AUTHOR} label="Last articles" />
-            <Tab value={TabValues.FAVORITED} label="Favorite articles" />
-          </Tabs>
-        </AppBar>
-      </Grid>
-      <ArticleList
-        initialData={initialArticles}
-        initialTab={initialTab}
-        valueKey="username"
-        emptyType={TabValues.AUTHOR}
-      />
-    </Grid>
+    <>
+      <UserSection initialUser={initialUser} />
+      <TabBar>
+        <Tabs emptyType={TabValues.AUTHOR}>
+          <Tab value={TabValues.AUTHOR} label="Last articles" />
+          <Tab value={TabValues.FAVORITED} label="Favorite articles" />
+        </Tabs>
+      </TabBar>
+      <Gutter>
+        <ArticleList
+          initialData={initialArticles}
+          initialTab={initialTab}
+          valueKey="username"
+          emptyType={TabValues.AUTHOR}
+        />
+      </Gutter>
+    </>
   );
 
 export const getServerSideProps = wrapper.getServerSideProps(

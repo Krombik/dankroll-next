@@ -1,11 +1,10 @@
-import { StyledTagList, StyledTag } from "../../components/tag/styled";
 import { FC, useRef } from "react";
 import SortableList from "../common/SortableList";
 import SortableItem from "../common/SortableItem";
 import { moveFromTo } from "../../utils/moveFromTo";
 import AddIcon from "@material-ui/icons/Add";
 import EditableTag from "./EditableTag";
-import { Chip } from "@material-ui/core";
+import { Chip, Grid } from "@material-ui/core";
 
 type Props = {
   tagList: string[];
@@ -35,11 +34,33 @@ const EditableTagList: FC<Props> = ({ tagList, editTags }) => {
     ref.current?.focus();
   };
   return (
-    <SortableList axis="xy" distance={10} onSortEnd={onSortEnd}>
-      <StyledTagList>
+    <SortableList
+      axis="xy"
+      distance={10}
+      onSortEnd={onSortEnd}
+      helperClass="dragging"
+    >
+      <Grid container spacing={1}>
         {tagList.map((tag, index) => (
           <SortableItem index={index} key={index}>
-            <StyledTag>
+            <Grid
+              item
+              css={`
+                .MuiInputBase-input {
+                  padding: 0 4px;
+                  text-transform: lowercase;
+                }
+                .MuiChip-label {
+                  display: flex;
+                }
+                .drag-area {
+                  padding-left: 2px;
+                  display: inline-flex;
+                  align-self: center;
+                  height: 100%;
+                }
+              `}
+            >
               <Chip
                 label={
                   <EditableTag
@@ -55,10 +76,10 @@ const EditableTagList: FC<Props> = ({ tagList, editTags }) => {
                 variant="outlined"
                 component="span"
               />
-            </StyledTag>
+            </Grid>
           </SortableItem>
         ))}
-        <StyledTag>
+        <Grid item>
           <Chip
             label={<EditableTag onTag={addTag} value="" inputRef={ref} />}
             onDelete={setFocus}
@@ -66,8 +87,8 @@ const EditableTagList: FC<Props> = ({ tagList, editTags }) => {
             variant="outlined"
             component="span"
           />
-        </StyledTag>
-      </StyledTagList>
+        </Grid>
+      </Grid>
     </SortableList>
   );
 };

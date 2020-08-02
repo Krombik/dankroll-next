@@ -1,35 +1,76 @@
-import styled from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
 import Modal, { ModalProps } from "@material-ui/core/Modal";
-import Divider from "@material-ui/core/Divider";
+import { SvgIconProps, SvgIconTypeMap } from "@material-ui/core";
+import { OverridableComponent } from "@material-ui/core/OverridableComponent";
 
-type StyledBannerProps = { backgroundColor: string };
+export const GlobalStyle = createGlobalStyle`
+  @font-face {
+    font-family: "OpenSans";
+    src: url('/fonts/OpenSans-Regular.woff2') format('woff2'),
+         url('/fonts/OpenSans-Regular.woff') format('woff'),
+         url('/fonts/OpenSans-Regular.eot') format('eot'),
+         url('/fonts/OpenSans-Regular.svg') format('svg'),
+         url('/fonts/OpenSans-Regular.ttf') format('ttf');
+    font-weight: 400;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "OpenSans";
+    src: url('/fonts/OpenSans-SemiBold.woff2') format('woff2'),
+         url('/fonts/OpenSans-SemiBold.woff') format('woff'),
+         url('/fonts/OpenSans-SemiBold.eot') format('eot'),
+         url('/fonts/OpenSans-SemiBold.svg') format('svg'),
+         url('/fonts/OpenSans-SemiBold.ttf') format('ttf');
+    font-weight: 600;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "OpenSans";
+    src: url('/fonts/OpenSans-Bold.woff2') format('woff2'),
+         url('/fonts/OpenSans-Bold.woff') format('woff'),
+         url('/fonts/OpenSans-Bold.eot') format('eot'),
+         url('/fonts/OpenSans-Bold.svg') format('svg'),
+         url('/fonts/OpenSans-Bold.ttf') format('ttf');
+    font-weight: bold;
+    font-style: normal;
+  }
+  body {
+    overflow-x: hidden;
+  }
+  .draggable {
+    cursor: grab;
+  }
+  .dragging {
+    cursor: grabbing;
+    z-index: 99999;
+  }
+  .tooltip-button-wrapper {
+    display: inline-block;
+    .banner & {
+      button, a {
+        font-size: inherit;
+      }
+    }
+  }
+`;
+
 export interface StyledModalProps extends ModalProps {
   article?: boolean;
   authorization?: boolean;
 }
 
-export const StyledBanner = styled.div<StyledBannerProps>`
-  padding: 25px 0;
-  position: relative;
-  width: 100%;
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    width: 100vw;
-    transform: translateX(-50%);
-    left: 50%;
-    height: 100%;
-    background: ${(props) => props.backgroundColor};
-    box-shadow: inset 0px 0px 25px 20px rgba(0, 0, 0, 0.1);
-  }
-`;
+interface StyledSwitchableIconProps extends SvgIconProps {
+  active: boolean;
+  Icon: OverridableComponent<SvgIconTypeMap>;
+}
 
-export const FullWidthDivider = styled(Divider)`
-  width: 200%;
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
+export const StyledSwitchableIcon = styled(
+  ({ active, Icon, ...props }: StyledSwitchableIconProps) => <Icon {...props} />
+)`
+  path:first-child {
+    transition: 0.3s;
+    opacity: ${({ active }) => (active ? 0.5 : 0)};
+  }
 `;
 
 export const StyledModal = styled(
@@ -41,7 +82,7 @@ export const StyledModal = styled(
   flex-direction: column;
   width: 90vw;
   max-width: ${({ article, authorization }) =>
-    authorization ? "600px" : !article ? "1200px" : "auto"};
+    authorization ? "600px" : article ? "auto" : "1200px"};
   margin: auto;
   justify-content: space-between;
   overflow-y: auto;
