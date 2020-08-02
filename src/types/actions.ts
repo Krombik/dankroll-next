@@ -6,6 +6,7 @@ import { ModalActions } from "../redux/modal/type";
 import { RehydrateAction } from "redux-persist";
 import { ErrorActions } from "../redux/error/type";
 import { AuthenticationActions } from "../redux/authentication/type";
+import { EditorActions } from "../redux/editor/type";
 
 export type Actions =
   | ArticleActions
@@ -13,5 +14,6 @@ export type Actions =
   | ErrorActions
   | AuthenticationActions
   | ModalActions
+  | EditorActions
   | { type: typeof HYDRATE; payload: State }
   | RehydrateAction;

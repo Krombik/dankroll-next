@@ -1,7 +1,5 @@
-import { FC, useRef, useState, ChangeEvent } from "react";
+import { FC, useState, ChangeEvent, useEffect, useCallback } from "react";
 import Grid from "@material-ui/core/Grid";
-import useSWR from "swr";
-import { getFromStorage, setToStorage } from "../../utils/storage";
 import { Button } from "@material-ui/core";
 import EditableTagList from "../tag/EditableTagList";
 import { ArticleEditorType, ArticleObj } from "../../types/article";
@@ -12,10 +10,19 @@ import { State, ThunkDispatcher, FetchRV } from "../../types";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import { setModal } from "../../redux/modal/actions";
 import { setError } from "../../redux/error/actions";
+import {
+  setEditor,
+  setCurrentEditor,
+  removeEditor,
+} from "../../redux/editor/actions";
+import Router from "next/router";
+import { mutate } from "swr";
 
 const selectData = createSelector(
   (state: State) => state.authentication.token,
-  (token) => ({ token })
+  (state: State) => state.editor.editors,
+  (state: State) => state.editor.current,
+  (token, editors, currentEditor) => ({ token, editors, currentEditor })
 );
 
 type Props = {
@@ -23,70 +30,75 @@ type Props = {
 };
 
 const Editor: FC<Props> = ({ slug }) => {
-  const { token } = useSelector(selectData);
-  const dispatch = useDispatch<ThunkDispatcher>();
-  const initialData = slug
-    ? useSWR<ArticleObj>([getArticleUrl(slug), token], {
-        revalidateOnMount: false,
-        revalidateOnFocus: false,
-        revalidateOnReconnect: false,
-      }).data.article
-    : {
-        title: "",
-        description: "",
-        body: "",
-        tagList: [],
-      };
-  const key = "editor-" + (slug ? "e-" + slug : "new");
+  const key = slug ? `_${slug}` : "new";
   const [loading, setLoading] = useState(false);
-  const { data, mutate } = useSWR<ArticleEditorType>(key, getFromStorage);
-  const article = data ?? initialData;
-  const interval = useRef<number>(null);
-  const editTags = (tagList: string[]) => {
-    const newArticle = { ...article, tagList };
-    mutate(newArticle, false);
-    setToStorage(key, newArticle);
-  };
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    mutate({ ...article, [e.target.name]: e.target.value }, false);
-  };
-  const handleFocus = () => {
-    interval.current = setInterval(() => {
-      setToStorage(key, article);
-    }, 1000);
-  };
-  const handleBlur = () => {
-    clearInterval(interval.current);
-    setToStorage(key, article);
-  };
+  const { token, editors, currentEditor } = useSelector(selectData);
+  const dispatch = useDispatch<ThunkDispatcher>();
+  useEffect(() => {
+    if (!currentEditor || currentEditor.slug !== slug)
+      dispatch(setCurrentEditor(key));
+  }, []);
+  const updatedEditor = editors[key];
+  const handleChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      dispatch(setEditor(key, { [e.target.name]: e.target.value }));
+    },
+    [key]
+  );
+  const handleTag = useCallback(
+    (tagList: string[]) => {
+      dispatch(setEditor(key, { tagList }));
+    },
+    [key]
+  );
+  const handleResetEditor = useCallback(() => {
+    dispatch(removeEditor(key));
+  }, [key]);
   const handleArticleEdit = async () => {
     setLoading(true);
     let data: FetchRV<ArticleObj>;
     if (slug) {
       const updatedArticle: Partial<ArticleEditorType> = {};
-      if (article.title !== initialData.title)
-        updatedArticle.title = article.title;
-      if (article.body !== initialData.body) updatedArticle.body = article.body;
-      if (article.description !== initialData.description)
-        updatedArticle.description = article.description;
+      if (updatedEditor.title && currentEditor!.title !== updatedEditor.title)
+        updatedArticle.title = updatedEditor.title;
+      if (updatedEditor.body && currentEditor!.body !== updatedEditor.body)
+        updatedArticle.body = updatedEditor.body;
       if (
-        article.tagList.length !== initialData.tagList.length ||
-        article.tagList.some(
-          (item, index) => item !== initialData.tagList[index]
-        )
+        updatedEditor.description &&
+        currentEditor!.description !== updatedEditor.description
       )
-        updatedArticle.tagList = article.tagList;
+        updatedArticle.description = updatedEditor.description;
+      if (
+        updatedEditor.tagList &&
+        (updatedEditor.tagList.length !== currentEditor!.tagList.length ||
+          updatedEditor.tagList.some(
+            (item, index) => item !== currentEditor!.tagList[index]
+          ))
+      )
+        updatedArticle.tagList = updatedEditor.tagList;
       data = await updateArticle(updatedArticle, slug, token);
     } else {
-      data = await createArticle(article, token);
+      data = await createArticle(updatedEditor as ArticleEditorType, token);
     }
+    setLoading(false);
     if (data.article) {
-      setLoading(false);
-      window.history.pushState("", "", `/articles/${data.article.slug}`);
-      dispatch(setModal(true, "article", data.article.slug));
-      localStorage.removeItem(key);
+      dispatch(removeEditor(key));
+      const path = `/articles/${data.article.slug}`;
+      if (Router.query.slug) {
+        if (!slug)
+          await Router.push("/articles/[slug]", path, { shallow: true });
+        else {
+          mutate([getArticleUrl(data.article.slug), token], data, false);
+          await Router.replace("/articles/[slug]", path, { shallow: true });
+        }
+        dispatch(setModal(false));
+      } else {
+        if (!slug) window.history.pushState("", "", path);
+        else window.history.replaceState("", "", path);
+        dispatch(setModal(true, "article", data.article.slug));
+      }
     } else {
-      dispatch(setError(true, data.status, data.errors));
+      dispatch(setError(true, data));
     }
   };
   return (
@@ -94,13 +106,12 @@ const Editor: FC<Props> = ({ slug }) => {
       <Grid container justify="center" alignItems="center" spacing={3}>
         <Grid item xs={12}>
           <TextValidator
-            value={article.title}
+            value={updatedEditor?.title || currentEditor?.title || ""}
+            disabled={!currentEditor}
             label="Title"
             name="title"
             variant="outlined"
             onChange={handleChange}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
             fullWidth
             validators={["required"]}
             errorMessages={["this field is required"]}
@@ -108,13 +119,14 @@ const Editor: FC<Props> = ({ slug }) => {
         </Grid>
         <Grid item xs={12}>
           <TextValidator
-            value={article.description}
+            value={
+              updatedEditor?.description || currentEditor?.description || ""
+            }
+            disabled={!currentEditor}
             name="description"
             label="Description"
             variant="outlined"
             onChange={handleChange}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
             fullWidth
             validators={["required"]}
             errorMessages={["this field is required"]}
@@ -122,13 +134,12 @@ const Editor: FC<Props> = ({ slug }) => {
         </Grid>
         <Grid item xs={12}>
           <TextValidator
-            value={article.body}
+            value={updatedEditor?.body || currentEditor?.body || ""}
+            disabled={!currentEditor}
             name="body"
             label="Text"
             variant="outlined"
             onChange={handleChange}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
             multiline
             fullWidth
             validators={["required"]}
@@ -136,18 +147,35 @@ const Editor: FC<Props> = ({ slug }) => {
             rows={15}
           />
         </Grid>
-        <Grid item xs={12}>
-          <EditableTagList tagList={article.tagList} editTags={editTags} />
-        </Grid>
-        <Grid item>
-          <Button
-            variant="contained"
-            color="primary"
-            disabled={loading}
-            type="submit"
-          >
-            {(slug ? "Edit" : "Create") + " article"}
-          </Button>
+        {currentEditor && (
+          <Grid item xs={12}>
+            <EditableTagList
+              tagList={updatedEditor?.tagList || currentEditor.tagList}
+              editTags={handleTag}
+            />
+          </Grid>
+        )}
+        <Grid item container spacing={3} justify="center">
+          <Grid item>
+            <Button
+              variant="contained"
+              color="primary"
+              disabled={loading || !currentEditor}
+              type="submit"
+            >
+              {`${slug ? "Edit" : "Create"} article`}
+            </Button>
+          </Grid>
+          <Grid item>
+            <Button
+              variant="contained"
+              color="primary"
+              disabled={loading || !currentEditor}
+              onClick={handleResetEditor}
+            >
+              Reset
+            </Button>
+          </Grid>
         </Grid>
       </Grid>
     </ValidatorForm>
