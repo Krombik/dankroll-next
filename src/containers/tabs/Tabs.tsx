@@ -1,12 +1,12 @@
 import { useSelector } from "react-redux";
 import { createSelector } from "reselect";
-import { State } from "../../types";
+import { State } from "@/types";
 import { FC } from "react";
 import Router, { useRouter } from "next/router";
-import { tabKeyDecoder } from "../../utils/tabKeyDecoder";
+import { tabKeyDecoder } from "@/utils/tabKeyDecoder";
 import MuiTabs from "@material-ui/core/Tabs";
-import { TabQuery } from "../../types/tab";
-import { TabValues } from "../../utils/constant";
+import { TabQuery } from "@/types/tab";
+import { TabValues } from "@/utils/constant";
 
 const selectData = createSelector(
   (state: State) => state.articleTabs.tabPages,

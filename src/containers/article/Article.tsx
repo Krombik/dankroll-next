@@ -1,14 +1,14 @@
-import { ArticleObj } from "../../types/article";
+import { ArticleObj } from "@/types/article";
 import Grid from "@material-ui/core/Grid";
 import { FC, useEffect } from "react";
-import { CommentsObj } from "../../types/comment";
-import { FetchRV, State, ThunkDispatcher } from "../../types";
+import { CommentsObj } from "@/types/comment";
+import { FetchRV, State, ThunkDispatcher } from "@/types";
 import { createSelector } from "reselect";
 import { useSelector, useDispatch } from "react-redux";
-import { setModal } from "../../redux/modal/actions";
+import { setModal } from "@/redux/modal/actions";
 import CommentSection from "../comment/CommentSection";
 import ArticleSection from "./ArticleSection";
-import { Divider } from "@material-ui/core";
+import Divider from "@material-ui/core/Divider";
 
 const selectData = createSelector(
   (state: State) => state.authentication.token,

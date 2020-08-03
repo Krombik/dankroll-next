@@ -22,7 +22,7 @@
     "@material-ui/lab": "4.0.0-alpha.55",
     "styled-components": "5.1.1",
     "react-sortable-hoc": "1.11.0",
-    "swr": "0.3.0-beta.10",
+    "swr": "0.3.0",
     "nookies": "2.3.2",
     "react-material-ui-form-validator": "2.0.10",
     "react-markdown": "4.3.1",
@@ -31,7 +31,6 @@
   "devDependencies": {
     "@types/lodash.clonedeep": "4.5.6",
     "@types/react-material-ui-form-validator": "2.0.5",
-    "@types/react-beautiful-dnd": "13.0.0",
     "@types/node": "14.0.11",
     "@types/react": "16.9.35",
     "@types/react-redux": "7.1.9",

@@ -3,14 +3,14 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Link from "@material-ui/core/Link";
-import { loginUser } from "../../api/user";
+import { loginUser } from "@/api/user";
 import { useDispatch } from "react-redux";
-import { ThunkDispatcher } from "../../types";
-import { setError } from "../../redux/error/actions";
-import { setAuthorized } from "../../redux/authentication/actions";
+import { ThunkDispatcher } from "@/types";
+import { setError } from "@/redux/error/actions";
+import { setAuthorized } from "@/redux/authentication/actions";
 import { setCookie } from "nookies";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
-import { setModal } from "../../redux/modal/actions";
+import { setModal } from "@/redux/modal/actions";
 
 type Props = {
   openModal: (e: any) => void;

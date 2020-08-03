@@ -1,10 +1,10 @@
 import { FC, memo, useCallback } from "react";
 import Snackbar from "@material-ui/core/Snackbar";
 import Alert from "@material-ui/lab/Alert";
-import { State, ThunkDispatcher } from "../../types";
+import { State, ThunkDispatcher } from "@/types";
 import { createSelector } from "reselect";
 import { useSelector, useDispatch } from "react-redux";
-import { setError } from "../../redux/error/actions";
+import { setError } from "@/redux/error/actions";
 
 const selectData = createSelector(
   (state: State) => state.error.show,

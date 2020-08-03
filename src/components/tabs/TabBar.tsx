@@ -1,7 +1,6 @@
 import MuiAppBar, { AppBarProps } from "@material-ui/core/AppBar";
 import { FC } from "react";
 import Gutter from "../common/Gutter";
-import { Toolbar } from "@material-ui/core";
 
 const AppBar: FC<AppBarProps> = (props) => (
   <MuiAppBar
@@ -9,7 +8,7 @@ const AppBar: FC<AppBarProps> = (props) => (
     component="nav"
     css={`
       justify-content: center;
-      min-height: 60px;
+      min-height: 72px;
     `}
     position="static"
     color="default"

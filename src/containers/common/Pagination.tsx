@@ -2,8 +2,8 @@ import Link from "next/link";
 import PaginationContainer from "@material-ui/lab/Pagination";
 import PaginationItem from "@material-ui/lab/PaginationItem";
 import { useDispatch } from "react-redux";
-import { ThunkDispatcher } from "../../types";
-import { setPageNumber } from "../../redux/articleTabs/actions";
+import { ThunkDispatcher } from "@/types";
+import { setPageNumber } from "@/redux/articleTabs/actions";
 import { FC } from "react";
 import { useRouter } from "next/router";
 

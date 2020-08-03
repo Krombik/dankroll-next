@@ -2,7 +2,7 @@ import useSWR, { useSWRInfinite } from "swr";
 import { useRef } from "react";
 import { keyInterface } from "swr/dist/types";
 import fetcher from "./fetcher";
-import { FetchRV } from "../types";
+import { FetchRV } from "@/types";
 
 export function useRequest<T = any>(
   key: keyInterface,

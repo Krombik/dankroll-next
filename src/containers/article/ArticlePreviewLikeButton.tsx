@@ -2,7 +2,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import { FC } from "react";
 import Button from "@material-ui/core/Button";
 import FavoriteTwoToneIcon from "@material-ui/icons/FavoriteTwoTone";
-import { StyledSwitchableIcon } from "../../components/common/styled";
+import { StyledSwitchableIcon } from "@/components/common/styled";
 
 type Props = {
   onLike?: (liked: boolean, slug: string, index: number) => Promise<void>;

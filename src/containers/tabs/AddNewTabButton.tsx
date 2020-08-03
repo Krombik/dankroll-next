@@ -1,15 +1,15 @@
-import { ThunkDispatcher } from "../../types";
+import { ThunkDispatcher } from "@/types";
 import { useDispatch } from "react-redux";
-import { addTab } from "../../redux/articleTabs/actions";
+import { addTab } from "@/redux/articleTabs/actions";
 import AddIcon from "@material-ui/icons/Add";
 import Grid from "@material-ui/core/Grid";
 import Input from "@material-ui/core/Input";
 import { useState, useRef, FC, memo, ChangeEvent, KeyboardEvent } from "react";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import Router from "next/router";
-import { TabProps, Tab } from "@material-ui/core";
-import TooltipIconButton from "../../components/common/TooltipIconButton";
-import { TabValues } from "../../utils/constant";
+import Tab, { TabProps } from "@material-ui/core/Tab";
+import TooltipIconButton from "@/components/common/TooltipIconButton";
+import { TabValues } from "@/utils/constant";
 
 const AddNewTabButton: FC<TabProps & { component: string }> = memo((props) => {
   const ref = useRef<HTMLInputElement>(null);

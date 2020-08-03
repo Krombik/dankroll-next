@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { FetchRV } from "../types";
+import { FetchRV } from "@/types";
 
 const fetcher = {
   async get<T = {}>(url: string, token?: string): Promise<FetchRV<T>> {

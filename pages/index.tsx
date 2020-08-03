@@ -1,26 +1,26 @@
-import { wrapper } from "../src/redux/store";
-import { ServerSideContext, PropsFromServer } from "../src/types";
-import ArticleList from "../src/containers/article/ArticlesList";
-import { getArticlesUrl } from "../src/api/article";
+import { wrapper } from "@/redux/store";
+import { ServerSideContext, PropsFromServer } from "@/types";
+import ArticleList from "@/containers/article/ArticlesList";
+import { getArticlesUrl } from "@/api/article";
 import { NextPage } from "next";
-import SortableTabs from "../src/containers/tabs/SortableTabs";
+import SortableTabs from "@/containers/tabs/SortableTabs";
 import {
   serverSetOffset,
   setPageNumber,
   addTab,
-} from "../src/redux/articleTabs/actions";
+} from "@/redux/articleTabs/actions";
 import DefaultErrorPage from "next/error";
-import Banner from "../src/containers/common/Banner";
+import Banner from "@/containers/common/Banner";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import { ArticlesObj } from "../src/types/article";
-import fetcher from "../src/utils/fetcher";
+import { ArticlesObj } from "@/types/article";
+import fetcher from "@/utils/fetcher";
 import { parseCookies } from "nookies";
-import { serverSetAuthorized } from "../src/redux/authentication/actions";
-import { TabQuery } from "../src/types/tab";
-import { TabValues, SITE_NAME } from "../src/utils/constant";
-import Gutter from "../src/components/common/Gutter";
-import TabBar from "../src/components/tabs/TabBar";
+import { serverSetAuthorized } from "@/redux/authentication/actions";
+import { TabQuery } from "@/types/tab";
+import { TabValues, SITE_NAME } from "@/utils/constant";
+import Gutter from "@/components/common/Gutter";
+import TabBar from "@/components/tabs/TabBar";
 
 const Index: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
   initialArticles,

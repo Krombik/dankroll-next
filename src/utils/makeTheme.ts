@@ -9,14 +9,9 @@ const makeTheme = (isDark: boolean) =>
         },
         h2: {
           fontWeight: "bold",
-          position: "relative",
         },
         h1: {
           fontWeight: "bold",
-          position: "relative",
-        },
-        body1: {
-          position: "relative",
         },
       },
       palette: {

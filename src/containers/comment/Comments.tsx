@@ -1,11 +1,11 @@
 import Grid from "@material-ui/core/Grid";
 import { FC } from "react";
-import { CommentType, CommentsObj } from "../../types/comment";
-import Comment from "../../components/common/Comment";
-import { FetchRV, ThunkDispatcher } from "../../types";
-import { deleteArticleComment } from "../../api/comment";
+import { CommentType, CommentsObj } from "@/types/comment";
+import Comment from "@/components/common/Comment";
+import { FetchRV, ThunkDispatcher } from "@/types";
+import { deleteArticleComment } from "@/api/comment";
 import { useDispatch } from "react-redux";
-import { setError } from "../../redux/error/actions";
+import { setError } from "@/redux/error/actions";
 
 type Props = {
   comments: CommentType[];

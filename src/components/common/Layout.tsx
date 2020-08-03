@@ -1,7 +1,7 @@
 import { FC } from "react";
-import Header from "../../containers/header/Header";
-import Modal from "../../containers/modal/Modal";
-import ErrorAlert from "../../containers/common/ErrorAlert";
+import Header from "@/containers/header/Header";
+import Modal from "@/containers/modal/Modal";
+import ErrorAlert from "@/containers/common/ErrorAlert";
 import Grid from "@material-ui/core/Grid";
 
 const Layout: FC = ({ children }) => (

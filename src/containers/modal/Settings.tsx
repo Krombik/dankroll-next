@@ -9,21 +9,21 @@ import {
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
-import { updateCurrentUser, getCurrentUser } from "../../api/user";
-import { setError } from "../../redux/error/actions";
-import { setAuthorized } from "../../redux/authentication/actions";
+import { updateCurrentUser, getCurrentUser } from "@/api/user";
+import { setError } from "@/redux/error/actions";
+import { setAuthorized } from "@/redux/authentication/actions";
 import { setCookie } from "nookies";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
-import { setModal } from "../../redux/modal/actions";
+import { setModal } from "@/redux/modal/actions";
 import { createSelector } from "reselect";
 import { useSelector, useDispatch } from "react-redux";
-import { State, ThunkDispatcher, FetchRV } from "../../types";
+import { State, ThunkDispatcher, FetchRV } from "@/types";
 import useSWR from "swr";
 import {
   AuthorizedUserObj,
   AuthorizedUserType,
   UpdateUser,
-} from "../../types/user";
+} from "@/types/user";
 import Router from "next/router";
 
 const selectData = createSelector(

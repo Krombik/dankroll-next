@@ -1,7 +1,4 @@
-import {
-  ArticleEditorType,
-  ArticleCurrentEditorType,
-} from "../../types/article";
+import { ArticleEditorType, ArticleCurrentEditorType } from "@/types/article";
 
 export enum EditorActionTypes {
   SET_EDITOR = "SET_EDITOR",

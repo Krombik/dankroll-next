@@ -1,11 +1,11 @@
 import { FC } from "react";
 import { createSelector } from "reselect";
 import { useSelector, useDispatch } from "react-redux";
-import { State, ThunkDispatcher } from "../../types";
+import { State, ThunkDispatcher } from "@/types";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import { setOffset } from "../../redux/articleTabs/actions";
+import { setOffset } from "@/redux/articleTabs/actions";
 import Router from "next/router";
 import { setCookie } from "nookies";
 import { SelectInputProps } from "@material-ui/core/Select/SelectInput";

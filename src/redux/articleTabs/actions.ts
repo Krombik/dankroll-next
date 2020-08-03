@@ -1,10 +1,10 @@
-import { ThunkResult } from "../../types";
+import { ThunkResult } from "@/types";
 import { ActionTypes, TabPagesType } from "./type";
-import { TabQuery } from "../../types/tab";
-import { tabKeyDecoder } from "../../utils/tabKeyDecoder";
-import { moveFromTo } from "../../utils/moveFromTo";
+import { TabQuery } from "@/types/tab";
+import { tabKeyDecoder } from "@/utils/tabKeyDecoder";
+import { moveFromTo } from "@/utils/moveFromTo";
 import Router from "next/router";
-import { TabValues } from "../../utils/constant";
+import { TabValues } from "@/utils/constant";
 
 export const setOffset = (offset: number): ThunkResult => (dispatch) => {
   dispatch({

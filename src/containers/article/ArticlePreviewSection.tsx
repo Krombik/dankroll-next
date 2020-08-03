@@ -1,14 +1,14 @@
-import { ArticlesObj, ArticleType } from "../../types/article";
+import { ArticlesObj, ArticleType } from "@/types/article";
 import { FC, MouseEvent, useCallback, useEffect } from "react";
-import { likeArticle } from "../../api/article";
-import { FetchRV, ThunkDispatcher } from "../../types";
+import { likeArticle } from "@/api/article";
+import { FetchRV, ThunkDispatcher } from "@/types";
 import { useDispatch } from "react-redux";
 import cloneDeep from "lodash.clonedeep";
-import { setModal } from "../../redux/modal/actions";
-import ArticlePreview from "../../components/article/ArticlePreview";
+import { setModal } from "@/redux/modal/actions";
+import ArticlePreview from "@/components/article/ArticlePreview";
 import ArticlePreviewLikeButton from "./ArticlePreviewLikeButton";
 import TagList from "../tag/TagList";
-import { setError } from "../../redux/error/actions";
+import { setError } from "@/redux/error/actions";
 
 type Props = {
   data: FetchRV<ArticlesObj>[];

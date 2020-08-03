@@ -1,16 +1,16 @@
-import RemovableTab from "../../components/tabs/RemovableTab";
+import RemovableTab from "@/components/tabs/RemovableTab";
 import Tab from "@material-ui/core/Tab";
 import { useSelector } from "react-redux";
 import { createSelector } from "reselect";
-import { State, ThunkDispatcher } from "../../types";
+import { State, ThunkDispatcher } from "@/types";
 import { useDispatch } from "react-redux";
-import { moveTab, removeTab } from "../../redux/articleTabs/actions";
+import { moveTab, removeTab } from "@/redux/articleTabs/actions";
 import { FC, SyntheticEvent, useCallback, memo } from "react";
 import AddNewTabButton from "./AddNewTabButton";
 import SortableList from "../common/SortableList";
 import Tabs from "./Tabs";
 import Router from "next/router";
-import { TabValues } from "../../utils/constant";
+import { TabValues } from "@/utils/constant";
 
 const selectData = createSelector(
   (state: State) => state.articleTabs.tabList,

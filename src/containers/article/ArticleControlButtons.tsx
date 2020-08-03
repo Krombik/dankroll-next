@@ -2,14 +2,14 @@ import { FC, useState } from "react";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { useDispatch } from "react-redux";
-import { ThunkDispatcher } from "../../types";
-import { setModal } from "../../redux/modal/actions";
-import { deleteArticle } from "../../api/article";
+import { ThunkDispatcher } from "@/types";
+import { setModal } from "@/redux/modal/actions";
+import { deleteArticle } from "@/api/article";
 import Router from "next/router";
-import { setError } from "../../redux/error/actions";
-import TooltipIconButton from "../../components/common/TooltipIconButton";
-import { ArticleType } from "../../types/article";
-import { setCurrentEditor } from "../../redux/editor/actions";
+import { setError } from "@/redux/error/actions";
+import TooltipIconButton from "@/components/common/TooltipIconButton";
+import { ArticleType } from "@/types/article";
+import { setCurrentEditor } from "@/redux/editor/actions";
 
 type Props = {
   article: ArticleType;

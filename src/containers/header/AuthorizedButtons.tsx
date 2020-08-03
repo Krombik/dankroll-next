@@ -1,11 +1,11 @@
 import { FC } from "react";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import MeetingRoomIcon from "@material-ui/icons/MeetingRoom";
-import TooltipIconButton from "../../components/common/TooltipIconButton";
+import TooltipIconButton from "@/components/common/TooltipIconButton";
 import CreateIcon from "@material-ui/icons/Create";
 import { useDispatch } from "react-redux";
-import { ThunkDispatcher } from "../../types";
-import { setAuthorized } from "../../redux/authentication/actions";
+import { ThunkDispatcher } from "@/types";
+import { setAuthorized } from "@/redux/authentication/actions";
 import { destroyCookie } from "nookies";
 
 type Props = {

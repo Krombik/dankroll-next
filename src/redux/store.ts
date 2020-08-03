@@ -2,8 +2,8 @@ import { createStore, applyMiddleware, Middleware } from "redux";
 import { HYDRATE, createWrapper } from "next-redux-wrapper";
 import thunkMiddleware from "redux-thunk";
 import { combinedReducer } from "./reducer";
-import { State } from "../types";
-import { Actions } from "../types/actions";
+import { State } from "@/types";
+import { Actions } from "@/types/actions";
 import { persistStore, REHYDRATE } from "redux-persist";
 
 const bindMiddleware = (middleware: Middleware) => {
@@ -37,7 +37,10 @@ const reducer = (state: State, action: Actions) => {
 };
 
 const initStore = () => {
-  const store: any = createStore(reducer, bindMiddleware(thunkMiddleware));
+  const store: any = createStore(
+    reducer as any,
+    bindMiddleware(thunkMiddleware)
+  );
   if (typeof window !== "undefined") persistStore(store);
   return store;
 };

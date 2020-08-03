@@ -5,15 +5,15 @@ import { FC, MouseEvent, memo, useCallback } from "react";
 import MuiLink from "@material-ui/core/Link";
 import { createSelector } from "reselect";
 import { useSelector, useDispatch } from "react-redux";
-import { State, ThunkDispatcher } from "../../types";
+import { State, ThunkDispatcher } from "@/types";
 import UnauthorizedButtons from "./UnauthorizedButtons";
 import AuthorizedButtons from "./AuthorizedButtons";
 import Link from "next/link";
-import { setModal } from "../../redux/modal/actions";
-import { ModalType } from "../../redux/modal/type";
+import { setModal } from "@/redux/modal/actions";
+import { ModalType } from "@/redux/modal/type";
 import SettingsDial from "./SettingsDial";
-import { SITE_NAME } from "../../utils/constant";
-import Gutter from "../../components/common/Gutter";
+import { SITE_NAME } from "@/utils/constant";
+import Gutter from "@/components/common/Gutter";
 
 const selectData = createSelector(
   (state: State) => state.authentication.currentUserName,

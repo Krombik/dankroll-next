@@ -1,14 +1,14 @@
-import { wrapper } from "../src/redux/store";
-import Layout from "../src/components/common/Layout";
+import { wrapper } from "@/redux/store";
+import Layout from "@/components/common/Layout";
 import { StylesProvider, ThemeProvider } from "@material-ui/core/styles";
 import { useEffect, FC, useMemo } from "react";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import makeTheme from "../src/utils/makeTheme";
+import makeTheme from "@/utils/makeTheme";
 import { AppProps } from "next/app";
 import { useSelector } from "react-redux";
 import { createSelector } from "reselect";
-import { State } from "../src/types";
-import { GlobalStyle } from "../src/components/common/styled";
+import { State } from "@/types";
+import { GlobalStyle } from "@/components/common/styled";
 
 const selectData = createSelector(
   (state: State) => state.common.dark,

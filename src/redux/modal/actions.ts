@@ -1,4 +1,4 @@
-import { ThunkResult } from "../../types";
+import { ThunkResult } from "@/types";
 import { ActionTypes, ModalType, SetModalPayload } from "./type";
 
 export const setModal = (

@@ -1,6 +1,6 @@
-import { ThunkResult } from "../../types";
+import { ThunkResult } from "@/types";
 import { ActionTypes, SetErrorPayloadType } from "./type";
-import { FetcherFailError } from "../../types/error";
+import { FetcherFailError } from "@/types/error";
 
 export const setError = (
   show: boolean,

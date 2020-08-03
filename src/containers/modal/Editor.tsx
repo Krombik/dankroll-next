@@ -1,20 +1,20 @@
 import { FC, useState, ChangeEvent, useEffect, useCallback } from "react";
 import Grid from "@material-ui/core/Grid";
-import { Button } from "@material-ui/core";
+import Button from "@material-ui/core/Button";
 import EditableTagList from "../tag/EditableTagList";
-import { ArticleEditorType, ArticleObj } from "../../types/article";
-import { createArticle, updateArticle, getArticleUrl } from "../../api/article";
+import { ArticleEditorType, ArticleObj } from "@/types/article";
+import { createArticle, updateArticle, getArticleUrl } from "@/api/article";
 import { createSelector } from "reselect";
 import { useSelector, useDispatch } from "react-redux";
-import { State, ThunkDispatcher, FetchRV } from "../../types";
+import { State, ThunkDispatcher, FetchRV } from "@/types";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
-import { setModal } from "../../redux/modal/actions";
-import { setError } from "../../redux/error/actions";
+import { setModal } from "@/redux/modal/actions";
+import { setError } from "@/redux/error/actions";
 import {
   setEditor,
   setCurrentEditor,
   removeEditor,
-} from "../../redux/editor/actions";
+} from "@/redux/editor/actions";
 import Router from "next/router";
 import { mutate } from "swr";
 

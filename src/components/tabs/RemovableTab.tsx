@@ -2,7 +2,7 @@ import { memo, FC } from "react";
 import Tab, { TabProps } from "@material-ui/core/Tab";
 import CloseIcon from "@material-ui/icons/Close";
 import Grid from "@material-ui/core/Grid";
-import SortableItem from "../../containers/common/SortableItem";
+import SortableItem from "@/containers/common/SortableItem";
 import TooltipIconButton from "../common/TooltipIconButton";
 import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
 

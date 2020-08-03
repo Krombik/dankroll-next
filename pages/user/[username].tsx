@@ -1,27 +1,22 @@
-import { wrapper } from "../../src/redux/store";
-import { ServerSideContext, PropsFromServer } from "../../src/types";
-import { getArticlesUrl } from "../../src/api/article";
+import { wrapper } from "@/redux/store";
+import { ServerSideContext, PropsFromServer } from "@/types";
+import { getArticlesUrl } from "@/api/article";
 import { NextPage } from "next";
 import DefaultErrorPage from "next/error";
-import AppBar from "@material-ui/core/AppBar";
 import Tab from "@material-ui/core/Tab";
-import { getUserUrl } from "../../src/api/user";
-import Grid from "@material-ui/core/Grid";
-import ArticleList from "../../src/containers/article/ArticlesList";
-import {
-  serverSetOffset,
-  setPageNumber,
-} from "../../src/redux/articleTabs/actions";
-import { ArticlesObj } from "../../src/types/article";
-import fetcher from "../../src/utils/fetcher";
-import { UserObj } from "../../src/types/user";
+import { getUserUrl } from "@/api/user";
+import ArticleList from "@/containers/article/ArticlesList";
+import { serverSetOffset, setPageNumber } from "@/redux/articleTabs/actions";
+import { ArticlesObj } from "@/types/article";
+import fetcher from "@/utils/fetcher";
+import { UserObj } from "@/types/user";
 import { parseCookies } from "nookies";
-import { serverSetAuthorized } from "../../src/redux/authentication/actions";
-import Tabs from "../../src/containers/tabs/Tabs";
-import UserSection from "../../src/containers/user/UserSection";
-import { TabValues } from "../../src/utils/constant";
-import TabBar from "../../src/components/tabs/TabBar";
-import Gutter from "../../src/components/common/Gutter";
+import { serverSetAuthorized } from "@/redux/authentication/actions";
+import Tabs from "@/containers/tabs/Tabs";
+import UserSection from "@/containers/user/UserSection";
+import { TabValues } from "@/utils/constant";
+import TabBar from "@/components/tabs/TabBar";
+import Gutter from "@/components/common/Gutter";
 
 const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
   initialUser,

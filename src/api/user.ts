@@ -1,7 +1,7 @@
-import { SERVER_BASE_URL } from "../utils/constant";
-import fetcher from "../utils/fetcher";
-import { FetchRV } from "../types";
-import { AuthorizedUserObj, UpdateUser, UserObj } from "../types/user";
+import { SERVER_BASE_URL } from "@/utils/constant";
+import fetcher from "@/utils/fetcher";
+import { FetchRV } from "@/types";
+import { AuthorizedUserObj, UpdateUser, UserObj } from "@/types/user";
 
 export const getUserUrl = (username: string) =>
   `${SERVER_BASE_URL}/profiles/${username}`;

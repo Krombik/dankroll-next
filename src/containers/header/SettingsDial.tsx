@@ -1,7 +1,7 @@
 import { FC, useState } from "react";
 import SpeedDialAction from "@material-ui/lab/SpeedDialAction";
 import TuneIcon from "@material-ui/icons/Tune";
-import { StyledSettingsDial } from "../../components/header/styled";
+import { StyledSettingsDial } from "@/components/header/styled";
 import IconButton from "@material-ui/core/IconButton";
 import SwitchTheme from "./SwitchTheme";
 import OffsetSelect from "./OffsetSelect";

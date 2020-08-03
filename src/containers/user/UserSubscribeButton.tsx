@@ -1,11 +1,11 @@
 import { FC } from "react";
 import SubscriptionsTwoToneIcon from "@material-ui/icons/SubscriptionsTwoTone";
-import { followUser } from "../../api/user";
+import { followUser } from "@/api/user";
 import { useDispatch } from "react-redux";
-import { ThunkDispatcher } from "../../types";
-import { setError } from "../../redux/error/actions";
-import TooltipIconButton from "../../components/common/TooltipIconButton";
-import { StyledSwitchableIcon } from "../../components/common/styled";
+import { ThunkDispatcher } from "@/types";
+import { setError } from "@/redux/error/actions";
+import TooltipIconButton from "@/components/common/TooltipIconButton";
+import { StyledSwitchableIcon } from "@/components/common/styled";
 
 type Props = {
   username: string;

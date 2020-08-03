@@ -1,10 +1,11 @@
 import { FC, useRef } from "react";
 import SortableList from "../common/SortableList";
 import SortableItem from "../common/SortableItem";
-import { moveFromTo } from "../../utils/moveFromTo";
+import { moveFromTo } from "@/utils/moveFromTo";
 import AddIcon from "@material-ui/icons/Add";
 import EditableTag from "./EditableTag";
-import { Chip, Grid } from "@material-ui/core";
+import Chip from "@material-ui/core/Chip";
+import Grid from "@material-ui/core/Grid";
 
 type Props = {
   tagList: string[];

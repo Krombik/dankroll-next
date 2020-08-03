@@ -1,6 +1,6 @@
-import { ThunkResult } from "../../types";
+import { ThunkResult } from "@/types";
 import { ActionTypes } from "./type";
-import { getCurrentUser } from "../../api/user";
+import { getCurrentUser } from "@/api/user";
 
 export const serverSetAuthorized = (
   token: string

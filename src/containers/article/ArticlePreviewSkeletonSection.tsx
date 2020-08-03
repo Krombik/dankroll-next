@@ -1,5 +1,5 @@
 import { FC } from "react";
-import ArticlePreview from "../../components/article/ArticlePreview";
+import ArticlePreview from "@/components/article/ArticlePreview";
 import FavoriteTwoToneIcon from "@material-ui/icons/FavoriteTwoTone";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";

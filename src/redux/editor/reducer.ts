@@ -1,8 +1,5 @@
 import { EditorActionTypes, EditorActions } from "./type";
-import {
-  ArticleEditorType,
-  ArticleCurrentEditorType,
-} from "../../types/article";
+import { ArticleEditorType, ArticleCurrentEditorType } from "@/types/article";
 
 type State = {
   editors: { [key: string]: Partial<ArticleEditorType> };

@@ -1,9 +1,9 @@
 import { FC } from "react";
 import SettingsIcon from "@material-ui/icons/Settings";
 import { useDispatch } from "react-redux";
-import { ThunkDispatcher } from "../../types";
-import { setModal } from "../../redux/modal/actions";
-import TooltipIconButton from "../../components/common/TooltipIconButton";
+import { ThunkDispatcher } from "@/types";
+import { setModal } from "@/redux/modal/actions";
+import TooltipIconButton from "@/components/common/TooltipIconButton";
 
 const UserSettingsButton: FC = () => {
   const dispatch = useDispatch<ThunkDispatcher>();

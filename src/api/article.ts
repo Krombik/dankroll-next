@@ -1,7 +1,7 @@
-import { SERVER_BASE_URL, TabValues } from "../utils/constant";
-import { getQuery } from "../utils/getQuery";
-import fetcher from "../utils/fetcher";
-import { ArticleObj, ArticleEditorType } from "../types/article";
+import { SERVER_BASE_URL, TabValues } from "@/utils/constant";
+import fetcher from "@/utils/fetcher";
+import { ArticleObj, ArticleEditorType } from "@/types/article";
+import { getQuery } from "@/utils/getQuery";
 
 export const getArticlesUrl = (
   type: string,

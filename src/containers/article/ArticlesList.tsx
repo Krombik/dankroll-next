@@ -1,22 +1,21 @@
-import { ArticlesObj } from "../../types/article";
+import { ArticlesObj } from "@/types/article";
 import { FC, useEffect, memo } from "react";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import { getArticlesUrl } from "../../api/article";
+import { getArticlesUrl } from "@/api/article";
 import Pagination from "../common/Pagination";
 import Router, { useRouter } from "next/router";
-import { FetchRV, State, ThunkDispatcher } from "../../types";
+import { FetchRV, State, ThunkDispatcher } from "@/types";
 import { createSelector } from "reselect";
 import { useSelector, useDispatch } from "react-redux";
-import usePrevious from "../../utils/usePrevious";
-import useOnUpdateEffect from "../../utils/useOnUpdateEffect";
-import { TabQuery } from "../../types/tab";
-import { setModal } from "../../redux/modal/actions";
-import { useRequestInfinity } from "../../utils/useRequest";
+import usePrevious from "@/utils/usePrevious";
+import useOnUpdateEffect from "@/utils/useOnUpdateEffect";
+import { TabQuery } from "@/types/tab";
+import { setModal } from "@/redux/modal/actions";
+import { useRequestInfinity } from "@/utils/useRequest";
 import ArticlePreviewSection from "./ArticlePreviewSection";
 import ArticlePreviewSkeletonSection from "./ArticlePreviewSkeletonSection";
 import Typography from "@material-ui/core/Typography";
-import Gutter from "../../components/common/Gutter";
 
 const selectData = createSelector(
   (state: State) => state.authentication.token,

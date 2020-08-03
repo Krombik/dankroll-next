@@ -1,13 +1,13 @@
 import { FC, MouseEvent, SyntheticEvent, memo } from "react";
 import { createSelector } from "reselect";
 import { useSelector, useDispatch } from "react-redux";
-import { State, ThunkDispatcher } from "../../types";
+import { State, ThunkDispatcher } from "@/types";
 import Login from "./Login";
-import CustomModal from "../../components/common/CustomModal";
+import CustomModal from "@/components/common/CustomModal";
 import Register from "./Register";
 import Editor from "./Editor";
-import { setModal } from "../../redux/modal/actions";
-import { ModalType } from "../../redux/modal/type";
+import { setModal } from "@/redux/modal/actions";
+import { ModalType } from "@/redux/modal/type";
 import Article from "../article/Article";
 import Router from "next/router";
 import Settings from "./Settings";

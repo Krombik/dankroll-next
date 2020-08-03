@@ -1,13 +1,13 @@
-import { ThunkResult } from "../../types";
+import { ThunkResult } from "@/types";
 import { EditorActionTypes } from "./type";
 import {
   ArticleEditorType,
   ArticleType,
   ArticleObj,
   ArticleCurrentEditorType,
-} from "../../types/article";
-import fetcher from "../../utils/fetcher";
-import { getArticleUrl } from "../../api/article";
+} from "@/types/article";
+import fetcher from "@/utils/fetcher";
+import { getArticleUrl } from "@/api/article";
 import { setError } from "../error/actions";
 
 export const setEditor = (

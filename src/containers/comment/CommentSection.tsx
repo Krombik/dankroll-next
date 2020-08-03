@@ -2,15 +2,15 @@ import Grid from "@material-ui/core/Grid";
 import { FC, useEffect } from "react";
 import Comments from "../comment/Comments";
 import PostComment from "../comment/PostComment";
-import { CommentsObj } from "../../types/comment";
-import { getArticleCommentsUrl } from "../../api/comment";
+import { CommentsObj } from "@/types/comment";
+import { getArticleCommentsUrl } from "@/api/comment";
 import Typography from "@material-ui/core/Typography";
-import { FetchRV, ThunkDispatcher } from "../../types";
-import Spinner from "../../components/common/Spinner";
-import { useRequest } from "../../utils/useRequest";
+import { FetchRV, ThunkDispatcher } from "@/types";
+import Spinner from "@/components/common/Spinner";
+import { useRequest } from "@/utils/useRequest";
 import { useDispatch } from "react-redux";
-import { setError } from "../../redux/error/actions";
-import Gutter from "../../components/common/Gutter";
+import { setError } from "@/redux/error/actions";
+import Gutter from "@/components/common/Gutter";
 
 type Props = {
   token: string;

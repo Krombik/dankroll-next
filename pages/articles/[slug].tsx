@@ -1,17 +1,17 @@
-import { wrapper } from "../../src/redux/store";
-import { ServerSideContext, PropsFromServer } from "../../src/types";
-import { getArticleUrl } from "../../src/api/article";
+import { wrapper } from "@/redux/store";
+import { ServerSideContext, PropsFromServer } from "@/types";
+import { getArticleUrl } from "@/api/article";
 import { NextPage } from "next";
 import DefaultErrorPage from "next/error";
-import Article from "../../src/containers/article/Article";
+import Article from "@/containers/article/Article";
 import { useRouter } from "next/router";
-import { getArticleCommentsUrl } from "../../src/api/comment";
-import fetcher from "../../src/utils/fetcher";
-import { ArticleObj } from "../../src/types/article";
-import { CommentsObj } from "../../src/types/comment";
+import { getArticleCommentsUrl } from "@/api/comment";
+import fetcher from "@/utils/fetcher";
+import { ArticleObj } from "@/types/article";
+import { CommentsObj } from "@/types/comment";
 import { parseCookies } from "nookies";
-import { serverSetAuthorized } from "../../src/redux/authentication/actions";
-import { serverSetOffset } from "../../src/redux/articleTabs/actions";
+import { serverSetAuthorized } from "@/redux/authentication/actions";
+import { serverSetOffset } from "@/redux/articleTabs/actions";
 
 const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
   initialArticle,

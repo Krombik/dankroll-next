@@ -1,5 +1,5 @@
 import { FC } from "react";
-import TooltipIconButton from "../../components/common/TooltipIconButton";
+import TooltipIconButton from "@/components/common/TooltipIconButton";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 

@@ -1,6 +1,5 @@
 import Container from "@material-ui/core/Container";
 import Grid, { GridProps } from "@material-ui/core/Grid";
-import { FC } from "react";
 
 const Gutter = <C extends React.ElementType>({
   children,

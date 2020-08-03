@@ -1,10 +1,10 @@
 import Grid from "@material-ui/core/Grid";
 import { FC } from "react";
 import Typography from "@material-ui/core/Typography";
-import TagList from "../../containers/tag/TagList";
-import { ArticleType } from "../../types/article";
-import Banner from "../../containers/common/Banner";
-import ContentInfo from "../common/ContentInfo";
+import TagList from "@/containers/tag/TagList";
+import { ArticleType } from "@/types/article";
+import Banner from "@/containers/common/Banner";
+import ContentInfo from "@/components/common/ContentInfo";
 
 type Props = {
   article: ArticleType;

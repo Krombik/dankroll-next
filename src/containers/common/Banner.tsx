@@ -3,9 +3,10 @@ import { createMuiTheme, useTheme } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/styles";
 import { useSelector } from "react-redux";
 import { createSelector } from "reselect";
-import { State } from "../../types";
-import Gutter from "../../components/common/Gutter";
-import { Paper, GridProps } from "@material-ui/core";
+import { State } from "@/types";
+import Gutter from "@/components/common/Gutter";
+import { GridProps } from "@material-ui/core/Grid";
+import Paper from "@material-ui/core/Paper";
 
 const selectData = createSelector(
   (state: State) => state.common.dark,

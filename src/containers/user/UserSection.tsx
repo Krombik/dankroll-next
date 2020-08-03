@@ -4,15 +4,15 @@ import Typography from "@material-ui/core/Typography";
 import { useSelector, useDispatch } from "react-redux";
 import { createSelector } from "reselect";
 import { FC, useEffect } from "react";
-import { useRequest } from "../../utils/useRequest";
-import { UserObj } from "../../types/user";
-import { State, FetchRV, ThunkDispatcher } from "../../types";
-import Spinner from "../../components/common/Spinner";
+import { useRequest } from "@/utils/useRequest";
+import { UserObj } from "@/types/user";
+import { State, FetchRV, ThunkDispatcher } from "@/types";
+import Spinner from "@/components/common/Spinner";
 import Banner from "../common/Banner";
 import UserSubscribeButton from "./UserSubscribeButton";
 import UserSettingsButton from "./UserSettingsButton";
-import { getUserUrl } from "../../api/user";
-import { setError } from "../../redux/error/actions";
+import { getUserUrl } from "@/api/user";
+import { setError } from "@/redux/error/actions";
 import { useRouter } from "next/router";
 
 const selectData = createSelector(
