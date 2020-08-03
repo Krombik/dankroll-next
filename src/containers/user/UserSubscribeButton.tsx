@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import SubscriptionsTwoToneIcon from "@material-ui/icons/SubscriptionsTwoTone";
 import { followUser } from "@/api/user";
 import { useDispatch } from "react-redux";
@@ -20,15 +20,16 @@ const UserSubscribeButton: FC<Props> = ({
   mutate,
   follow,
 }) => {
-  let loading = false;
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch<ThunkDispatcher>();
   const handleSubscribe = token
     ? async () => {
         if (!loading) {
-          loading = true;
+          setLoading(true);
           const data = await followUser(!follow, username, token);
           if (data.profile) {
             mutate(data, false);
+            setLoading(false);
           } else {
             dispatch(setError(true, data));
           }

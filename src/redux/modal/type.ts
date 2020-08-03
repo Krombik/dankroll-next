@@ -16,7 +16,6 @@ export type SetModalPayload = {
   open: boolean;
   modal?: ModalType;
   slug?: string;
-  refresh?: (...args: any) => any;
 };
 
 type SetModal = {
