@@ -33,9 +33,10 @@ const ArticlePreviewSection: FC<Props> = ({ data, token, mutate, offset }) => {
       newData[Math.floor(index / offset)].articles[index % offset] =
         res.article;
       mutate(newData, false);
-    } else {
-      dispatch(setError(true, res));
+      return true;
     }
+    dispatch(setError(true, res));
+    return false;
   };
   const handleModal = useCallback((e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
