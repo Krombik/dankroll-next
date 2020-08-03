@@ -102,83 +102,87 @@ const Editor: FC<Props> = ({ slug }) => {
     }
   };
   return (
-    <ValidatorForm onSubmit={handleArticleEdit} autoComplete="off">
-      <Grid container justify="center" alignItems="center" spacing={3}>
+    <Grid
+      container
+      justify="center"
+      alignItems="center"
+      spacing={3}
+      component={ValidatorForm}
+      onSubmit={handleArticleEdit}
+      autoComplete="off"
+    >
+      <Grid item xs={12}>
+        <TextValidator
+          value={updatedEditor?.title || currentEditor?.title || ""}
+          disabled={!currentEditor}
+          label="Title"
+          name="title"
+          variant="outlined"
+          onChange={handleChange}
+          fullWidth
+          validators={["required"]}
+          errorMessages={["this field is required"]}
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <TextValidator
+          value={updatedEditor?.description || currentEditor?.description || ""}
+          disabled={!currentEditor}
+          name="description"
+          label="Description"
+          variant="outlined"
+          onChange={handleChange}
+          fullWidth
+          validators={["required"]}
+          errorMessages={["this field is required"]}
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <TextValidator
+          value={updatedEditor?.body || currentEditor?.body || ""}
+          disabled={!currentEditor}
+          name="body"
+          label="Text"
+          variant="outlined"
+          onChange={handleChange}
+          multiline
+          fullWidth
+          validators={["required"]}
+          errorMessages={["this field is required"]}
+          rows={15}
+        />
+      </Grid>
+      {currentEditor && (
         <Grid item xs={12}>
-          <TextValidator
-            value={updatedEditor?.title || currentEditor?.title || ""}
-            disabled={!currentEditor}
-            label="Title"
-            name="title"
-            variant="outlined"
-            onChange={handleChange}
-            fullWidth
-            validators={["required"]}
-            errorMessages={["this field is required"]}
+          <EditableTagList
+            tagList={updatedEditor?.tagList || currentEditor.tagList}
+            editTags={handleTag}
           />
         </Grid>
-        <Grid item xs={12}>
-          <TextValidator
-            value={
-              updatedEditor?.description || currentEditor?.description || ""
-            }
-            disabled={!currentEditor}
-            name="description"
-            label="Description"
-            variant="outlined"
-            onChange={handleChange}
-            fullWidth
-            validators={["required"]}
-            errorMessages={["this field is required"]}
-          />
+      )}
+      <Grid item container spacing={3} justify="center">
+        <Grid item>
+          <Button
+            variant="contained"
+            color="primary"
+            disabled={loading || !currentEditor}
+            type="submit"
+          >
+            {`${slug ? "Edit" : "Create"} article`}
+          </Button>
         </Grid>
-        <Grid item xs={12}>
-          <TextValidator
-            value={updatedEditor?.body || currentEditor?.body || ""}
-            disabled={!currentEditor}
-            name="body"
-            label="Text"
-            variant="outlined"
-            onChange={handleChange}
-            multiline
-            fullWidth
-            validators={["required"]}
-            errorMessages={["this field is required"]}
-            rows={15}
-          />
-        </Grid>
-        {currentEditor && (
-          <Grid item xs={12}>
-            <EditableTagList
-              tagList={updatedEditor?.tagList || currentEditor.tagList}
-              editTags={handleTag}
-            />
-          </Grid>
-        )}
-        <Grid item container spacing={3} justify="center">
-          <Grid item>
-            <Button
-              variant="contained"
-              color="primary"
-              disabled={loading || !currentEditor}
-              type="submit"
-            >
-              {`${slug ? "Edit" : "Create"} article`}
-            </Button>
-          </Grid>
-          <Grid item>
-            <Button
-              variant="contained"
-              color="primary"
-              disabled={loading || !currentEditor}
-              onClick={handleResetEditor}
-            >
-              Reset
-            </Button>
-          </Grid>
+        <Grid item>
+          <Button
+            variant="contained"
+            color="primary"
+            disabled={loading || !currentEditor}
+            onClick={handleResetEditor}
+          >
+            Reset
+          </Button>
         </Grid>
       </Grid>
-    </ValidatorForm>
+    </Grid>
   );
 };
 

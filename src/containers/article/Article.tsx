@@ -1,5 +1,4 @@
 import { ArticleObj } from "@/types/article";
-import Grid from "@material-ui/core/Grid";
 import { FC, useEffect } from "react";
 import { CommentsObj } from "@/types/comment";
 import { FetchRV, State, ThunkDispatcher } from "@/types";
@@ -43,15 +42,11 @@ const Article: FC<Props> = ({ initialArticle, initialComments, slug }) => {
         token={token}
         currentUserName={currentUserName}
       />
-      <Grid
-        item
-        xs={12}
+      <Divider
         css={`
-          padding-top: 0 !important;
+          width: 100%;
         `}
-      >
-        <Divider />
-      </Grid>
+      />
       <CommentSection
         initialComments={initialComments}
         slug={slug}

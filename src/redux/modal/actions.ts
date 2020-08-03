@@ -1,6 +1,15 @@
 import { ThunkResult } from "@/types";
 import { ActionTypes, ModalType, SetModalPayload } from "./type";
 
+export const setArticleListRefreshFunc = (
+  refresh: (...args: any) => any
+): ThunkResult => (dispatch) => {
+  dispatch({
+    type: ActionTypes.SET_REFRESH_FUNC,
+    payload: refresh,
+  });
+};
+
 export const setModal = (
   open: boolean,
   modal?: ModalType,

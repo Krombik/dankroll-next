@@ -1,5 +1,6 @@
 export enum ActionTypes {
   SET_MODAL = "SET_MODAL",
+  SET_REFRESH_FUNC = "SET_REFRESH_FUNC",
 }
 
 export type ModalType =
@@ -15,6 +16,7 @@ export type SetModalPayload = {
   open: boolean;
   modal?: ModalType;
   slug?: string;
+  refresh?: (...args: any) => any;
 };
 
 type SetModal = {
@@ -22,4 +24,9 @@ type SetModal = {
   payload: SetModalPayload;
 };
 
-export type ModalActions = SetModal;
+type SetRefreshFunc = {
+  type: ActionTypes.SET_REFRESH_FUNC;
+  payload: (...args: any) => any;
+};
+
+export type ModalActions = SetModal | SetRefreshFunc;

@@ -44,73 +44,79 @@ const Register: FC<Props> = ({ openModal }) => {
     setLoading(false);
   };
   return (
-    <ValidatorForm onSubmit={handleRegister} autoComplete="off">
-      <Grid container justify="center" alignItems="center" spacing={3}>
-        <Grid item xs={12}>
-          <Typography align="center" variant="h4">
-            Sign up
-          </Typography>
-        </Grid>
-        <Link
-          underline="always"
-          variant="body2"
-          color="inherit"
-          component="button"
-          name="login"
-          onClick={openModal}
-        >
-          Have an account?
-        </Link>
-        <Grid item xs={12}>
-          <TextValidator
-            value={username}
-            label="Username"
-            name="username"
-            variant="outlined"
-            onChange={handleUsername}
-            fullWidth
-            validators={["required"]}
-            errorMessages={["this field is required"]}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextValidator
-            value={email}
-            label="Email"
-            type="email"
-            name="email"
-            variant="outlined"
-            onChange={handleEmail}
-            fullWidth
-            validators={["required", "isEmail"]}
-            errorMessages={["this field is required", "email is not valid"]}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextValidator
-            value={password}
-            label="Password"
-            type="password"
-            name="password"
-            variant="outlined"
-            onChange={handlePassword}
-            fullWidth
-            validators={["required"]}
-            errorMessages={["this field is required"]}
-          />
-        </Grid>
-        <Grid item>
-          <Button
-            variant="contained"
-            type="submit"
-            color="primary"
-            disabled={loading}
-          >
-            Register
-          </Button>
-        </Grid>
+    <Grid
+      container
+      justify="center"
+      alignItems="center"
+      spacing={3}
+      component={ValidatorForm}
+      onSubmit={handleRegister}
+      autoComplete="off"
+    >
+      <Grid item xs={12}>
+        <Typography align="center" variant="h4">
+          Sign up
+        </Typography>
       </Grid>
-    </ValidatorForm>
+      <Link
+        underline="always"
+        variant="body2"
+        color="inherit"
+        component="button"
+        name="login"
+        onClick={openModal}
+      >
+        Have an account?
+      </Link>
+      <Grid item xs={12}>
+        <TextValidator
+          value={username}
+          label="Username"
+          name="username"
+          variant="outlined"
+          onChange={handleUsername}
+          fullWidth
+          validators={["required"]}
+          errorMessages={["this field is required"]}
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <TextValidator
+          value={email}
+          label="Email"
+          type="email"
+          name="email"
+          variant="outlined"
+          onChange={handleEmail}
+          fullWidth
+          validators={["required", "isEmail"]}
+          errorMessages={["this field is required", "email is not valid"]}
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <TextValidator
+          value={password}
+          label="Password"
+          type="password"
+          name="password"
+          variant="outlined"
+          onChange={handlePassword}
+          fullWidth
+          validators={["required"]}
+          errorMessages={["this field is required"]}
+        />
+      </Grid>
+      <Grid item>
+        <Button
+          variant="contained"
+          type="submit"
+          color="primary"
+          disabled={loading}
+        >
+          Register
+        </Button>
+      </Grid>
+    </Grid>
   );
 };
 

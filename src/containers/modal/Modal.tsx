@@ -1,4 +1,4 @@
-import { FC, MouseEvent, SyntheticEvent, memo } from "react";
+import { FC, MouseEvent, SyntheticEvent, memo, useEffect } from "react";
 import { createSelector } from "reselect";
 import { useSelector, useDispatch } from "react-redux";
 import { State, ThunkDispatcher } from "@/types";
@@ -11,28 +11,42 @@ import { ModalType } from "@/redux/modal/type";
 import Article from "../article/Article";
 import Router from "next/router";
 import Settings from "./Settings";
+import Grid from "@material-ui/core/Grid";
 
 const selectData = createSelector(
   (state: State) => state.modal.open,
   (state: State) => state.modal.modal,
   (state: State) => state.modal.slug,
-  (open, modal, slug) => ({ open, modal, slug })
+  (state: State) => state.modal.refreshArticleList,
+  (open, modal, slug, refreshArticleList) => ({
+    open,
+    modal,
+    slug,
+    refreshArticleList,
+  })
 );
 
 const Modal: FC = memo(() => {
   const dispatch = useDispatch<ThunkDispatcher>();
-  const { open, modal, slug } = useSelector(selectData);
+  const { open, modal, slug, refreshArticleList } = useSelector(selectData);
   const isArticle = modal === "article";
+  const isEdit = modal === "edit";
+  const isNew = modal === "new";
+  const isLogin = modal === "login";
+  const isRegister = modal === "register";
+  useEffect(() => {
+    if (!open && (isArticle || isEdit || isNew) && refreshArticleList)
+      refreshArticleList();
+  }, [open]);
   const closeModal = () => {
-    if (isArticle) window.history.back();
-    else if (
-      modal === "edit" &&
-      window.location.pathname.includes("/articles/") &&
-      !Router.query.slug
-    ) {
+    if (
+      isArticle ||
+      (isEdit &&
+        window.location.pathname.includes("/articles/") &&
+        !Router.query.slug)
+    )
       window.history.back();
-      dispatch(setModal(false));
-    } else dispatch(setModal(false));
+    if (!isArticle) dispatch(setModal(false));
   };
   const openModal = (e: SyntheticEvent<HTMLButtonElement, MouseEvent>) => {
     dispatch(setModal(true, e.currentTarget.name as ModalType));
@@ -41,18 +55,20 @@ const Modal: FC = memo(() => {
     <CustomModal
       open={open}
       article={isArticle}
-      authorization={modal === "login" || modal === "register"}
+      authorization={isLogin || isRegister}
       onClose={closeModal}
     >
       {isArticle ? (
-        <Article slug={slug} />
-      ) : modal === "login" ? (
+        <Grid container spacing={3}>
+          <Article slug={slug} />
+        </Grid>
+      ) : isLogin ? (
         <Login openModal={openModal} />
-      ) : modal === "register" ? (
+      ) : isRegister ? (
         <Register openModal={openModal} />
-      ) : modal === "new" ? (
+      ) : isNew ? (
         <Editor />
-      ) : modal === "edit" ? (
+      ) : isEdit ? (
         <Editor slug={slug} />
       ) : modal === "settings" ? (
         <Settings />

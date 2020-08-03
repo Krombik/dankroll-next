@@ -29,11 +29,8 @@ const ArticleControlButtons: FC<Props> = ({ article, token }) => {
       const data = await deleteArticle(article.slug, token);
       if (data.status) {
         dispatch(setError(true, data));
-      } else {
-        dispatch(setModal(false));
-        if (window.history.length > 0) Router.back();
-        else Router.replace("/");
-      }
+      } else if (Router.query.slug) Router.replace("/");
+      else window.history.back();
     }
   };
   return (

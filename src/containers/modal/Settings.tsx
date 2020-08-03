@@ -91,88 +91,94 @@ const Settings: FC = () => {
     setLoading(false);
   };
   return (
-    <ValidatorForm onSubmit={handleSettings} autoComplete="off">
-      <Grid container justify="center" alignItems="center" spacing={3}>
-        <Grid item xs={12}>
-          <Typography align="center" variant="h4">
-            Settings
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <TextValidator
-            value={data?.user?.image || ""}
-            disabled={!data?.user}
-            label="Avatar url"
-            name="image"
-            variant="outlined"
-            onChange={handleChange}
-            fullWidth
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextValidator
-            disabled={!data?.user}
-            value={data?.user?.username || ""}
-            label="Username"
-            name="username"
-            variant="outlined"
-            onChange={handleChange}
-            fullWidth
-            validators={["required"]}
-            errorMessages={["this field is required"]}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextValidator
-            disabled={!data?.user}
-            value={data?.user?.bio || ""}
-            label="Bio"
-            name="bio"
-            variant="outlined"
-            onChange={handleChange}
-            multiline
-            rows={5}
-            fullWidth
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextValidator
-            disabled={!data?.user}
-            value={data?.user?.email || ""}
-            label="Email"
-            type="email"
-            name="email"
-            variant="outlined"
-            onChange={handleChange}
-            fullWidth
-            validators={["required", "isEmail"]}
-            errorMessages={["this field is required", "email is not valid"]}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextValidator
-            disabled={!data?.user}
-            value={password}
-            label="New password"
-            type="password"
-            name="password"
-            variant="outlined"
-            onChange={handlePassword}
-            fullWidth
-          />
-        </Grid>
-        <Grid item>
-          <Button
-            variant="contained"
-            type="submit"
-            color="primary"
-            disabled={loading || !data?.user}
-          >
-            Update profile
-          </Button>
-        </Grid>
+    <Grid
+      container
+      justify="center"
+      alignItems="center"
+      spacing={3}
+      component={ValidatorForm}
+      onSubmit={handleSettings}
+      autoComplete="off"
+    >
+      <Grid item xs={12}>
+        <Typography align="center" variant="h4">
+          Settings
+        </Typography>
       </Grid>
-    </ValidatorForm>
+      <Grid item xs={12}>
+        <TextValidator
+          value={data?.user?.image || ""}
+          disabled={!data?.user}
+          label="Avatar url"
+          name="image"
+          variant="outlined"
+          onChange={handleChange}
+          fullWidth
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <TextValidator
+          disabled={!data?.user}
+          value={data?.user?.username || ""}
+          label="Username"
+          name="username"
+          variant="outlined"
+          onChange={handleChange}
+          fullWidth
+          validators={["required"]}
+          errorMessages={["this field is required"]}
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <TextValidator
+          disabled={!data?.user}
+          value={data?.user?.bio || ""}
+          label="Bio"
+          name="bio"
+          variant="outlined"
+          onChange={handleChange}
+          multiline
+          rows={5}
+          fullWidth
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <TextValidator
+          disabled={!data?.user}
+          value={data?.user?.email || ""}
+          label="Email"
+          type="email"
+          name="email"
+          variant="outlined"
+          onChange={handleChange}
+          fullWidth
+          validators={["required", "isEmail"]}
+          errorMessages={["this field is required", "email is not valid"]}
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <TextValidator
+          disabled={!data?.user}
+          value={password}
+          label="New password"
+          type="password"
+          name="password"
+          variant="outlined"
+          onChange={handlePassword}
+          fullWidth
+        />
+      </Grid>
+      <Grid item>
+        <Button
+          variant="contained"
+          type="submit"
+          color="primary"
+          disabled={loading || !data?.user}
+        >
+          Update profile
+        </Button>
+      </Grid>
+    </Grid>
   );
 };
 
