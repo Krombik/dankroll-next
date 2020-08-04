@@ -31,16 +31,7 @@ const Index: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
   ) : (
     <>
       <Banner justify="center">
-        <Grid
-          item
-          component={Typography}
-          variant="h1"
-          color="textPrimary"
-          css={`
-            margin-top: 25px;
-            margin-bottom: 25px;
-          `}
-        >
+        <Grid item component={Typography} variant="h1" color="textPrimary">
           {SITE_NAME}
         </Grid>
       </Banner>

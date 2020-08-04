@@ -1,6 +1,5 @@
 import { SERVER_BASE_URL } from "@/utils/constant";
 import fetcher from "@/utils/fetcher";
-import { FetchRV } from "@/types";
 import { CommentObj } from "@/types/comment";
 import { CreateCommentType } from "@/types/comment";
 
@@ -12,7 +11,7 @@ export const createArticleComment = (
   comment: CreateCommentType,
   token: string
 ) =>
-  fetcher.post<FetchRV<CommentObj>>(
+  fetcher.post<CommentObj>(
     `${SERVER_BASE_URL}/articles/${slug}/comments`,
     { comment },
     token

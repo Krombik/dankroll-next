@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme: Theme) =>
     paper: {
       backgroundColor: theme.palette.background.default,
       padding: ({ article }: StyledModalProps) =>
-        article ? theme.spacing(1, 0, 2) : theme.spacing(3),
+        article ? theme.spacing(0, 0, 3) : theme.spacing(3),
       overflowX: "hidden",
     },
   })

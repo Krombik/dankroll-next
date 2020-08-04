@@ -4,7 +4,7 @@ import Typography from "@material-ui/core/Typography";
 import TagList from "@/containers/tag/TagList";
 import { ArticleType } from "@/types/article";
 import Banner from "@/containers/common/Banner";
-import ContentInfo from "@/components/common/ContentInfo";
+import ContentInfo from "@/containers/common/ContentInfo";
 
 type Props = {
   article: ArticleType;

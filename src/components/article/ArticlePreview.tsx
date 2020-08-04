@@ -5,7 +5,7 @@ import CardActions from "@material-ui/core/CardActions";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Card from "@material-ui/core/Card";
-import ContentInfo from "../common/ContentInfo";
+import ContentInfo from "../../containers/common/ContentInfo";
 
 type Props = {
   avatar: string | JSX.Element;

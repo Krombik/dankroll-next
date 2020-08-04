@@ -1,6 +1,6 @@
-# Next.js Example App
+# Next.js blog app
 
-> ### Next.js codebase containing examples (CRUD, auth, advanced patterns, etc) that adheres to the [RealWorld](https://github.com/gothinkster/realworld-example-apps) spec and API.
+> ### Next.js codebase containing examples (CRUD, auth, advanced patterns, etc) that adheres to the [RealWorld](https://github.com/gothinkster/realworld-example-apps) API.
 
 ## Getting started
 
@@ -34,12 +34,12 @@ The example application is a social blogging site. It uses a custom API for all 
 
 - Every page has same layout:
   - Header component:
-    - site logo (link to home page)
-    - sing in/up (open sing in/up modal) buttons for unauthorized user
-    - new post (open editor modal), user profile (link to profile of current user), logout buttons for authorized user
-    - site settings button
-      - switch between dark/light theme (value stores at localstorage)
-      - select for count of articles per page (value stores at cookies)
+    - Site logo (link to home page)
+    - Sing in/up (opens sign in/up modal) buttons for unauthorized user
+    - New post (opens editor modal), user profile (link to profile of current user) and logout buttons for authorized user
+    - Site settings button
+      - Switch between dark/light theme (stored in localstorage)
+      - Select of articles count per page (stored in cookies)
   - Page component
   - Modal component
   - ErrorAlert component
@@ -49,48 +49,48 @@ The example application is a social blogging site. It uses a custom API for all 
     - Global (last articles)
     - Tabs opened by user, can be closed and dragged (stored in localstorage)
     - Add new tab (by tag) button
-  - List of articles preview by current tab, every item contains:
+  - List of articles previews by current tab, every item contains:
     - Author avatar (link to author profile)
     - Author username (link to author profile)
-    - Date of article creation or edit
+    - Date the article was created or edited
     - Like button (disabled for unauthorized user)
-    - Like count
+    - Likes count
     - Title
     - Description
     - Read more button (opens article modal and change url to article page)
-    - Tag list (every item is a link to itself tag tab)
-  - Pagination and load more button for list of articles (if page count > 1)
+    - List of tags (each element is a link to a tag tab)
+  - Pagination and load more button for list of articles (displayed only if the number of pages exceeds 1)
 - User (profile) page (URL: /user/{username})
-  - user avatar
-  - username
-  - user settings button if it is current user
-  - subscribe button if it is not current user (disabled for unauthorized user)
-  - user bio
+  - User avatar
+  - Username
+  - User settings (only shown to current user)
+  - Subscribe button (shown only to non-current user and disabled for unauthorized user)
+  - User bio
   - Tabs with list of articles:
     - Last articles of user
     - User's favorite articles
-  - List of articles preview by current tab (same as at home page)
+  - List of articles previews by current tab (same as at home page)
 - Article page/modal (URL: /articles/{slug})
   - Article title
   - Like button (disabled for unauthorized user)
-  - Like count
+  - Likes count
   - Delete/Edit article buttons (only shown to article's author)
   - Article text (with markdown render)
   - Comment section
     - Comments count
     - New comment section (only shown to authorized user)
-      - textarea
-      - submit button
+      - Textarea
+      - Submit button
     - Comments list
       - Comment text
-      - Comment author avatar
-      - Comment author username
+      - Comment author avatar (link to author profile)
+      - Comment author username (link to author profile)
       - Comment post date
       - Delete comment (only shown to comment's author)
 - Sign in/up modals
-  - Use JWT (store the token in cookies)
+  - Use JWT (stored in cookies)
 - Settings modal
   - Edit user info (change email, username, bio, image, password)
 - Editor modal to create/edit articles
-  - Saving data at localstorage every 1000 ms while field in focus and after blur
+  - Stored changing data at localstorage until edit/create or reset button will be pressed
   - Every item in tag list is editable, removable and draggle (drag make no sense because api)

@@ -33,6 +33,12 @@ const Banner: FC<GridProps> = (props) => {
         className="MuiGrid-item banner"
         square
         {...props}
+        css={`
+          & > div {
+            padding-top: 20px;
+            padding-bottom: 20px;
+          }
+        `}
       />
     </ThemeProvider>
   );

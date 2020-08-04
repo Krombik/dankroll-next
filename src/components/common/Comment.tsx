@@ -3,7 +3,7 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
-import ContentInfo from "./ContentInfo";
+import ContentInfo from "../../containers/common/ContentInfo";
 import Grid from "@material-ui/core/Grid";
 import TooltipIconButton from "./TooltipIconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
