@@ -91,6 +91,6 @@ The example application is a social blogging site. It uses a custom API for all 
   - Use JWT (stored in cookies)
 - Settings modal
   - Edit user info (change email, username, bio, image, password)
-- Editor modal to create/edit articles
+- Editor modal/page to create (URL: /new) or edit (URL: /articles/{slug}/edit) articles
   - Stored changing data at localstorage until edit/create or reset button will be pressed
   - Every item in tag list is editable, removable and draggle (drag make no sense because api)
