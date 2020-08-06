@@ -33,7 +33,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
         ctx.store.getState().authentication.currentUserName ===
           article.author.username
       )
-        ctx.store.dispatch(setCurrentEditor(article.slug, article));
+        ctx.store.dispatch(setCurrentEditor(`_${article.slug}`, article));
       else props.status = status || 403;
     } else props.status = 401;
     ctx.store.dispatch(serverSetOffset(+offset));
