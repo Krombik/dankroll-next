@@ -25,6 +25,7 @@ import {
   UpdateUser,
 } from "@/types/user";
 import Router from "next/router";
+import Gutter from "@/components/common/Gutter";
 
 const selectData = createSelector(
   (state: State) => state.authentication.token,
@@ -91,14 +92,12 @@ const Settings: FC = () => {
     setLoading(false);
   };
   return (
-    <Grid
-      container
+    <Gutter
       justify="center"
       alignItems="center"
-      spacing={3}
       component={ValidatorForm}
-      onSubmit={handleSettings}
-      autoComplete="off"
+      componentProps={{ onSubmit: handleSettings, autoComplete: "off" }}
+      maxWidth="md"
     >
       <Grid item xs={12}>
         <Typography align="center" variant="h4">
@@ -178,7 +177,7 @@ const Settings: FC = () => {
           Update profile
         </Button>
       </Grid>
-    </Grid>
+    </Gutter>
   );
 };
 

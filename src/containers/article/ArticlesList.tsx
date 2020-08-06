@@ -15,6 +15,7 @@ import { useRequestInfinity } from "@/utils/useRequest";
 import ArticlePreviewSection from "./ArticlePreviewSection";
 import ArticlePreviewSkeletonSection from "./ArticlePreviewSkeletonSection";
 import Typography from "@material-ui/core/Typography";
+import { ModalType } from "@/redux/modal/type";
 
 const selectData = createSelector(
   (state: State) => state.authentication.token,
@@ -67,19 +68,28 @@ const ArticleList: FC<Props> = ({
       setSize(1);
   }, [page]);
   useEffect(() => {
-    const handleRouteChange = async () => {
-      const { pathname } = window.location;
-      if (pathname.includes("/articles/")) {
-        await Router.replace(
-          { pathname: Router.pathname, query: Router.query },
-          Router.asPath,
-          { shallow: true }
-        );
-        window.history.replaceState("", "", pathname);
-        dispatch(setModal(true));
-      }
-    };
     dispatch(setArticleListRefreshFunc(mutate));
+    const handleRouteChange = async () => {
+      const { pathname: url } = window.location;
+      let modal: ModalType | undefined;
+      let isModalOpen: boolean | undefined;
+      if (url.endsWith("/edit")) {
+        modal = "edit";
+        isModalOpen = true;
+      } else if (url.startsWith("/articles")) {
+        modal = "article";
+        isModalOpen = true;
+      } else if (url.startsWith("/new")) {
+        modal = "new";
+        isModalOpen = true;
+      }
+      if (isModalOpen) {
+        const { pathname, query, asPath } = Router;
+        await Router.replace({ pathname, query }, asPath, { shallow: true });
+        window.history.replaceState("", "", url);
+        dispatch(setModal(true, modal));
+      } else dispatch(setModal(false));
+    };
     window.addEventListener("popstate", handleRouteChange);
     return () => {
       window.removeEventListener("popstate", handleRouteChange);

@@ -1,5 +1,4 @@
 import styled, { createGlobalStyle } from "styled-components";
-import Modal, { ModalProps } from "@material-ui/core/Modal";
 import { SvgIconProps, SvgIconTypeMap } from "@material-ui/core";
 import { OverridableComponent } from "@material-ui/core/OverridableComponent";
 import SpeedDial from "@material-ui/lab/SpeedDial";
@@ -35,8 +34,22 @@ export const GlobalStyle = createGlobalStyle`
     font-weight: bold;
     font-style: normal;
   }
+  * {
+    &::-webkit-scrollbar {
+      width: 5px;
+      &-track {
+        background: rgba(0,0,0,.1);
+        border-radius: 5px;
+      }
+      &-thumb {
+        background: rgba(0,0,0,.2);
+        border-radius: 5px;
+      }
+    }
+  }
   body {
     overflow-x: hidden;
+    min-width: 320px; 
   }
   .draggable {
     cursor: grab;
@@ -50,15 +63,13 @@ export const GlobalStyle = createGlobalStyle`
     .banner & {
       button, a {
         font-size: inherit;
+        margin-top: -50%;
+        margin-bottom: -50%;
+        bottom: 6px;
       }
     }
   }
 `;
-
-export interface StyledModalProps extends ModalProps {
-  article?: boolean;
-  authorization?: boolean;
-}
 
 interface StyledSwitchableIconProps extends SvgIconProps {
   active: boolean;
@@ -74,52 +85,39 @@ export const StyledSwitchableIcon = styled(
   }
 `;
 
-export const StyledModal = styled(
-  ({ article, authorization, ...props }: StyledModalProps) => (
-    <Modal {...props} />
-  )
-)`
-  display: flex;
-  flex-direction: column;
-  width: 90vw;
-  max-width: ${({ article, authorization }) =>
-    authorization ? "600px" : article ? "100%" : "1200px"};
-  margin: auto;
-  justify-content: space-between;
-  overflow-y: auto;
-`;
-
 export const StyledSettingsDial = styled(SpeedDial)`
   display: inline-block;
   position: relative;
-  .MuiSpeedDial-fab {
-    background-color: transparent !important;
-    color: inherit;
-    width: auto;
-    height: auto;
-    box-shadow: none;
-    z-index: 2;
-    .MuiIconButton-root {
+  .MuiSpeedDial {
+    &-fab {
+      background-color: transparent !important;
       color: inherit;
-    }
-  }
-  .MuiSpeedDial-actions {
-    position: absolute;
-    z-index: 1;
-    left: 0;
-    right: 0;
-    margin-left: auto;
-    margin-right: auto;
-    .MuiSpeedDialAction-fab {
-      margin: auto;
       width: auto;
       height: auto;
-      transform: translateX(-50%);
-      position: relative;
-      left: 50%;
-      border-radius: 10%;
-      &:not(:last-child) {
-        margin-bottom: 8px;
+      box-shadow: none;
+      z-index: 2;
+      .MuiIconButton-root {
+        color: inherit;
+      }
+    }
+    &-actions {
+      position: absolute;
+      z-index: 1;
+      left: 0;
+      right: 0;
+      margin-left: auto;
+      margin-right: auto;
+      .MuiSpeedDialAction-fab {
+        margin: auto;
+        width: auto;
+        height: auto;
+        transform: translateX(-50%);
+        position: relative;
+        left: 50%;
+        border-radius: 10%;
+        &:not(:last-child) {
+          margin-bottom: 8px;
+        }
       }
     }
   }

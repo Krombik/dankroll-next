@@ -24,7 +24,7 @@ const RemovableTab: FC<Props> = memo(({ index, onRemove, ...props }) => (
             container
             justify="flex-end"
             alignItems="center"
-            spacing={3}
+            wrap="nowrap"
           >
             <DragIndicatorIcon className="draggable" fontSize="inherit" />
             <TooltipIconButton

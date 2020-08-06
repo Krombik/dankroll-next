@@ -1,4 +1,4 @@
-import { FC, MouseEvent, SyntheticEvent, memo, useEffect } from "react";
+import { FC, MouseEvent, SyntheticEvent, memo, useCallback } from "react";
 import { createSelector } from "reselect";
 import { useSelector, useDispatch } from "react-redux";
 import { State, ThunkDispatcher } from "@/types";
@@ -9,62 +9,38 @@ import Editor from "./Editor";
 import { setModal } from "@/redux/modal/actions";
 import { ModalType } from "@/redux/modal/type";
 import Article from "../article/Article";
-import Router from "next/router";
 import Settings from "./Settings";
-import Grid from "@material-ui/core/Grid";
 
 const selectData = createSelector(
   (state: State) => state.modal.open,
   (state: State) => state.modal.modal,
   (state: State) => state.modal.slug,
-  (state: State) => state.modal.refreshArticleList,
-  (open, modal, slug, refreshArticleList) => ({
-    open,
-    modal,
-    slug,
-    refreshArticleList,
-  })
+  (open, modal, slug) => ({ open, modal, slug })
 );
 
 const Modal: FC = memo(() => {
   const dispatch = useDispatch<ThunkDispatcher>();
-  const { open, modal, slug, refreshArticleList } = useSelector(selectData);
+  const { open, modal, slug } = useSelector(selectData);
   const isArticle = modal === "article";
   const isEdit = modal === "edit";
   const isNew = modal === "new";
-  const isLogin = modal === "login";
-  const isRegister = modal === "register";
-  useEffect(() => {
-    if (!open && (isArticle || isEdit || isNew) && refreshArticleList)
-      refreshArticleList();
-  }, [open]);
-  const closeModal = () => {
-    if (
-      isArticle ||
-      (isEdit &&
-        window.location.pathname.includes("/articles/") &&
-        !Router.query.slug)
-    )
-      window.history.back();
-    if (!isArticle) dispatch(setModal(false));
-  };
-  const openModal = (e: SyntheticEvent<HTMLButtonElement, MouseEvent>) => {
-    dispatch(setModal(true, e.currentTarget.name as ModalType));
-  };
+  const closeModal = useCallback(() => {
+    if (isArticle || isNew || isEdit) window.history.back();
+    else dispatch(setModal(false));
+  }, [modal]);
+  const openModal = useCallback(
+    (e: SyntheticEvent<HTMLButtonElement, MouseEvent>) => {
+      dispatch(setModal(true, e.currentTarget.name as ModalType));
+    },
+    []
+  );
   return (
-    <CustomModal
-      open={open}
-      article={isArticle}
-      authorization={isLogin || isRegister}
-      onClose={closeModal}
-    >
+    <CustomModal open={open} article={isArticle} onClose={closeModal}>
       {isArticle ? (
-        <Grid container spacing={3}>
-          <Article slug={slug} />
-        </Grid>
-      ) : isLogin ? (
+        <Article slug={slug} />
+      ) : modal === "login" ? (
         <Login openModal={openModal} />
-      ) : isRegister ? (
+      ) : modal === "register" ? (
         <Register openModal={openModal} />
       ) : isNew ? (
         <Editor />

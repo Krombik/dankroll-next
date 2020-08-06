@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useState, MouseEvent } from "react";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { useDispatch } from "react-redux";
@@ -18,7 +18,10 @@ type Props = {
 
 const ArticleControlButtons: FC<Props> = ({ article, token }) => {
   const dispatch = useDispatch<ThunkDispatcher>();
-  const openModal = () => {
+  const href = `/articles/${article.slug}/edit`;
+  const openEditor = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    window.history.pushState("", "", href);
     dispatch(setModal(true, "edit", article.slug));
     dispatch(setCurrentEditor(`_${article.slug}`, article));
   };
@@ -35,7 +38,7 @@ const ArticleControlButtons: FC<Props> = ({ article, token }) => {
   };
   return (
     <>
-      <TooltipIconButton tooltip="Edit" onClick={openModal}>
+      <TooltipIconButton tooltip="Edit" href={href} onClick={openEditor}>
         <EditIcon fontSize="inherit" color="inherit" />
       </TooltipIconButton>
       <TooltipIconButton tooltip="Delete" onClick={handleDelete}>

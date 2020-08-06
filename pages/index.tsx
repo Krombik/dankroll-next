@@ -21,33 +21,35 @@ import { TabQuery } from "@/types/tab";
 import { TabValues, SITE_NAME } from "@/utils/constant";
 import Gutter from "@/components/common/Gutter";
 import TabBar from "@/components/tabs/TabBar";
+import { memo } from "react";
 
-const Index: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
-  initialArticles,
-  initialTab,
-}) =>
-  initialArticles?.status && !initialArticles.articles ? (
-    <DefaultErrorPage statusCode={initialArticles.status} />
-  ) : (
-    <>
-      <Banner justify="center">
-        <Grid item component={Typography} variant="h1" color="textPrimary">
-          {SITE_NAME}
-        </Grid>
-      </Banner>
-      <TabBar>
-        <SortableTabs />
-      </TabBar>
-      <Gutter>
-        <ArticleList
-          initialData={initialArticles}
-          initialTab={initialTab}
-          emptyType={TabValues.DEFAULT}
-          valueKey="value"
-        />
-      </Gutter>
-    </>
-  );
+const Index: NextPage<PropsFromServer<typeof getServerSideProps>> = memo(
+  ({ initialArticles, initialTab }) =>
+    initialArticles?.status && !initialArticles.articles ? (
+      <DefaultErrorPage statusCode={initialArticles.status} />
+    ) : (
+      <>
+        <Banner justify="center">
+          <Grid item>
+            <Typography variant="h1" color="textPrimary">
+              {SITE_NAME}
+            </Typography>
+          </Grid>
+        </Banner>
+        <TabBar>
+          <SortableTabs />
+        </TabBar>
+        <Gutter>
+          <ArticleList
+            initialData={initialArticles}
+            initialTab={initialTab}
+            emptyType={TabValues.DEFAULT}
+            valueKey="value"
+          />
+        </Gutter>
+      </>
+    )
+);
 
 export const getServerSideProps = wrapper.getServerSideProps(
   async (ctx: ServerSideContext) => {

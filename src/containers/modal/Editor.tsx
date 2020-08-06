@@ -17,6 +17,8 @@ import {
 } from "@/redux/editor/actions";
 import Router from "next/router";
 import { mutate } from "swr";
+import Gutter from "@/components/common/Gutter";
+import Typography from "@material-ui/core/Typography";
 
 const selectData = createSelector(
   (state: State) => state.authentication.token,
@@ -102,15 +104,18 @@ const Editor: FC<Props> = ({ slug }) => {
     }
   };
   return (
-    <Grid
-      container
+    <Gutter
       justify="center"
       alignItems="center"
-      spacing={3}
       component={ValidatorForm}
-      onSubmit={handleArticleEdit}
-      autoComplete="off"
+      componentProps={{ onSubmit: handleArticleEdit, autoComplete: "off" }}
+      maxWidth="md"
     >
+      <Grid item xs={12}>
+        <Typography align="center" variant="h4">
+          Editor
+        </Typography>
+      </Grid>
       <Grid item xs={12}>
         <TextValidator
           value={updatedEditor?.title || currentEditor?.title || ""}
@@ -153,14 +158,20 @@ const Editor: FC<Props> = ({ slug }) => {
         />
       </Grid>
       {currentEditor && (
-        <Grid item xs={12}>
-          <EditableTagList
-            tagList={updatedEditor?.tagList || currentEditor.tagList}
-            editTags={handleTag}
-          />
-        </Grid>
+        <EditableTagList
+          tagList={updatedEditor?.tagList || currentEditor.tagList}
+          editTags={handleTag}
+        />
       )}
-      <Grid item container spacing={3} justify="center">
+      <Grid
+        item
+        container
+        spacing={3}
+        justify="center"
+        css={`
+          overflow-y: hidden;
+        `}
+      >
         <Grid item>
           <Button
             variant="contained"
@@ -182,7 +193,7 @@ const Editor: FC<Props> = ({ slug }) => {
           </Button>
         </Grid>
       </Grid>
-    </Grid>
+    </Gutter>
   );
 };
 

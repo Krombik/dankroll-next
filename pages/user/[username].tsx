@@ -17,33 +17,32 @@ import UserSection from "@/containers/user/UserSection";
 import { TabValues } from "@/utils/constant";
 import TabBar from "@/components/tabs/TabBar";
 import Gutter from "@/components/common/Gutter";
+import { memo } from "react";
 
-const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = ({
-  initialUser,
-  initialArticles,
-  initialTab,
-}) =>
-  initialUser.status && !initialUser.profile ? (
-    <DefaultErrorPage statusCode={initialUser.status} />
-  ) : (
-    <>
-      <UserSection initialUser={initialUser} />
-      <TabBar>
-        <Tabs emptyType={TabValues.AUTHOR}>
-          <Tab value={TabValues.AUTHOR} label="Last articles" />
-          <Tab value={TabValues.FAVORITED} label="Favorite articles" />
-        </Tabs>
-      </TabBar>
-      <Gutter>
-        <ArticleList
-          initialData={initialArticles}
-          initialTab={initialTab}
-          valueKey="username"
-          emptyType={TabValues.AUTHOR}
-        />
-      </Gutter>
-    </>
-  );
+const ArticlePage: NextPage<PropsFromServer<typeof getServerSideProps>> = memo(
+  ({ initialUser, initialArticles, initialTab }) =>
+    initialUser.status && !initialUser.profile ? (
+      <DefaultErrorPage statusCode={initialUser.status} />
+    ) : (
+      <>
+        <UserSection initialUser={initialUser} />
+        <TabBar>
+          <Tabs emptyType={TabValues.AUTHOR}>
+            <Tab value={TabValues.AUTHOR} label="Last articles" />
+            <Tab value={TabValues.FAVORITED} label="Favorite articles" />
+          </Tabs>
+        </TabBar>
+        <Gutter>
+          <ArticleList
+            initialData={initialArticles}
+            initialTab={initialTab}
+            valueKey="username"
+            emptyType={TabValues.AUTHOR}
+          />
+        </Gutter>
+      </>
+    )
+);
 
 export const getServerSideProps = wrapper.getServerSideProps(
   async (ctx: ServerSideContext) => {

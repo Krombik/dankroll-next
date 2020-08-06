@@ -30,15 +30,12 @@ const Banner: FC<GridProps> = (props) => {
     <ThemeProvider theme={invertTheme}>
       <Gutter
         component={Paper}
-        className="MuiGrid-item banner"
-        square
-        {...props}
+        className="banner MuiGrid-item"
+        componentProps={{ className: "MuiGrid-item" }}
         css={`
-          & > div {
-            padding-top: 20px;
-            padding-bottom: 20px;
-          }
+          padding: ${theme.spacing(3, 0)};
         `}
+        {...props}
       />
     </ThemeProvider>
   );

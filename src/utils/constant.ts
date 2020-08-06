@@ -9,4 +9,4 @@ export enum TabValues {
   TAG = "tag",
 }
 
-export const SITE_NAME = "dankroll-next";
+export const SITE_NAME = "dankroll";

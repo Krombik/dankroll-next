@@ -11,6 +11,7 @@ import { setAuthorized } from "@/redux/authentication/actions";
 import { setCookie } from "nookies";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import { setModal } from "@/redux/modal/actions";
+import Gutter from "@/components/common/Gutter";
 
 type Props = {
   openModal: (e: any) => void;
@@ -40,14 +41,12 @@ const Login: FC<Props> = ({ openModal }) => {
     setLoading(false);
   };
   return (
-    <Grid
-      container
+    <Gutter
       justify="center"
       alignItems="center"
-      spacing={3}
       component={ValidatorForm}
-      onSubmit={handleLogin}
-      autoComplete="off"
+      componentProps={{ onSubmit: handleLogin, autoComplete: "off" }}
+      maxWidth="sm"
     >
       <Grid item xs={12}>
         <Typography align="center" variant="h4">
@@ -100,7 +99,7 @@ const Login: FC<Props> = ({ openModal }) => {
           Login
         </Button>
       </Grid>
-    </Grid>
+    </Gutter>
   );
 };
 

@@ -41,27 +41,30 @@ const EditableTagList: FC<Props> = ({ tagList, editTags }) => {
       onSortEnd={onSortEnd}
       helperClass="dragging"
     >
-      <Grid container spacing={1}>
+      <Grid
+        container
+        item
+        xs={12}
+        spacing={1}
+        css={`
+          .MuiInputBase-input {
+            padding: 0 4px;
+            text-transform: lowercase;
+          }
+          .MuiChip-label {
+            display: flex;
+          }
+          .drag-area {
+            padding-left: 2px;
+            display: inline-flex;
+            align-self: center;
+            height: 100%;
+          }
+        `}
+      >
         {tagList.map((tag, index) => (
           <SortableItem index={index} key={index}>
-            <Grid
-              item
-              css={`
-                .MuiInputBase-input {
-                  padding: 0 4px;
-                  text-transform: lowercase;
-                }
-                .MuiChip-label {
-                  display: flex;
-                }
-                .drag-area {
-                  padding-left: 2px;
-                  display: inline-flex;
-                  align-self: center;
-                  height: 100%;
-                }
-              `}
-            >
+            <Grid item>
               <Chip
                 label={
                   <EditableTag

@@ -1,10 +1,9 @@
 import { ArticleObj } from "@/types/article";
-import { FC, useEffect } from "react";
+import { FC, memo } from "react";
 import { CommentsObj } from "@/types/comment";
-import { FetchRV, State, ThunkDispatcher } from "@/types";
+import { FetchRV, State } from "@/types";
 import { createSelector } from "reselect";
-import { useSelector, useDispatch } from "react-redux";
-import { setModal } from "@/redux/modal/actions";
+import { useSelector } from "react-redux";
 import CommentSection from "../comment/CommentSection";
 import ArticleSection from "./ArticleSection";
 import Divider from "@material-ui/core/Divider";
@@ -21,19 +20,8 @@ type Props = {
   slug: string;
 };
 
-const Article: FC<Props> = ({ initialArticle, initialComments, slug }) => {
+const Article: FC<Props> = memo(({ initialArticle, initialComments, slug }) => {
   const { token, currentUserName } = useSelector(selectData);
-  const dispatch = useDispatch<ThunkDispatcher>();
-  useEffect(() => {
-    const handleRouteChange = () => {
-      if (!window.location.pathname.includes("/articles/"))
-        dispatch(setModal(false));
-    };
-    window.addEventListener("popstate", handleRouteChange);
-    return () => {
-      window.removeEventListener("popstate", handleRouteChange);
-    };
-  }, []);
   return (
     <>
       <ArticleSection
@@ -55,6 +43,6 @@ const Article: FC<Props> = ({ initialArticle, initialComments, slug }) => {
       />
     </>
   );
-};
+});
 
 export default Article;

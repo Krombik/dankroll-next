@@ -1,5 +1,5 @@
 import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles";
-const makeTheme = (isDark: boolean) =>
+const makeTheme = (dark: boolean) =>
   responsiveFontSizes(
     createMuiTheme({
       typography: {
@@ -15,7 +15,33 @@ const makeTheme = (isDark: boolean) =>
         },
       },
       palette: {
-        type: isDark ? "dark" : "light",
+        type: dark ? "dark" : "light",
+      },
+      overrides: {
+        MuiContainer: {
+          root: {
+            display: undefined,
+            width: undefined,
+            marginLeft: undefined,
+            marginRight: undefined,
+          },
+        },
+        MuiAppBar: {
+          root: {
+            flexDirection: undefined,
+            minHeight: "72px",
+          },
+        },
+        MuiTabs: {
+          root: {
+            minHeight: undefined,
+            height: "100%",
+          },
+          scroller: {
+            height: "100%",
+            display: "inline-flex",
+          },
+        },
       },
     })
   );

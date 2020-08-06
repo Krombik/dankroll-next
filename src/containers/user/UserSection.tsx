@@ -48,30 +48,28 @@ const UserSection: FC<Props> = ({ initialUser }) => {
           {user.username[0]}
         </Avatar>
       </Grid>
-      <Grid
-        item
-        container
-        alignItems="center"
-        justify="center"
-        component={Typography}
-        variant="h2"
-        color="textPrimary"
-      >
-        <Grid item>{user.username}</Grid>
-        {user.username !== currentUserName ? (
-          <UserSubscribeButton
-            token={token}
-            username={user.username}
-            follow={user.following}
-            mutate={mutate}
-          />
-        ) : (
-          <UserSettingsButton />
-        )}
+      <Grid item container alignItems="center" justify="center">
+        <Grid item>
+          <Typography variant="h2" color="textPrimary">
+            {user.username}
+            {user.username !== currentUserName ? (
+              <UserSubscribeButton
+                token={token}
+                username={user.username}
+                follow={user.following}
+                mutate={mutate}
+              />
+            ) : (
+              <UserSettingsButton />
+            )}
+          </Typography>
+        </Grid>
       </Grid>
-      <Grid item component={Typography} color="textPrimary">
-        {user.bio}
-      </Grid>
+      {user.bio && (
+        <Grid item color="textPrimary">
+          <Typography color="textPrimary">{user.bio}</Typography>
+        </Grid>
+      )}
     </Banner>
   );
 };

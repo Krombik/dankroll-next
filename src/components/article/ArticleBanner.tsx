@@ -13,24 +13,20 @@ type Props = {
 
 const ArticleBanner: FC<Props> = ({ article, controlButtons }) => (
   <Banner>
-    <Grid
-      item
-      container
-      alignItems="center"
-      component={Typography}
-      variant="h2"
-      color="textPrimary"
-    >
-      <Grid item>{article.title}</Grid>
-      {controlButtons}
+    <Grid item xs={12}>
+      <Typography variant="h2" color="textPrimary">
+        {article.title}
+        {controlButtons}
+      </Typography>
     </Grid>
     {article.tagList.length > 0 && (
-      <Grid item container spacing={1}>
+      <Grid item xs={12} container spacing={1}>
         <TagList tagList={article.tagList} />
       </Grid>
     )}
     <Grid
       item
+      xs={12}
       component={ContentInfo}
       avatar={article.author.image}
       titleTypographyProps={{ color: "textPrimary" }}
@@ -40,7 +36,7 @@ const ArticleBanner: FC<Props> = ({ article, controlButtons }) => (
           ? new Date(article.createdAt).toDateString()
           : new Date(article.updatedAt).toDateString().concat(" (Edited)")
       }
-    ></Grid>
+    />
   </Banner>
 );
 

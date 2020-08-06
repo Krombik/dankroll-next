@@ -1,24 +1,20 @@
 import Fade from "@material-ui/core/Fade";
 import { FC } from "react";
-import Paper from "@material-ui/core/Paper";
-import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
-import { StyledModal, StyledModalProps } from "./styled";
+import Modal, { ModalProps } from "@material-ui/core/Modal";
+import { Grid, useTheme } from "@material-ui/core";
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    paper: {
-      backgroundColor: theme.palette.background.default,
-      padding: ({ article }: StyledModalProps) =>
-        article ? theme.spacing(0, 0, 3) : theme.spacing(3),
-      overflowX: "hidden",
-    },
-  })
-);
+type Props = {
+  article?: boolean;
+};
 
-const CustomModal: FC<StyledModalProps> = ({ children, ...props }) => {
-  const classes = useStyles({ article: props.article } as StyledModalProps);
+const CustomModal: FC<Props & ModalProps> = ({
+  children,
+  article,
+  ...props
+}) => {
+  const theme = useTheme();
   return (
-    <StyledModal
+    <Modal
       disableEnforceFocus
       disableAutoFocus
       {...props}
@@ -26,11 +22,32 @@ const CustomModal: FC<StyledModalProps> = ({ children, ...props }) => {
       BackdropProps={{
         timeout: 500,
       }}
+      css={`
+        display: flex;
+        margin: auto;
+      `}
     >
       <Fade in={props.open}>
-        <Paper className={classes.paper}>{children}</Paper>
+        <Grid
+          container
+          spacing={3}
+          css={`
+            flex-direction: column;
+            flex-wrap: nowrap;
+            background: ${theme.palette.background.default};
+            border-radius: ${theme.shape.borderRadius}px;
+            margin: auto;
+            width: auto;
+            max-width: 99vw;
+            max-height: 90vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+          `}
+        >
+          {children}
+        </Grid>
       </Fade>
-    </StyledModal>
+    </Modal>
   );
 };
 

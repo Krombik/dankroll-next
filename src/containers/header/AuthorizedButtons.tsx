@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useCallback, MouseEvent } from "react";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import MeetingRoomIcon from "@material-ui/icons/MeetingRoom";
 import TooltipIconButton from "@/components/common/TooltipIconButton";
@@ -7,21 +7,28 @@ import { useDispatch } from "react-redux";
 import { ThunkDispatcher } from "@/types";
 import { setAuthorized } from "@/redux/authentication/actions";
 import { destroyCookie } from "nookies";
+import { setModal } from "@/redux/modal/actions";
 
 type Props = {
   currentUserName: string;
-  openModal: (e: any) => void;
 };
 
-const AuthorizedButtons: FC<Props> = ({ currentUserName, openModal }) => {
+const AuthorizedButtons: FC<Props> = ({ currentUserName }) => {
   const dispatch = useDispatch<ThunkDispatcher>();
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     dispatch(setAuthorized("", ""));
     destroyCookie(null, "token", { path: "/" });
-  };
+  }, []);
+  const handleEditor = useCallback((e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    if (!window.location.pathname.startsWith("/new")) {
+      dispatch(setModal(true, "new"));
+      window.history.pushState("", "", "/new");
+    }
+  }, []);
   return (
     <>
-      <TooltipIconButton tooltip="New post" name="new" onClick={openModal}>
+      <TooltipIconButton tooltip="New post" href="/new" onClick={handleEditor}>
         <CreateIcon />
       </TooltipIconButton>
       <TooltipIconButton

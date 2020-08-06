@@ -21,10 +21,9 @@ const ArticlePreviewLikeButton: FC<Props> = ({
 }) => {
   const [loading, setLoading] = useState(false);
   const handleLike = async () => {
-    if (!loading) {
+    if (onLike && !loading) {
       setLoading(true);
-      const isCorrect = onLike ? await onLike(favorited, slug, index) : false;
-      if (isCorrect) setLoading(false);
+      if (await onLike(favorited, slug, index)) setLoading(false);
     }
   };
   return (
@@ -33,7 +32,6 @@ const ArticlePreviewLikeButton: FC<Props> = ({
         <Button
           variant="contained"
           color="primary"
-          disabled={!onLike}
           onClick={handleLike}
           endIcon={
             <StyledSwitchableIcon

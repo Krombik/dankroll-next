@@ -1,25 +1,35 @@
-import Container from "@material-ui/core/Container";
+import Container, { ContainerProps } from "@material-ui/core/Container";
 import Grid, { GridProps } from "@material-ui/core/Grid";
 
 const Gutter = <C extends React.ElementType>({
   children,
-  justify,
-  direction,
-  alignItems,
+  component,
+  componentProps = {},
   ...props
-}: Omit<GridProps<C, { component?: C }>, "object">) => (
-  <Grid {...props} item xs={12}>
-    <Container maxWidth="lg" disableGutters>
-      <Grid
-        container
-        justify={justify}
-        direction={direction}
-        alignItems={alignItems}
-        spacing={3}
-      >
-        {children}
-      </Grid>
-    </Container>
+}: GridProps &
+  ContainerProps & {
+    component?: C;
+    componentProps?: React.ComponentProps<C> | {};
+  }) => (
+  <Grid
+    component={component || "div"}
+    {...componentProps}
+    item
+    container
+    justify="center"
+    xs={12}
+  >
+    <Grid
+      item
+      container
+      spacing={3}
+      component={Container}
+      maxWidth="lg"
+      disableGutters
+      {...props}
+    >
+      {children}
+    </Grid>
   </Grid>
 );
 

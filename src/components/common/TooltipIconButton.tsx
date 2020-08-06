@@ -24,7 +24,7 @@ const TooltipIconButton: FC<Props & IconButtonProps> = ({
   <Tooltip title={props.disabled ? "Log in first" : tooltip}>
     <div className="tooltip-button-wrapper">
       <IconButton
-        component={props.as ? Link : "button"}
+        component={props.as ? Link : props.href ? "a" : "button"}
         color="inherit"
         {...props}
       />
