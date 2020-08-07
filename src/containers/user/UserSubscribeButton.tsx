@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import { ThunkDispatcher } from "@/types";
 import { setError } from "@/redux/error/actions";
 import TooltipIconButton from "@/components/common/TooltipIconButton";
-import { StyledSwitchableIcon } from "@/components/common/styled";
+import SwitchableIcon from "@/components/common/SwitchableIcon";
 
 type Props = {
   username: string;
@@ -42,7 +42,7 @@ const UserSubscribeButton: FC<Props> = ({
       disabled={!token}
       onClick={handleSubscribe}
     >
-      <StyledSwitchableIcon
+      <SwitchableIcon
         fontSize="inherit"
         color="inherit"
         active={follow}

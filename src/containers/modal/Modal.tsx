@@ -1,4 +1,4 @@
-import { FC, MouseEvent, SyntheticEvent, memo, useCallback } from "react";
+import { FC, memo, useCallback } from "react";
 import { createSelector } from "reselect";
 import { useSelector, useDispatch } from "react-redux";
 import { State, ThunkDispatcher } from "@/types";
@@ -7,7 +7,6 @@ import CustomModal from "@/components/common/CustomModal";
 import Register from "./Register";
 import Editor from "./Editor";
 import { setModal } from "@/redux/modal/actions";
-import { ModalType } from "@/redux/modal/type";
 import Article from "../article/Article";
 import Settings from "./Settings";
 
@@ -28,20 +27,14 @@ const Modal: FC = memo(() => {
     if (isArticle || isNew || isEdit) window.history.back();
     else dispatch(setModal(false));
   }, [modal]);
-  const openModal = useCallback(
-    (e: SyntheticEvent<HTMLButtonElement, MouseEvent>) => {
-      dispatch(setModal(true, e.currentTarget.name as ModalType));
-    },
-    []
-  );
   return (
-    <CustomModal open={open} article={isArticle} onClose={closeModal}>
+    <CustomModal open={open} onClose={closeModal}>
       {isArticle ? (
         <Article slug={slug} />
       ) : modal === "login" ? (
-        <Login openModal={openModal} />
+        <Login />
       ) : modal === "register" ? (
-        <Register openModal={openModal} />
+        <Register />
       ) : isNew ? (
         <Editor />
       ) : isEdit ? (

@@ -25,11 +25,9 @@ const OffsetSelect: FC = () => {
       setCookie(null, "offset", String(count), { path: "/" });
       const { page, ...query } = Router.query;
       if (page)
-        Router.replace(
-          { pathname: Router.pathname, query },
-          { pathname: Router.pathname, query },
-          { shallow: true }
-        );
+        Router.replace({ pathname: Router.pathname, query }, undefined, {
+          shallow: true,
+        });
     }
   };
   return (

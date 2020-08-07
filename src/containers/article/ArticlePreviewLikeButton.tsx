@@ -2,7 +2,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import { FC, useState } from "react";
 import Button from "@material-ui/core/Button";
 import FavoriteTwoToneIcon from "@material-ui/icons/FavoriteTwoTone";
-import { StyledSwitchableIcon } from "@/components/common/styled";
+import SwitchableIcon from "@/components/common/SwitchableIcon";
 
 type Props = {
   onLike?: (liked: boolean, slug: string, index: number) => Promise<boolean>;
@@ -34,10 +34,7 @@ const ArticlePreviewLikeButton: FC<Props> = ({
           color="primary"
           onClick={handleLike}
           endIcon={
-            <StyledSwitchableIcon
-              Icon={FavoriteTwoToneIcon}
-              active={favorited}
-            />
+            <SwitchableIcon Icon={FavoriteTwoToneIcon} active={favorited} />
           }
         >
           {favoritesCount}

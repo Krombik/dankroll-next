@@ -13,11 +13,7 @@ import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import { setModal } from "@/redux/modal/actions";
 import Gutter from "@/components/common/Gutter";
 
-type Props = {
-  openModal: (e: any) => void;
-};
-
-const Login: FC<Props> = ({ openModal }) => {
+const Login: FC = () => {
   const dispatch = useDispatch<ThunkDispatcher>();
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
@@ -27,6 +23,9 @@ const Login: FC<Props> = ({ openModal }) => {
   }, []);
   const handlePassword = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
+  }, []);
+  const openRegister = useCallback(() => {
+    dispatch(setModal(true, "register"));
   }, []);
   const handleLogin = async () => {
     setLoading(true);
@@ -59,7 +58,7 @@ const Login: FC<Props> = ({ openModal }) => {
         color="inherit"
         component="button"
         name="register"
-        onClick={openModal}
+        onClick={openRegister}
       >
         Need an account?
       </Link>

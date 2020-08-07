@@ -8,7 +8,7 @@ import { AppProps } from "next/app";
 import { useSelector } from "react-redux";
 import { createSelector } from "reselect";
 import { State } from "@/types";
-import { GlobalStyle } from "@/components/common/styled";
+import GlobalStyle from "@/components/common/GlobalStyle";
 
 const selectData = createSelector(
   (state: State) => state.common.dark,

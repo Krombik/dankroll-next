@@ -3,15 +3,7 @@ import { FC } from "react";
 import Modal, { ModalProps } from "@material-ui/core/Modal";
 import { Grid, useTheme } from "@material-ui/core";
 
-type Props = {
-  article?: boolean;
-};
-
-const CustomModal: FC<Props & ModalProps> = ({
-  children,
-  article,
-  ...props
-}) => {
+const CustomModal: FC<ModalProps> = ({ children, ...props }) => {
   const theme = useTheme();
   return (
     <Modal

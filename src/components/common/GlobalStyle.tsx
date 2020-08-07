@@ -1,9 +1,6 @@
-import styled, { createGlobalStyle } from "styled-components";
-import { SvgIconProps, SvgIconTypeMap } from "@material-ui/core";
-import { OverridableComponent } from "@material-ui/core/OverridableComponent";
-import SpeedDial from "@material-ui/lab/SpeedDial";
+import { createGlobalStyle } from "styled-components";
 
-export const GlobalStyle = createGlobalStyle`
+const GlobalStyle = createGlobalStyle`
   @font-face {
     font-family: "OpenSans";
     src: url('/fonts/OpenSans-Regular.woff2') format('woff2'),
@@ -71,54 +68,4 @@ export const GlobalStyle = createGlobalStyle`
   }
 `;
 
-interface StyledSwitchableIconProps extends SvgIconProps {
-  active: boolean;
-  Icon: OverridableComponent<SvgIconTypeMap>;
-}
-
-export const StyledSwitchableIcon = styled(
-  ({ active, Icon, ...props }: StyledSwitchableIconProps) => <Icon {...props} />
-)`
-  path:first-child {
-    transition: 0.3s;
-    opacity: ${({ active }) => (active ? 0.5 : 0)};
-  }
-`;
-
-export const StyledSettingsDial = styled(SpeedDial)`
-  display: inline-block;
-  position: relative;
-  .MuiSpeedDial {
-    &-fab {
-      background-color: transparent !important;
-      color: inherit;
-      width: auto;
-      height: auto;
-      box-shadow: none;
-      z-index: 2;
-      .MuiIconButton-root {
-        color: inherit;
-      }
-    }
-    &-actions {
-      position: absolute;
-      z-index: 1;
-      left: 0;
-      right: 0;
-      margin-left: auto;
-      margin-right: auto;
-      .MuiSpeedDialAction-fab {
-        margin: auto;
-        width: auto;
-        height: auto;
-        transform: translateX(-50%);
-        position: relative;
-        left: 50%;
-        border-radius: 10%;
-        &:not(:last-child) {
-          margin-bottom: 8px;
-        }
-      }
-    }
-  }
-`;
+export default GlobalStyle;

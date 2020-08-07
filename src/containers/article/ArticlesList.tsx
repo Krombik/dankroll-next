@@ -72,18 +72,12 @@ const ArticleList: FC<Props> = ({
     const handleRouteChange = async () => {
       const { pathname: url } = window.location;
       let modal: ModalType | undefined;
-      let isModalOpen: boolean | undefined;
-      if (url.endsWith("/edit")) {
-        modal = "edit";
-        isModalOpen = true;
-      } else if (url.startsWith("/articles")) {
-        modal = "article";
-        isModalOpen = true;
-      } else if (url.startsWith("/new")) {
-        modal = "new";
-        isModalOpen = true;
-      }
-      if (isModalOpen) {
+      let isModalShouldBeOpen = true;
+      if (url.endsWith("/edit")) modal = "edit";
+      else if (url.startsWith("/articles")) modal = "article";
+      else if (url.startsWith("/new")) modal = "new";
+      else isModalShouldBeOpen = false;
+      if (isModalShouldBeOpen) {
         const { pathname, query, asPath } = Router;
         await Router.replace({ pathname, query }, asPath, { shallow: true });
         window.history.replaceState("", "", url);

@@ -1,5 +1,5 @@
 import Grid from "@material-ui/core/Grid";
-import { FC } from "react";
+import { FC, useState } from "react";
 import { CommentType, CommentsObj } from "@/types/comment";
 import Comment from "@/components/common/Comment";
 import { FetchRV, ThunkDispatcher } from "@/types";
@@ -22,15 +22,17 @@ const Comments: FC<Props> = ({
   token,
   mutate,
 }) => {
-  let loading = false;
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch<ThunkDispatcher>();
   const deleteComment = async (id: number) => {
     if (!loading) {
+      setLoading(true);
       const data = await deleteArticleComment(slug, id, token);
       if (data.status) {
         dispatch(setError(true, data));
       } else {
         mutate({ comments: comments.filter((item) => item.id !== id) }, false);
+        setLoading(false);
       }
     }
   };

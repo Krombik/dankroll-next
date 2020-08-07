@@ -1,21 +1,58 @@
-import { FC, useState } from "react";
+import { FC, useState, useCallback } from "react";
 import SpeedDialAction from "@material-ui/lab/SpeedDialAction";
 import TuneIcon from "@material-ui/icons/Tune";
-import { StyledSettingsDial } from "@/components/common/styled";
 import IconButton from "@material-ui/core/IconButton";
 import SwitchTheme from "./SwitchTheme";
 import OffsetSelect from "./OffsetSelect";
+import SpeedDial from "@material-ui/lab/SpeedDial";
 
 const SettingsDial: FC = () => {
   const [open, setOpen] = useState(false);
-  const handleOpen = () => {
+  const handleOpen = useCallback(() => {
     setOpen(true);
-  };
-  const handleClose = () => {
+  }, []);
+  const handleClose = useCallback(() => {
     setOpen(false);
-  };
+  }, []);
   return (
-    <StyledSettingsDial
+    <SpeedDial
+      css={`
+        display: inline-block;
+        position: relative;
+        .MuiSpeedDial {
+          &-fab {
+            background-color: transparent !important;
+            color: inherit;
+            width: auto;
+            height: auto;
+            box-shadow: none;
+            z-index: 2;
+            .MuiIconButton-root {
+              color: inherit;
+            }
+          }
+          &-actions {
+            position: absolute;
+            z-index: 1;
+            left: 0;
+            right: 0;
+            margin-left: auto;
+            margin-right: auto;
+            .MuiSpeedDialAction-fab {
+              margin: auto;
+              width: auto;
+              height: auto;
+              transform: translateX(-50%);
+              position: relative;
+              left: 50%;
+              border-radius: 10%;
+              &:not(:last-child) {
+                margin-bottom: 8px;
+              }
+            }
+          }
+        }
+      `}
       ariaLabel="settings"
       icon={
         <IconButton component="span">
@@ -32,7 +69,7 @@ const SettingsDial: FC = () => {
         icon={<OffsetSelect />}
         tooltipTitle="Articles per page"
       />
-    </StyledSettingsDial>
+    </SpeedDial>
   );
 };
 

@@ -1,5 +1,5 @@
 import { ArticleObj } from "@/types/article";
-import { FC } from "react";
+import { FC, useState } from "react";
 import { likeArticle } from "@/api/article";
 import { FetchRV, ThunkDispatcher } from "@/types";
 import Badge from "@material-ui/core/Badge";
@@ -7,7 +7,7 @@ import FavoriteTwoToneIcon from "@material-ui/icons/FavoriteTwoTone";
 import { useDispatch } from "react-redux";
 import { setError } from "@/redux/error/actions";
 import TooltipIconButton from "@/components/common/TooltipIconButton";
-import { StyledSwitchableIcon } from "@/components/common/styled";
+import SwitchableIcon from "@/components/common/SwitchableIcon";
 
 type Props = {
   like: boolean;
@@ -25,12 +25,17 @@ const ArticleLikeButton: FC<Props> = ({
   slug,
 }) => {
   const dispatch = useDispatch<ThunkDispatcher>();
+  const [loading, setLoading] = useState(false);
   const handleLike = async () => {
-    const data = await likeArticle(!like, slug, token);
-    if (data.article) {
-      mutate(data, false);
-    } else {
-      dispatch(setError(true, data));
+    if (!loading) {
+      setLoading(true);
+      const data = await likeArticle(!like, slug, token);
+      if (data.article) {
+        mutate(data, false);
+        setLoading(false);
+      } else {
+        dispatch(setError(true, data));
+      }
     }
   };
   return (
@@ -45,7 +50,7 @@ const ArticleLikeButton: FC<Props> = ({
         overlap="circle"
         showZero
       >
-        <StyledSwitchableIcon
+        <SwitchableIcon
           fontSize="inherit"
           color="inherit"
           active={like}

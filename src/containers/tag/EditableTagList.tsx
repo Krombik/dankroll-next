@@ -1,4 +1,4 @@
-import { FC, useRef } from "react";
+import { FC, useRef, useCallback } from "react";
 import SortableList from "../common/SortableList";
 import SortableItem from "../common/SortableItem";
 import { moveFromTo } from "@/utils/moveFromTo";
@@ -31,9 +31,9 @@ const EditableTagList: FC<Props> = ({ tagList, editTags }) => {
     tags.splice(index, 1);
     editTags(tags);
   };
-  const setFocus = () => {
+  const setFocus = useCallback(() => {
     ref.current?.focus();
-  };
+  }, []);
   return (
     <SortableList
       axis="xy"
