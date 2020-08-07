@@ -17,8 +17,8 @@ export const setModal = (
 ): ThunkResult => (dispatch, getState) => {
   const payload: SetModalPayload = { open };
   if (!open) {
-    const { refreshArticleList } = getState().modal;
-    if (refreshArticleList) refreshArticleList();
+    const { refreshArticleList, modal } = getState().modal;
+    if (refreshArticleList && modal === "article") refreshArticleList();
   }
   if (modal) payload.modal = modal;
   if (slug) payload.slug = slug;
