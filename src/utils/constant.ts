@@ -10,3 +10,5 @@ export enum TabValues {
 }
 
 export const SITE_NAME = "dankroll";
+
+export const MODAL_FADE_DURATION = 300;

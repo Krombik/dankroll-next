@@ -2,9 +2,10 @@ import { FC, useState, useCallback } from "react";
 import SpeedDialAction from "@material-ui/lab/SpeedDialAction";
 import TuneIcon from "@material-ui/icons/Tune";
 import IconButton from "@material-ui/core/IconButton";
-import SwitchTheme from "./SwitchTheme";
+import ThemeSwitcher from "./ThemeSwitcher";
 import OffsetSelect from "./OffsetSelect";
 import SpeedDial from "@material-ui/lab/SpeedDial";
+import { ThemeProps } from "@/types";
 
 const SettingsDial: FC = () => {
   const [open, setOpen] = useState(false);
@@ -45,9 +46,10 @@ const SettingsDial: FC = () => {
               transform: translateX(-50%);
               position: relative;
               left: 50%;
-              border-radius: 10%;
+              border-radius: ${({ theme }: ThemeProps) =>
+                theme.shape.borderRadius}px;
               &:not(:last-child) {
-                margin-bottom: 8px;
+                margin-bottom: ${({ theme }: ThemeProps) => theme.spacing(1)}px;
               }
             }
           }
@@ -64,7 +66,7 @@ const SettingsDial: FC = () => {
       open={open}
       direction="down"
     >
-      <SpeedDialAction icon={<SwitchTheme />} tooltipTitle="Switch theme" />
+      <SpeedDialAction icon={<ThemeSwitcher />} tooltipTitle="Switch theme" />
       <SpeedDialAction
         icon={<OffsetSelect />}
         tooltipTitle="Articles per page"

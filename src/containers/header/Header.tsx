@@ -23,7 +23,8 @@ const Header: FC = memo(() => {
   return (
     <Gutter
       component={AppBar}
-      componentProps={{ position: "static", color: "default" }}
+      position="static"
+      color="default"
       justify="space-between"
       alignItems="center"
     >

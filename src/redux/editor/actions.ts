@@ -54,3 +54,10 @@ export const removeEditor = (key: string): ThunkResult => (dispatch) => {
     payload: key,
   });
 };
+
+export const resetEditor = (key: string): ThunkResult => (dispatch) => {
+  dispatch({
+    type: EditorActionTypes.RESET_EDITOR,
+    payload: key,
+  });
+};

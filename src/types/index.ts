@@ -11,6 +11,8 @@ import {
   GetStaticPropsResult,
 } from "next";
 import { FetcherFailError } from "./error";
+import { Theme } from "@material-ui/core";
+import { ThemeProps as GenericThemeProps } from "styled-components";
 
 export type PropsFromServer<T> = T extends GetServerSideProps<
   Promise<GetServerSidePropsResult<infer U> | null>
@@ -39,3 +41,5 @@ type XOR<T, U> = T | U extends object
   : T | U;
 
 export type FetchRV<T> = XOR<T, FetcherFailError>;
+
+export type ThemeProps = GenericThemeProps<Theme>;

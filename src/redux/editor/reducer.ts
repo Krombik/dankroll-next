@@ -47,6 +47,11 @@ export default function reducer(
         editors: (({ [action.payload]: _, ...rest }) => rest)(state.editors),
         current: null,
       };
+    case EditorActionTypes.RESET_EDITOR:
+      return {
+        ...state,
+        editors: (({ [action.payload]: _, ...rest }) => rest)(state.editors),
+      };
     default:
       return state;
   }

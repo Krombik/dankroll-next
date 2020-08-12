@@ -1,39 +1,40 @@
-import { FC, useMemo } from "react";
-import { createMuiTheme, useTheme } from "@material-ui/core/styles";
-import { ThemeProvider } from "@material-ui/styles";
+import { useMemo, FC } from "react";
 import { useSelector } from "react-redux";
 import { createSelector } from "reselect";
 import { State } from "@/types";
 import Gutter from "@/components/common/Gutter";
-import { GridProps } from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
+import { ThemeProps } from "@/types";
+import { ThemeProvider, GridProps, CardProps } from "@material-ui/core";
+import makeTheme from "@/utils/makeTheme";
 
 const selectData = createSelector(
   (state: State) => state.common.dark,
   (dark) => ({ dark })
 );
 
-const Banner: FC<GridProps> = (props) => {
+const Banner: FC<GridProps & CardProps> = (props) => {
   const { dark } = useSelector(selectData);
-  const theme = useTheme();
-  const invertTheme = useMemo(
-    () =>
-      createMuiTheme({
-        ...theme,
-        palette: {
-          type: dark ? "light" : "dark",
-        },
-      }),
-    [dark]
-  );
+  const invertTheme = useMemo(() => makeTheme(!dark), [dark]);
   return (
     <ThemeProvider theme={invertTheme}>
       <Gutter
         component={Paper}
+        square
         className="banner MuiGrid-item"
-        componentProps={{ className: "MuiGrid-item" }}
         css={`
-          padding: ${theme.spacing(3, 0)};
+          > div {
+            padding: ${({ theme }: ThemeProps) => theme.spacing(3, 0)};
+          }
+          .tooltip-button-wrapper {
+            button,
+            a {
+              font-size: inherit;
+              margin-top: -50%;
+              margin-bottom: -50%;
+              bottom: 6px;
+            }
+          }
         `}
         {...props}
       />

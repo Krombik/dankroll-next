@@ -48,7 +48,8 @@ const Register: FC = () => {
       justify="center"
       alignItems="center"
       component={ValidatorForm}
-      componentProps={{ onSubmit: handleRegister, autoComplete: "off" }}
+      onSubmit={handleRegister}
+      autoComplete="off"
       maxWidth="sm"
     >
       <Grid item xs={12}>

@@ -10,7 +10,7 @@ const selectData = createSelector(
   (dark) => ({ dark })
 );
 
-const SwitchTheme: FC = () => {
+const ThemeSwitcher: FC = () => {
   const dispatch = useDispatch<ThunkDispatcher>();
   const { dark } = useSelector(selectData);
   const handleTheme = () => {
@@ -19,4 +19,4 @@ const SwitchTheme: FC = () => {
   return <Switch checked={dark} onChange={handleTheme} color="default" />;
 };
 
-export default SwitchTheme;
+export default ThemeSwitcher;

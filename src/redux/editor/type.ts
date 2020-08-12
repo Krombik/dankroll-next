@@ -5,6 +5,7 @@ export enum EditorActionTypes {
   CREATE_EDITOR = "CREATE_EDITOR",
   SET_CURRENT = "SET_CURRENT",
   REMOVE_EDITOR = "REMOVE_EDITOR",
+  RESET_EDITOR = "RESET_EDITOR",
 }
 
 type SetEditor = {
@@ -27,8 +28,14 @@ type RemoveEditor = {
   payload: string;
 };
 
+type ResetEditor = {
+  type: EditorActionTypes.RESET_EDITOR;
+  payload: string;
+};
+
 export type EditorActions =
   | SetEditor
   | CreateEditor
   | SetCurrent
-  | RemoveEditor;
+  | RemoveEditor
+  | ResetEditor;

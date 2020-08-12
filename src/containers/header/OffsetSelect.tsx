@@ -32,13 +32,7 @@ const OffsetSelect: FC = () => {
   };
   return (
     <FormControl variant="outlined">
-      <Select
-        labelId="demo-simple-select-outlined-label"
-        id="demo-simple-select-outlined"
-        value={offset}
-        onChange={handleCount}
-        label="Age"
-      >
+      <Select value={offset} onChange={handleCount}>
         <MenuItem value={10}>10</MenuItem>
         <MenuItem value={20}>20</MenuItem>
         <MenuItem value={50}>50</MenuItem>

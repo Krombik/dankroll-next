@@ -3,30 +3,26 @@ import Grid, { GridProps } from "@material-ui/core/Grid";
 
 const Gutter = <C extends React.ElementType>({
   children,
-  component,
-  componentProps = {},
+  maxWidth = "lg",
+  justify,
+  direction,
+  wrap,
+  alignItems,
   ...props
-}: GridProps &
-  ContainerProps & {
-    component?: C;
-    componentProps?: React.ComponentProps<C> | {};
-  }) => (
-  <Grid
-    component={component || "div"}
-    {...componentProps}
-    item
-    container
-    justify="center"
-    xs={12}
-  >
+}: Omit<GridProps<C, { component?: C }>, "object"> &
+  Pick<ContainerProps, "maxWidth">) => (
+  <Grid {...props} item container justify="center" xs={12}>
     <Grid
       item
       container
       spacing={3}
       component={Container}
-      maxWidth="lg"
       disableGutters
-      {...props}
+      maxWidth={maxWidth}
+      justify={justify}
+      direction={direction}
+      wrap={wrap}
+      alignItems={alignItems}
     >
       {children}
     </Grid>

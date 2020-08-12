@@ -44,7 +44,8 @@ const Login: FC = () => {
       justify="center"
       alignItems="center"
       component={ValidatorForm}
-      componentProps={{ onSubmit: handleLogin, autoComplete: "off" }}
+      onSubmit={handleLogin}
+      autoComplete="off"
       maxWidth="sm"
     >
       <Grid item xs={12}>

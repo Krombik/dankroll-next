@@ -96,7 +96,8 @@ const Settings: FC = () => {
       justify="center"
       alignItems="center"
       component={ValidatorForm}
-      componentProps={{ onSubmit: handleSettings, autoComplete: "off" }}
+      onSubmit={handleSettings}
+      autoComplete="off"
       maxWidth="md"
     >
       <Grid item xs={12}>

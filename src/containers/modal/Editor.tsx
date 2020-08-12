@@ -14,6 +14,7 @@ import {
   setEditor,
   setCurrentEditor,
   removeEditor,
+  resetEditor,
 } from "@/redux/editor/actions";
 import Router from "next/router";
 import { mutate } from "swr";
@@ -54,7 +55,7 @@ const Editor: FC<Props> = ({ slug }) => {
     [key]
   );
   const handleResetEditor = useCallback(() => {
-    dispatch(removeEditor(key));
+    dispatch(resetEditor(key));
   }, [key]);
   const handleArticleEdit = async () => {
     setLoading(true);
@@ -108,7 +109,8 @@ const Editor: FC<Props> = ({ slug }) => {
       justify="center"
       alignItems="center"
       component={ValidatorForm}
-      componentProps={{ onSubmit: handleArticleEdit, autoComplete: "off" }}
+      onSubmit={handleArticleEdit}
+      autoComplete="off"
       maxWidth="md"
     >
       <Grid item xs={12}>
@@ -163,15 +165,7 @@ const Editor: FC<Props> = ({ slug }) => {
           editTags={handleTag}
         />
       )}
-      <Grid
-        item
-        container
-        spacing={3}
-        justify="center"
-        css={`
-          overflow-y: hidden;
-        `}
-      >
+      <Grid item container spacing={3} justify="center">
         <Grid item>
           <Button
             variant="contained"
